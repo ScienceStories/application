@@ -9,7 +9,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kenneth Seals-Nutt",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^1.0.3",
