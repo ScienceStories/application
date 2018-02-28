@@ -30,7 +30,7 @@ module.exports = (app, sessionChecker) => {
         page: function(){ return 'manifest'},
         scripts: function(){ return 'manifest_scripts'},
         links: function(){ return 'manifest_links'},
-        title: "Welcome",
+        title: "Manifest",
         nav: "manifest",
       });
   });
