@@ -9,8 +9,11 @@ const fs = require('fs');
 const hbs = require('handlebars');
 const path = require('path');
 const fetch = require('node-fetch');
+const cors = require('cors');
 // Set up the express app
 const app = express();
+
+
 
 // Log requests to the console.
 app.use(logger('dev'));
@@ -20,9 +23,9 @@ app.engine('html', cons.handlebars)
 app.set('view engine', 'html')
 app.set('views', __dirname + '/views')
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
-app.use('/collection', express.static(__dirname + '/collection/'));
+app.use('/collection',  cors(), express.static(__dirname + '/collection/'));
 app.use('/static', express.static(__dirname + '/static/'));
-app.use('/uv-config.json', (req, res) => res.sendFile(__dirname + '/uv-config.json'));
+app.use('/uv-config.json', cors(), (req, res) => res.sendFile(__dirname + '/uv-config.json'));
 hbs.registerHelper('if_equal', function(a, b, opts) {
     if (a == b) {
         return opts.fn(this)

@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "config" : {
-  },
+  "config": {},
   "scripts": {
     "start": "npm run manifest && node ./bin/www",
     "start:dev": "npm run manifest:dev && nodemon ./bin/www",
@@ -20,9 +19,11 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^1.0.3",
+    "biiif-cli": "0.0.13",
     "body-parser": "^1.18.2",
     "consolidate": "^0.15.0",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
     "express": "^4.16.2",
     "express-session": "^1.15.6",
     "handlebars": "^4.0.11",
@@ -33,8 +34,7 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.33.4",
     "sequelize-cli": "^4.0.0",
-    "universalviewer": "3.0.21",
-    "biiif-cli": "0.0.13"
+    "universalviewer": "3.0.21"
   },
   "devDependencies": {
     "nodemon": "^1.15.0"
