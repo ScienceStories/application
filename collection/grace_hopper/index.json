@@ -121,22 +121,6 @@
                     }
                   },
                   "target": "http://localhost:8000/collection/grace_hopper/index.json/canvas/1"
-                },
-                {
-                  "id": "http://localhost:8000/collection/grace_hopper/index.json/canvas/1/annotation/1",
-                  "type": "Annotation",
-                  "motivation": "painting",
-                  "body": {
-                    "id": "http://localhost:8000/collection/grace_hopper/_portraits2/portraits2.jpg",
-                    "type": "Image",
-                    "format": "image/jpeg",
-                    "label": {
-                      "@none": [
-                        "Second Image of Grace Murray Hopper"
-                      ]
-                    }
-                  },
-                  "target": "http://localhost:8000/collection/grace_hopper/index.json/canvas/1"
                 }
               ]
             }

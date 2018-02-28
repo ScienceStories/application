@@ -16,6 +16,21 @@
           "type": "Image"
         }
       ]
+    },
+    {
+      "id": "https://iiif.lib.harvard.edu/manifests/drs:9596592",
+      "type": "Collection",
+      "label": {
+        "@none": [
+          "Harvard Manifest"
+        ]
+      },
+      "thumbnail": [
+        {
+          "id": "https://iiif.lib.harvard.edu/static/manifests/harvard_logo.jpg",
+          "type": "Image"
+        }
+      ]
     }
   ],
   "label": {
