@@ -9,7 +9,7 @@
     "start": "npm run manifest && node ./bin/www",
     "start:dev": "npm run manifest:dev && nodemon ./bin/www",
     "manifest:dev": "biiif collection -u http://localhost:${PORT:-8000}/collection",
-    "manifest": "biiif collection -u https://sciencestories.ksn.io/collection",
+    "manifest": "biiif collection -u http://sciencestories.ksn.io/collection",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
