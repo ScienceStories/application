@@ -20,7 +20,16 @@ app.engine('html', cons.handlebars)
 app.set('view engine', 'html')
 app.set('views', __dirname + '/views')
 app.use('/scripts', express.static(__dirname + '/node_modules/'));
+app.use('/collection', express.static(__dirname + '/collection/'));
 app.use('/static', express.static(__dirname + '/static/'));
+app.use('/uv-config.json', (req, res) => res.sendFile(__dirname + '/uv-config.json'));
+hbs.registerHelper('if_equal', function(a, b, opts) {
+    if (a == b) {
+        return opts.fn(this)
+    } else {
+        return opts.inverse(this)
+    }
+})
 // Register partials
 var partials = "./views/partials/";
 fs.readdirSync(partials).forEach(function (file) {

@@ -1,0 +1,208 @@
+{
+  "id": "http://localhost:8000/collection/grace_hopper/index.json",
+  "type": "Manifest",
+  "items": [
+    {
+      "type": "Sequence",
+      "items": [
+        {
+          "id": "http://localhost:8000/collection/grace_hopper/index.json/canvas/0",
+          "type": "Canvas",
+          "items": [
+            {
+              "id": "http://localhost:8000/collection/grace_hopper/index.json/canvas/0/annotationpage/0",
+              "type": "AnnotationPage",
+              "items": [
+                {
+                  "id": "http://localhost:8000/collection/grace_hopper/index.json/canvas/0/annotation/0",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "id": "http://localhost:8000/collection/grace_hopper/_portraits/portraits.jpg",
+                    "type": "Image",
+                    "format": "image/jpeg",
+                    "label": {
+                      "@none": [
+                        "Grace Murray Hopper"
+                      ]
+                    }
+                  },
+                  "target": "http://localhost:8000/collection/grace_hopper/index.json/canvas/0"
+                },
+                {
+                  "id": "http://localhost:8000/collection/grace_hopper/index.json/canvas/0/annotation/1",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "id": "http://localhost:8000/collection/grace_hopper/_portraits/portraits2.jpg",
+                    "type": "Image",
+                    "format": "image/jpeg",
+                    "label": {
+                      "@none": [
+                        "Grace Murray Hopper"
+                      ]
+                    }
+                  },
+                  "target": "http://localhost:8000/collection/grace_hopper/index.json/canvas/0"
+                }
+              ]
+            }
+          ],
+          "label": {
+            "@none": [
+              "Grace Murray Hopper"
+            ]
+          },
+          "metadata": [
+            {
+              "label": {
+                "@none": [
+                  "License"
+                ]
+              },
+              "value": {
+                "@none": [
+                  "Copyright Yale University [not real]"
+                ]
+              }
+            },
+            {
+              "label": {
+                "@none": [
+                  "Author"
+                ]
+              },
+              "value": {
+                "@none": [
+                  "Kenneth Seals-Nutt [not real]"
+                ]
+              }
+            },
+            {
+              "label": {
+                "@none": [
+                  "Published Date"
+                ]
+              },
+              "value": {
+                "@none": [
+                  "29 July 1954 [not real]"
+                ]
+              }
+            }
+          ],
+          "thumbnail": [
+            {
+              "id": "http://localhost:8000/collection/grace_hopper/_portraits/thumb.jpg",
+              "type": "Image"
+            }
+          ]
+        },
+        {
+          "id": "http://localhost:8000/collection/grace_hopper/index.json/canvas/1",
+          "type": "Canvas",
+          "items": [
+            {
+              "id": "http://localhost:8000/collection/grace_hopper/index.json/canvas/1/annotationpage/0",
+              "type": "AnnotationPage",
+              "items": [
+                {
+                  "id": "http://localhost:8000/collection/grace_hopper/index.json/canvas/1/annotation/0",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "id": "http://localhost:8000/collection/grace_hopper/_portraits2/gh1.jpg",
+                    "type": "Image",
+                    "format": "image/jpeg",
+                    "label": {
+                      "@none": [
+                        "Second Image of Grace Murray Hopper"
+                      ]
+                    }
+                  },
+                  "target": "http://localhost:8000/collection/grace_hopper/index.json/canvas/1"
+                },
+                {
+                  "id": "http://localhost:8000/collection/grace_hopper/index.json/canvas/1/annotation/1",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "id": "http://localhost:8000/collection/grace_hopper/_portraits2/portraits2.jpg",
+                    "type": "Image",
+                    "format": "image/jpeg",
+                    "label": {
+                      "@none": [
+                        "Second Image of Grace Murray Hopper"
+                      ]
+                    }
+                  },
+                  "target": "http://localhost:8000/collection/grace_hopper/index.json/canvas/1"
+                }
+              ]
+            }
+          ],
+          "label": {
+            "@none": [
+              "Second Image of Grace Murray Hopper"
+            ]
+          },
+          "metadata": [
+            {
+              "label": {
+                "@none": [
+                  "License"
+                ]
+              },
+              "value": {
+                "@none": [
+                  "Copyright Yale University [not real]"
+                ]
+              }
+            },
+            {
+              "label": {
+                "@none": [
+                  "Author"
+                ]
+              },
+              "value": {
+                "@none": [
+                  "Kenneth Seals-Nutt [not real]"
+                ]
+              }
+            },
+            {
+              "label": {
+                "@none": [
+                  "Published Date"
+                ]
+              },
+              "value": {
+                "@none": [
+                  "29 July 1954 [not real]"
+                ]
+              }
+            }
+          ],
+          "thumbnail": [
+            {
+              "id": "http://localhost:8000/collection/grace_hopper/_portraits2/thumb.jpg",
+              "type": "Image"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "label": {
+    "@none": [
+      "grace_hopper"
+    ]
+  },
+  "thumbnail": [
+    {
+      "id": "http://localhost:8000/collection/grace_hopper/thumb.jpg",
+      "type": "Image"
+    }
+  ]
+}

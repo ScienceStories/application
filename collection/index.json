@@ -1,0 +1,26 @@
+{
+  "id": "http://localhost:8000/collection/index.json",
+  "type": "Collection",
+  "items": [
+    {
+      "id": "http://localhost:8000/collection/grace_hopper/index.json",
+      "type": "Manifest",
+      "label": {
+        "@none": [
+          "grace_hopper"
+        ]
+      },
+      "thumbnail": [
+        {
+          "id": "http://localhost:8000/collection/grace_hopper/thumb.jpg",
+          "type": "Image"
+        }
+      ]
+    }
+  ],
+  "label": {
+    "@none": [
+      "collection"
+    ]
+  }
+}

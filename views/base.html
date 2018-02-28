@@ -5,7 +5,8 @@
 		<title>Science Stories | {{title}}</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	  <link rel="icon" type="image/png" href="static/images/icons/favicon.ico"/>
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	 <link rel="icon" type="image/png" href="static/images/icons/favicon.ico"/>
 
 
 		<script src="static/js/jquery.min.js"></script>
@@ -27,7 +28,7 @@
 						        <span class="icon-bar"></span>
 						        <span class="icon-bar"></span>
 						      </button>
-						      <a class="navbar-brand" href="#">
+						      <a class="navbar-brand" href="/">
 										<!-- <img alt="Science Stories" src="/static/images/icons/favicon.ico"> -->
 										Science Stories [beta]
 									</a>
@@ -36,8 +37,9 @@
 						    <!-- Collect the nav links, forms, and other content for toggling -->
 						    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						      <ul class="nav navbar-nav">
-						        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-						        <li><a href="#">Link</a></li>
+						        <li {{#if_equal nav "home"}} class="active" {{else}}{{/if_equal}}><a href="/">Home <span class="sr-only">(current)</span></a></li>
+						        <li {{#if_equal nav "manifest"}} class="active" {{else}}{{/if_equal}}><a href="/manifest">Manifest</a></li>
+
 						        <li class="dropdown">
 						          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
 						          <ul class="dropdown-menu">
@@ -98,7 +100,7 @@
 						    <!-- Collect the nav links, forms, and other content for toggling -->
 						    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						      <ul class="nav navbar-nav pull-right">
-						        <li ><a href="https://www.wikidata.org/wiki/User:YULdigitalpreservation/ScienceStories" target="_blank">Kenneth Seals-Nutt & Katharine Thornton</a></li>
+						        <li ><a href="https://www.wikidata.org/wiki/User:YULdigitalpreservation/ScienceStories" target="_blank">Kenneth Seals-Nutt & Katherine Thornton</a></li>
 						      </ul>
 						    </div><!-- /.navbar-collapse -->
 						  </div><!-- /.container-fluid -->
@@ -106,7 +108,7 @@
           </footer>
 
   <!-- Scripts -->
-    <script src="static/js/home_main.js"></script>
+    <!-- <script src="static/js/home_main.js"></script> -->
     {{> (scripts)}}
 	</body>
 </html>

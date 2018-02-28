@@ -3,12 +3,19 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "config" : {
+  },
   "scripts": {
-    "start": "node ./bin/www",
-    "start:dev": "nodemon ./bin/www",
+    "start": "npm run manifest && node ./bin/www",
+    "start:dev": "npm run manifest:dev && nodemon ./bin/www",
+    "manifest:dev": "biiif collection -u http://localhost:${PORT:-8000}/collection",
+    "manifest": "biiif collection -u https://sciencestories.ksn.io/collection",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": [
+    "IIIF",
+    "universalviewer"
+  ],
   "author": "Kenneth Seals-Nutt",
   "license": "ISC",
   "dependencies": {
@@ -25,7 +32,9 @@
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.33.4",
-    "sequelize-cli": "^4.0.0"
+    "sequelize-cli": "^4.0.0",
+    "universalviewer": "3.0.21",
+    "biiif-cli": "0.0.13"
   },
   "devDependencies": {
     "nodemon": "^1.15.0"

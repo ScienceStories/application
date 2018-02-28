@@ -20,6 +20,18 @@ module.exports = (app, sessionChecker) => {
         scripts: function(){ return 'home_scripts'},
         links: function(){ return 'home_links'},
         title: "Welcome",
+        nav: "home",
+      });
+  });
+  // route for Home-Page
+  app.get('/manifest', sessionChecker, (req, res) => {
+      // res.redirect('/login');
+      res.render('base', {
+        page: function(){ return 'manifest'},
+        scripts: function(){ return 'manifest_scripts'},
+        links: function(){ return 'manifest_links'},
+        title: "Welcome",
+        nav: "manifest",
       });
   });
   // route for user signup

@@ -492,10 +492,7 @@ body {
   left: auto;
   right: 5px;
 }
-.page-wrapper {
-    padding-top: 10vh;
-    padding-bottom: 20vh;
-}
+
 .page-header {
     text-align:  center;
     color:  white;

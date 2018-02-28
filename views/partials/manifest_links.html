@@ -1,0 +1,22 @@
+<link rel='stylesheet prefetch' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+<link rel="stylesheet" type="text/css" href="static/uv/uv.css">
+<script src="https://unpkg.com/iiif-gallery/dist/iiifgallery.js"></script>
+<script src="static/uv/lib/offline.js"></script>
+<script src="static/uv/helpers.js"></script>
+    <style>
+    #uv {
+        display: none;
+        height: 480px;
+    }
+
+    iiif-gallery {
+        margin: 20px auto;
+        width: 90%;
+    }
+
+    @media screen and (max-width: 800px) {
+        iiif-gallery-item {
+            width:calc(50% - 8px);
+        }
+    }
+    </style>
