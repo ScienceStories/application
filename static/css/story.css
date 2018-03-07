@@ -1,0 +1,27 @@
+.page-wrapper{
+      background: #404040;
+}
+div#story_name {
+    font-size:  150%;
+    font-weight:  bold;
+    border-bottom:  1px solid;
+}
+
+div#story_div {
+    text-align:  center;
+    font-weight: 300;
+    font-size:  120%;
+    padding: 40px;
+    color: #a5fbff;
+}
+
+div#story_div ul {
+    list-style:  none;
+    padding:  0;
+    padding-top: 10px;
+}
+
+span.prop {
+    font-weight: 400;
+    color: white;
+}

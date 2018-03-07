@@ -34,7 +34,8 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.33.4",
     "sequelize-cli": "^4.0.0",
-    "universalviewer": "3.0.21"
+    "universalviewer": "3.0.21",
+    "wikidata-sdk": "^5.9.0"
   },
   "devDependencies": {
     "nodemon": "^1.15.0"

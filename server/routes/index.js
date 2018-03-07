@@ -1,4 +1,5 @@
 const membersController = require('../controllers').members;
+const wikidataController = require('../controllers').wikidata;
 const fetch = require('node-fetch')
 module.exports = (app, sessionChecker) => {
   // Wrapper function to fetch
@@ -23,6 +24,10 @@ module.exports = (app, sessionChecker) => {
         nav: "home",
       });
   });
+
+  // route for Home-Page
+  app.get('/story=:qid', wikidataController.loadStory);
+
   // route for Home-Page
   app.get('/manifest', sessionChecker, (req, res) => {
       // res.redirect('/login');
