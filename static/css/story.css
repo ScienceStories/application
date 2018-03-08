@@ -25,3 +25,21 @@ span.prop {
     font-weight: 400;
     color: white;
 }
+div#conent_panel {
+    width: 30%;
+    display: inline-block;
+    background: #615763;
+    height: 80vh;
+    overflow-y: scroll;
+}
+/*  viewer */
+#viewer {
+    vertical-align: top;
+    width: 69%;
+    /* overflow: scroll; */
+    height: 80vh;
+    position: relative;
+    margin: 0 auto;
+    color: black;
+    display: inline-block;
+}

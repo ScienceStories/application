@@ -2,9 +2,12 @@
   <div id="story_name">
     {{name}}
   </div>
-  <ul class="claim_list">
-  {{#each content}}
-    <li><span class="prop">{{this.wdLabel.value}}:</span> {{this.ps_Label.value}}</li>
-  {{/each}}
-</ul>
+  <div id="conent_panel">
+    <ul class="claim_list">
+    {{#each content}}
+      <li><span class="prop">{{this.wdLabel.value}}:</span> {{this.ps_Label.value}}</li>
+    {{/each}}
+    </ul>
+  </div>
+  <div id="viewer"></div>
 </div>
