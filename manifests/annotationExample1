@@ -1,0 +1,19 @@
+{
+
+ "@context": "http://iiif.io/api/presentation/2/context.json",
+ "@id": "http://example.org",
+ "@type": "sc:AnnotationList",
+
+ "resources": [
+  {
+    "@type": "oa:Annotation",
+    "motivation": "sc:Relationship",
+    "resource":{
+      "@id": "https://www.wikidata.org/wiki/Q2679156",
+      "@type": "dctypes:identifier"
+   },
+
+   "on": "http://example.org"
+ },
+]
+}
