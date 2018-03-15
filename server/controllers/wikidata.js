@@ -35,7 +35,7 @@ module.exports = {
         _api(`https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&ids=${qid}&languages=en&format=json`)
         .then(labels => {
           // const simplifiedResults = wdk.simplifySparqlResults(content)
-          return res.render('base', {
+          return res.render('full', {
         page: function(){ return 'story'},
         scripts: function(){ return 'story_scripts'},
         links: function(){ return 'story_links'},

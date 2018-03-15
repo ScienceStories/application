@@ -1,13 +1,52 @@
-<div id="story_div">
-  <div id="story_name">
-    {{name}}
-  </div>
-  <div id="conent_panel">
-    <ul class="claim_list">
-    {{#each content}}
-      <li><span class="prop">{{this.wdLabel.value}}:</span> {{this.ps_Label.value}}</li>
-    {{/each}}
-    </ul>
-  </div>
-  <div id="viewer"></div>
+<a id="homeButton" href="/">
+  Science Stories
+</a>
+<button id="arrow">
+  <span>↓</span>
+</button>
+<div id="pagepiling">
+    <div class="section" id="section1">
+        <div class="intro">
+            	<h1>{{name}}</h1>
+
+            <p>Sample Intro Slide: Hover over bottom of page to go to the next window or use the side nav toggle on the right</p>
+        </div>
+    </div>
+    <div class="section" id="section2">
+        <div class="intro">
+            	<h1>Occupation: Marine Biologist & Zoologist</h1>
+
+            <p>This slide would contain a viewer of her specimens</p>
+        </div>
+    </div>
+    <div class="section" id="section3">
+        <div class="intro">
+             <h1>Her Research</h1>
+
+            <p>This slide would contain all of her journal publications and drawings</p>
+        </div>
+    </div>
+    <div class="section pp-scrollable" id="section4">
+        <div class="content">
+            <div class="header">
+                	<h1>{{name}}</h1>
+                  <p>
+                    This will contain her complete wikidata statements, user comments, references, and contribution credits
+                  </p>
+            </div>
+            <div class="page">
+              <div id="story_div">
+                <div id="conent_panel">
+                  <ul class="claim_list">
+                  {{#each content}}
+                    <li><span class="prop">{{this.wdLabel.value}}:</span> {{this.ps_Label.value}}</li>
+                  {{/each}}
+                  </ul>
+                </div>
+                <div id="viewer"></div>
+              </div>
+            </div>
+
+        </div>
+    </div>
 </div>

@@ -1,3 +1,24 @@
+
+#homeButton {
+    color: #ffffff9e;
+  background:  none;
+  position:  fixed;
+  z-index:  10000000000000000;
+  left:  15px;
+  top: 15px;
+  font-size:  140%;
+  font-weight:  bold;
+  background: #8080804d;
+  padding:  5px;
+  border-radius:  5px;
+}
+
+a#homeButton:hover {
+    text-decoration:  none;
+    color:  white;
+    background: #235650;
+}
+
 .page-wrapper{
       background: #404040;
 }
@@ -11,7 +32,7 @@ div#story_div {
     text-align:  center;
     font-weight: 300;
     font-size:  120%;
-    padding: 40px;
+    /* padding: 40px; */
     color: #a5fbff;
 }
 
@@ -42,4 +63,145 @@ div#conent_panel {
     margin: 0 auto;
     color: black;
     display: inline-block;
+}
+
+
+
+
+/*  pagepile */
+/* Navigaton bullets styles
+ * --------------------------------------- */
+ #pp-nav li .active span, .pp-slidesNav .active span {
+    background: #bbb;
+}
+#pp-nav span, .pp-slidesNav span {
+    border-color: #bbb !important;
+}
+/* Sections
+	 * --------------------------------------- */
+ .section {
+    background-attachment: fixed;
+    background-size: auto 80%;
+    background-position: 50% 0%;
+    background-repeat: no-repeat;
+}
+#section1 {
+    background-image: url(../images/stock/kjb-1.jpg);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        background-position: center;
+    background-repeat: no-repeat;
+}
+#section2 {
+  background-image: url(../images/stock/kjb-2.jpg);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      background-position: center;
+  background-repeat: no-repeat;
+}
+#section3 {
+  background-image: url(../images/stock/kjb-3.jpg);
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      background-position: center;
+  background-repeat: no-repeat;
+}
+#section4 .content {
+    top: 100%;
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+/* Arrow
+	 * --------------------------------------- */
+ #arrow {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    cursor: pointer;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    border: 0;
+    outline: 0;
+    z-index: 100;
+    color: #BBB;
+    background: transparent;
+    -moz-transition: all 0.2s cubic-bezier(0.7, 0.01, 0.3, 1);
+    -o-transition: all 0.2s cubic-bezier(0.7, 0.01, 0.3, 1);
+    -webkit-transition: all 0.2s cubic-bezier(0.7, 0.01, 0.3, 1);
+    transition: all 0.2s cubic-bezier(0.7, 0.01, 0.3, 1);
+    font: 36px Heiti, 'Lucida Grande', Arial;
+    font-weight: bold;
+}
+#arrow span {
+    display: inline-block;
+    position: relative;
+    top: -18px;
+    -moz-transition: all 0.7s cubic-bezier(0.7, 0.01, 0.3, 1);
+    -o-transition: all 0.7s cubic-bezier(0.7, 0.01, 0.3, 1);
+    -webkit-transition: all 0.7s cubic-bezier(0.7, 0.01, 0.3, 1);
+    transition: all 0.7s cubic-bezier(0.7, 0.01, 0.3, 1);
+}
+#arrow:hover {
+    background: #EC008C;
+}
+#arrow:hover span {
+    top: 0;
+    color: #FFF;
+}
+/* Intro texts
+	 * --------------------------------------- */
+ .intro {
+    position: absolute;
+    bottom: 100px;
+    text-align: center;
+    width: 100%;
+    background: #00ffe7e0;
+}
+.intro h1 {
+    font-size: 5em;
+    font-weight: bold;
+    color: #000;
+}
+#section4 .intro {
+    color: #000;
+}
+/* Content page
+	 * --------------------------------------- */
+ .header {
+    padding-top: 80px;
+    text-align: center;
+}
+.header h1 {
+    font-size: 5em;
+    font-weight: bold;
+    color: #fff;
+}
+.header p {
+    color: #f2f2f2;
+    font-size: 1.7em;
+}
+.page {
+    width: 90%;
+    margin: 60px auto;
+    background:white;
+    padding: 20px;
+    -webkit-box-sizing: border-box;
+    /* Safari<=5 Android<=3 */
+    -moz-box-sizing: border-box;
+    /* <=28 */
+    box-sizing: border-box;
+}
+.page p {
+    font-style: 12px;
+    margin: 20px 0 0 0;
+    line-height: 1.35em;
+    color: #333;
 }

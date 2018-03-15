@@ -24,7 +24,17 @@ module.exports = (app, sessionChecker) => {
         nav: "home",
       });
   });
-
+  // route for Test-Page
+  app.get('/test', (req, res) => {
+      // res.redirect('/login');
+      res.render('base', {
+        page: function(){ return 'test'},
+        scripts: function(){ return 'test_scripts'},
+        links: function(){ return 'test_links'},
+        title: "Welcome",
+        nav: "test",
+      });
+  });
   // route for Home-Page
   app.get('/story=:qid', wikidataController.loadStory);
 

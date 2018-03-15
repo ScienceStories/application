@@ -2,3 +2,8 @@
     padding-top: 10vh;
     padding-bottom: 20vh;
 }
+.page-wrapper .container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+}
