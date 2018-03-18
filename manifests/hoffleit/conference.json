@@ -1,0 +1,209 @@
+{
+  // Metadata about this manifest file
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "http://example.org/iiif/sciencestories/hoffleit/conference",
+  "@type": "sc:Manifest",
+
+  // Descriptive metadata about the object/work
+  "label": "conference",
+  "metadata": [
+    {"label": "Author", "value": "Anne Author"},
+    {"label": "Published", "value": [
+        {"@value": "Paris, circa 1400", "@language": "en"},
+        {"@value": "Paris, environ 1400", "@language": "fr"}
+      ]
+    },
+    {"label": "Notes", "value": ["Text of note 1", "Text of note 2"]},
+    {"label": "Source",
+     "value": "<span>From: <a href=\"http://example.org/db/1.html\">Some Collection</a></span>"}
+  ],
+  "description": "A photograph from a spectroscpy conference.",
+  "thumbnail": {
+    "@id": "http://example.org/iiif/sciencestories/hoffleit/conference/full/80,100/0/default.jpg",
+    "service": {
+      "@context": "http://iiif.io/api/image/2/context.json",
+      "@id": "http://example.org/iiif/sciencestories/hoffleit/conference",
+      "profile": "http://iiif.io/api/image/2/level1.json"
+    }
+  },
+
+  // Presentation Information
+  "viewingDirection": "right-to-left",
+  "viewingHint": "non-paged",
+  "navDate": "1856-01-01T00:00:00Z",
+
+  // Rights Information
+  "license": "http://rightsstatements.org/vocab/NoC-NC/1.0/",
+  "attribution": "Courtesy of Manuscripts and Archives, Yale University",
+
+  "logo": {
+    "@id": "http://example.org/logos/institution1.jpg",
+    "service": {
+        "@context": "http://iiif.io/api/image/2/context.json",
+        "@id": "http://example.org/service/inst1",
+        "profile": "http://iiif.io/api/image/2/level2.json"
+    }
+  },
+
+
+  // List of sequences
+  "sequences": [
+      {
+        "@id": "http://example.org/iiif/sciencestories/hoffleit/conference/sequence/normal",
+        "@type": "sc:Sequence",
+        "label": "Current Page Order"
+        // sequence's page order should be included here, see below...
+      }
+      // Any additional sequences can be referenced here...
+  ]
+}
+
+{
+  // Metadata about this sequence
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "http://example.org/iiif/sciencestories/hoffleit/conference/sequence/normal",
+  "@type": "sc:Sequence",
+  "label": "Current Page Order",
+
+  "viewingDirection": "left-to-right",
+  "viewingHint": "non-paged",
+  "startCanvas": "http://example.org/iiif/sciencestories/hoffleit/conference/",
+
+  // The order of the canvases
+  "canvases": [
+    {
+      "@id": "http://example.org/iiif/sciencestories/hoffleit/conference/canvas/p1",
+      "@type": "sc:Canvas",
+      "label": "p. 1"
+      // ...
+    },
+    
+  ]
+}
+
+
+{
+  // Metadata about this canvas
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "http://example.org/iiif/sciencestories/hoffleit/conference/canvas/p1",
+  "@type": "sc:Canvas",
+  "label": "p. 1",
+  "height": 1000,
+  "width": 750,
+  "thumbnail" : {
+    "@id" : "http://example.org/iiif/sciencestories/hoffleit/conference/canvas/p1/thumb.jpg",
+    "@type": "dctypes:Image",
+    "height": 200,
+    "width": 150
+  },
+  "images": [
+    {
+      "@type": "oa:Annotation"
+      // Link from Image to canvas should be included here, as below
+    }
+  ],
+  "otherContent": [
+    {
+      // Reference to list of other Content resources, _not included directly_
+      "@id": "http://example.org/iiif/sciencestories/hoffleit/conference/list/p1",
+      "@type": "sc:AnnotationList"
+
+ "resources": [
+  {
+    "@type": "oa:Annotation",
+    "motivation": "sc:Relationship",
+    "resource":{
+      "@id": "https://www.wikidata.org/wiki/Q451538", #dorrit
+      "@type": "dctypes:identifier"
+   },
+
+   "on": "http://example.org/iiif/sciencestories/hoffleit/conference"
+ },
+]
+ "resources": [
+  {
+    "@type": "oa:Annotation",
+    "motivation": "sc:Relationship",
+    "resource":{
+      "@id": "https://www.wikidata.org/wiki/Q30236674", #Boyle
+      "@type": "dctypes:identifier"
+   },
+
+   "on": "http://example.org/iiif/sciencestories/hoffleit/conference"
+ },
+]
+ "resources": [
+  {
+    "@type": "oa:Annotation",
+    "motivation": "sc:Relationship",
+    "resource":{
+      "@id": "https://www.wikidata.org/wiki/Q1240217", #Osterbrock
+      "@type": "dctypes:identifier"
+   },
+
+   "on": "http://example.org/iiif/sciencestories/hoffleit/conference"
+ },
+]
+ "resources": [
+  {
+    "@type": "oa:Annotation",
+    "motivation": "sc:Relationship",
+    "resource":{
+      "@id": "https://www.wikidata.org/wiki/Q30236674", #Roman
+      "@type": "dctypes:identifier"
+   },
+
+   "on": "http://example.org/iiif/sciencestories/hoffleit/conference"
+ },
+]
+ "resources": [
+  {
+    "@type": "oa:Annotation",
+    "motivation": "sc:Relationship",
+    "resource":{
+      "@id": "https://www.wikidata.org/wiki/Q5277502", #Mihalas
+      "@type": "dctypes:identifier"
+   },
+
+   "on": "http://example.org/iiif/sciencestories/hoffleit/conference"
+ },
+]
+ "resources": [
+  {
+    "@type": "oa:Annotation",
+    "motivation": "sc:Relationship",
+    "resource":{
+      "@id": "https://www.wikidata.org/wiki/Q29834144", #Abt
+      "@type": "dctypes:identifier"
+   },
+
+   "on": "http://example.org/iiif/sciencestories/hoffleit/conference"
+ },
+]
+ "resources": [
+  {
+    "@type": "oa:Annotation",
+    "motivation": "sc:Relationship",
+    "resource":{
+      "@id": "https://www.wikidata.org/wiki/Q39060054", #Houk
+      "@type": "dctypes:identifier"
+   },
+
+   "on": "http://example.org/iiif/sciencestories/hoffleit/conference"
+ },
+] "resources": [
+  {
+    "@type": "oa:Annotation",
+    "motivation": "sc:Relationship",
+    "resource":{
+      "@id": "https://www.wikidata.org/wiki/Q2086095", #Keenan
+      "@type": "dctypes:identifier"
+   },
+
+   "on": "http://example.org/iiif/sciencestories/hoffleit/conference"
+ },
+]
+    }
+  ]
+
+}
