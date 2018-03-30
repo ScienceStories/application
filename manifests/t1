@@ -1,0 +1,151 @@
+{
+  "@context": "http://iiif.io/api/presentation/2/context.json",
+  "@id": "http://example.org/my_book",
+  "@type": "sc:Manifest",
+  "label": "My Book",
+  "thumbnail": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/full/!200,200/0/default.jpg",
+  "viewingHint": "paged",
+  "metadata": [
+    {
+      "Foo": "Bar"
+    },
+    {
+      "Bazzers": [
+        "Quux",
+        "Corge"
+      ]
+    }
+  ],
+  "sequences": [
+    {
+      "@type": "sc:Sequence",
+      "canvases": [
+        {
+          "@id": "http://example.org/my_book/pages/pudl0001%2F4609321%2Fs42%2F00000006.jp2",
+          "@type": "sc:Canvas",
+          "label": "Page 1",
+          "width": 5434,
+          "height": 7200,
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2/full/!200,200/0/default.jpg",
+                "@type": "dcterms:Image",
+                "format": "image/jpeg",
+                "width": 5434,
+                "height": 7200,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000006.jp2",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "@id": "http://example.org/my_book/pages/pudl0001%2F4609321%2Fs42%2F00000007.jp2",
+          "@type": "sc:Canvas",
+          "label": "Page 2",
+          "width": 5387,
+          "height": 7200,
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000007.jp2/full/!200,200/0/default.jpg",
+                "@type": "dcterms:Image",
+                "format": "image/jpeg",
+                "width": 5387,
+                "height": 7200,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000007.jp2",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "@id": "http://example.org/my_book/pages/pudl0001%2F4609321%2Fs42%2F00000008.jp2",
+          "@type": "sc:Canvas",
+          "label": "Page 3",
+          "width": 5434,
+          "height": 7200,
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000008.jp2/full/!200,200/0/default.jpg",
+                "@type": "dcterms:Image",
+                "format": "image/jpeg",
+                "width": 5434,
+                "height": 7200,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000008.jp2",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "@id": "http://example.org/my_book/pages/pudl0001%2F4609321%2Fs42%2F00000009.jp2",
+          "@type": "sc:Canvas",
+          "label": "Page 4",
+          "width": 5387,
+          "height": 7200,
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000009.jp2/full/!200,200/0/default.jpg",
+                "@type": "dcterms:Image",
+                "format": "image/jpeg",
+                "width": 5387,
+                "height": 7200,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000009.jp2",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "@id": "http://example.org/my_book/pages/pudl0001%2F4609321%2Fs42%2F00000010.jp2",
+          "@type": "sc:Canvas",
+          "label": "Page 5",
+          "width": 5434,
+          "height": 7200,
+          "images": [
+            {
+              "@type": "oa:Annotation",
+              "motivation": "sc:painting",
+              "resource": {
+                "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000010.jp2/full/!200,200/0/default.jpg",
+                "@type": "dcterms:Image",
+                "format": "image/jpeg",
+                "width": 5434,
+                "height": 7200,
+                "service": {
+                  "@context": "http://iiif.io/api/image/2/context.json",
+                  "@id": "http://libimages1.princeton.edu/loris/pudl0001%2F4609321%2Fs42%2F00000010.jp2",
+                  "profile": "http://iiif.io/api/image/2/level2.json"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

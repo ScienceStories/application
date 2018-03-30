@@ -1,6 +1,7 @@
 const membersController = require('../controllers').members;
 const wikidataController = require('../controllers').wikidata;
-const fetch = require('node-fetch')
+const fetch = require('node-fetch');
+const fs = require('fs');
 module.exports = (app, sessionChecker) => {
   // Wrapper function to fetch
   function _api(url) {
@@ -87,8 +88,40 @@ app.get('/logout', (req, res) => {
   }));
 
   app.post('/api/members', membersController.create);
+  app.get('/api/iiif/manifest-source/:source/:filename', (req, res) => {
+    res.status(200).sendfile("manifests/_sources/"+req.params.source+'/'+req.params.filename);
+  });
+  app.get('/api/iiif/:manifest', (req, res) => {
+    var content = fs.readFileSync("manifests/"+req.params.manifest+'/index.json');
+    res.status(200).send(JSON.parse(content));
+  });
+  app.get('/api/iiif/:manifest/image/:filename', (req, res) => {
+    res.status(200).sendfile("manifests/"+req.params.manifest+'/'+req.params.filename);
+  });
+  app.get('/api/iiif/:manifest/thumbnail', (req, res) => res.status(200).send({
+    message: 'Thumbnail for '+req.params.manifest,
+  }));
 
-
+  app.get('/api/iiif/:manifest/:sequence', (req, res) => {
+    var content = JSON.parse(fs.readFileSync("manifests/"+req.params.manifest+'/index.json')).sequences[req.params.sequence];
+    res.status(200).send(content);
+  });
+  app.get('/api/iiif/:manifest/:sequence/:canvas', (req, res) => {
+    var content = JSON.parse(fs.readFileSync("manifests/"+req.params.manifest+'/index.json')).sequences[req.params.sequence].canvases[req.params.canvas];
+    res.status(200).send(content);
+  });
+  app.get('/api/iiif/:manifest/image/:filename', (req, res) => {
+    // var content = fs.readFileSync("manifests/"+req.params.manifest+'/'+req.params.filename);
+    res.status(200).sendfile("manifests/"+req.params.manifest+'/'+req.params.filename);
+  });
+  app.get('/api/iiif/:manifest/:sequence/:canvas/other/:id', (req, res) => {
+    var content = JSON.parse(fs.readFileSync("manifests/"+req.params.manifest+'/index.json')).sequences[req.params.sequence].canvases[req.params.canvas].otherContent[req.params.id];
+    res.status(200).send(content);
+  });
+  app.get('/api/iiif/:manifest/:sequence/:canvas/:image', (req, res) => {
+    var content = JSON.parse(fs.readFileSync("manifests/"+req.params.manifest+'/index.json')).sequences[req.params.sequence].canvases[req.params.canvas].images[req.params.image];
+    res.status(200).send(content);
+  });
   // route for handling 404 requests(unavailable routes)
   app.use(function (req, res, next) {
     res.status(404).send("Sorry can't find that!")

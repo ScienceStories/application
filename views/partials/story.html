@@ -12,18 +12,33 @@
             <p>Sample Intro Slide: Hover over bottom of page to go to the next window or use the side nav toggle on the right</p>
         </div>
     </div>
-    <div class="section" id="section2">
-        <div class="intro">
-            	<h1>Occupation: Marine Biologist & Zoologist</h1>
-
+    <div class="section pp-scrollable" id="section2">
+        <div class="content">
+          <div class="header">
+            <h1>Occupation: Marine Biologist & Zoologist</h1>
             <p>This slide would contain a viewer of her specimens</p>
+          </div>
+      <div class="page">
+        <div id="viewer"></div>
+      </div>
+
+
         </div>
     </div>
-    <div class="section" id="section3">
-        <div class="intro">
+    <div class="section pp-scrollable" id="section3">
+        <div class="content">
+          <div class="header" style="background:  rebeccapurple;">
              <h1>Her Research</h1>
-
             <p>This slide would contain all of her journal publications and drawings</p>
+          </div>
+          <div class="page">
+            <!-- <video width="320" height="240" controls>
+              <source src="movie.mp4" type="video/mp4">
+              <source src="movie.ogg" type="video/ogg">
+            Your browser does not support the video tag.
+            </video> -->
+            <iframe width="90%" height="500" src="https://www.youtube.com/embed/ZR0ujwlvbkQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
         </div>
     </div>
     <div class="section pp-scrollable" id="section4">
@@ -43,7 +58,7 @@
                   {{/each}}
                   </ul>
                 </div>
-                <div id="viewer"></div>
+
               </div>
             </div>
 
