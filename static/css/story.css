@@ -56,7 +56,7 @@ div#conent_panel {
 /*  viewer */
 #viewer {
     vertical-align: top;
-    width: 69%;
+    width: 100%;
     /* overflow: scroll; */
     height: 80vh;
     position: relative;
@@ -80,7 +80,7 @@ div#conent_panel {
 /* Sections
 	 * --------------------------------------- */
  .section {
-    background-attachment: fixed;
+    /* background-attachment: fixed; */
     background-size: auto 80%;
     background-position: 50% 0%;
     background-repeat: no-repeat;

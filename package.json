@@ -35,6 +35,7 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.33.4",
     "sequelize-cli": "^4.0.0",
+    "tabula-rasa": "^1.0.9",
     "universalviewer": "3.0.21",
     "wikidata-sdk": "^5.9.0"
   },

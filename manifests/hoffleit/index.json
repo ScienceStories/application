@@ -1,0 +1,188 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "/api/iiif/hoffleit",
+	"@type": "sc:Manifest",
+
+	"label": "conference",
+	"metadata": [{
+			"label": "Author",
+			"value": "Anne Author"
+		},
+		{
+			"label": "Published",
+			"value": [{
+					"@value": "Paris, circa 1400",
+					"@language": "en"
+				},
+				{
+					"@value": "Paris, environ 1400",
+					"@language": "fr"
+				}
+			]
+		},
+		{
+			"label": "Notes",
+			"value": ["Text of note 1", "Text of note 2"]
+		},
+		{
+			"label": "Source",
+			"value": "<span>From: <a href=\"http://example.org/db/1.html\">Some Collection</a></span>"
+		}
+	],
+	"description": "A photograph from a spectroscpy conference.",
+	"thumbnail": {
+		"@id": "/api/iiif/hoffleit/image/0.jpg",
+		"service": {
+			"@context": "http://iiif.io/api/image/2/context.json",
+			"@id": "/api/iiif/hoffleit/0/0",
+			"profile": "http://iiif.io/api/image/2/level1.json"
+		}
+	},
+
+
+	"viewingDirection": "right-to-left",
+	"viewingHint": "non-paged",
+	"navDate": "1856-01-01T00:00:00Z",
+
+
+	"license": "http://rightsstatements.org/vocab/NoC-NC/1.0/",
+	"attribution": "Courtesy of Manuscripts and Archives, Yale University",
+
+	"logo": {
+		"@id": "/api/iiif/manifest-source/yale/yale-signature-blue.png",
+		"service": {
+			"@context": "http://iiif.io/api/image/2/context.json",
+			"@id": "http://example.org/service/inst1",
+			"profile": "http://iiif.io/api/image/2/level2.json"
+		}
+	},
+
+
+	"sequences": [{
+			"@context": "http://iiif.io/api/presentation/2/context.json",
+			"@id": "/api/iiif/hoffleit/0",
+			"@type": "sc:Sequence",
+			"label": "Current Page Order",
+
+			"viewingDirection": "left-to-right",
+			"viewingHint": "non-paged",
+			"startCanvas": "/api/iiif/hoffleit/0",
+
+			"canvases": [{
+					"@context": "http://iiif.io/api/presentation/2/context.json",
+					"@id": "/api/iiif/hoffleit/0/0",
+					"@type": "sc:Canvas",
+					"label": "p. 1",
+					"height": 1000,
+					"width": 750,
+					"thumbnail": {
+						"@id": "/api/iiif/hoffleit/image/0.jpg",
+						"@type": "dctypes:Image",
+						"height": 200,
+						"width": 150
+					},
+					"images": [{
+            "@id": "/api/iiif/hoffleit/0/0/0",
+						"@type": "oa:Annotation",
+            "resource": {
+                "@id": "/api/iiif/hoffleit/image/0.png",
+                "@type": "dctypes:Image",
+                "format": "image/png",
+                "height": 2236,
+                "width": 1732
+              },
+              "on": "/api/iiif/hoffleit/0/0/0"
+
+					}],
+					"otherContent": [{
+
+						"@id": "/api/iiif/hoffleit/0/0/other/0",
+						"@type": "sc:AnnotationList",
+
+						"resources": [{
+								"@type": "oa:Annotation",
+								"motivation": "sc:Relationship",
+								"resource": {
+									"@id": "https://www.wikidata.org/wiki/Q451538",
+									"@type": "dctypes:identifier"
+								},
+								"on": "/api/iiif/hoffleit/0/0"
+							},
+							{
+								"@type": "oa:Annotation",
+								"motivation": "sc:Relationship",
+								"resource": {
+									"@id": "https://www.wikidata.org/wiki/Q1240217",
+									"@type": "dctypes:identifier"
+								},
+
+								"on": "/api/iiif/hoffleit/0/0"
+							},
+							{
+								"@type": "oa:Annotation",
+								"motivation": "sc:Relationship",
+								"resource": {
+									"@id": "https://www.wikidata.org/wiki/Q30236674",
+									"@type": "dctypes:identifier"
+								},
+
+								"on": "/api/iiif/hoffleit/0/0"
+							}, {
+								"@type": "oa:Annotation",
+								"motivation": "sc:Relationship",
+								"resource": {
+									"@id": "https://www.wikidata.org/wiki/Q30236674",
+									"@type": "dctypes:identifier"
+								},
+
+								"on": "/api/iiif/hoffleit/0/0"
+							},
+							{
+								"@type": "oa:Annotation",
+								"motivation": "sc:Relationship",
+								"resource": {
+									"@id": "https://www.wikidata.org/wiki/Q5277502",
+									"@type": "dctypes:identifier"
+								},
+
+								"on": "/api/iiif/hoffleit/0/0"
+							},
+							{
+								"@type": "oa:Annotation",
+								"motivation": "sc:Relationship",
+								"resource": {
+									"@id": "https://www.wikidata.org/wiki/Q29834144",
+									"@type": "dctypes:identifier"
+								},
+
+								"on": "/api/iiif/hoffleit/0/0"
+							}, {
+								"@type": "oa:Annotation",
+								"motivation": "sc:Relationship",
+								"resource": {
+									"@id": "https://www.wikidata.org/wiki/Q39060054",
+									"@type": "dctypes:identifier"
+								},
+
+								"on": "/api/iiif/hoffleit/0/0"
+							},
+							{
+								"@type": "oa:Annotation",
+								"motivation": "sc:Relationship",
+								"resource": {
+									"@id": "https://www.wikidata.org/wiki/Q2086095",
+									"@type": "dctypes:identifier"
+								},
+
+								"on": "/api/iiif/hoffleit/0/0"
+							}
+						]
+					}]
+
+				}
+
+			]
+		}
+
+	]
+}

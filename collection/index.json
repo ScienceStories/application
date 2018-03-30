@@ -31,6 +31,21 @@
           "type": "Image"
         }
       ]
+    },
+    {
+      "id": "/api/iiif/hoffleit",
+      "type": "Collection",
+      "label": {
+        "@none": [
+          "Yale"
+        ]
+      },
+      "thumbnail": [
+        {
+          "id": "https://iiif.lib.harvard.edu/static/manifests/harvard_logo.jpg",
+          "type": "Image"
+        }
+      ]
     }
   ],
   "label": {
