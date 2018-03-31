@@ -197,7 +197,7 @@ background: #663399eb;
     font-size: 40px;
     color: #fff;
     background: #ffb225e0;
-    border-radius: 15px;
+    /* border-radius: 15px; */
     padding: 15px;
 }
 .el__close-btn {
@@ -543,7 +543,7 @@ background: #663399eb;
 }
 .el__text button {
     background: #f6b23d;
-    border: 2px solid #6dd4cf;
+    border: 2px solid white;
     padding: 5px 29px;
     /* border-radius: 5px; */
     font-size: 60%;
@@ -554,6 +554,7 @@ background: #663399eb;
 }
 .el__text button:hover {
     background: #6dd4cf;
+    border-color: #6dd4cf;
 }
 
 .el__text a {
