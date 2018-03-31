@@ -17,7 +17,7 @@ module.exports = (app, sessionChecker) => {
   // route for Home-Page
   app.get('/', sessionChecker, (req, res) => {
       // res.redirect('/login');
-      res.render('base', {
+      res.render('full', {
         page: function(){ return 'home'},
         scripts: function(){ return 'home_scripts'},
         links: function(){ return 'home_links'},

@@ -7,3 +7,41 @@
     margin: 0 auto;
     padding: 0;
 }
+
+#constructionWarning {
+    color: #ffffff9e;
+  background:  none;
+  position:  fixed;
+  z-index:  10000000000000000;
+  left:  15px;
+  bottom: 15px;
+  font-size:  140%;
+  font-weight:  bold;
+  background: #8080804d;
+  padding:  5px;
+  border-radius:  5px;
+}
+
+a#constructionWarning:hover {
+    text-decoration:  none;
+    color:  white;
+    background: #235650;
+}
+nav#mainNav {
+    background: #47494c;
+    /* z-index: 2; */
+    border: none;
+    box-shadow: 0 0 7px 2px black;
+}
+nav#mainNav .active a{
+  background-color: #393c3e;
+  color: #6dd4cf;
+
+}
+
+nav#mainNav a {
+    color: #ffffffc2;
+}
+nav#mainNav a:hover {
+    color: white;
+}
