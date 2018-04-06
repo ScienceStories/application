@@ -47,7 +47,8 @@ span.prop {
     color: white;
 }
 div#conent_panel {
-    width: 30%;
+  /* width: 30%; */
+width: 100%;
     display: inline-block;
     background: #615763;
     height: 80vh;
