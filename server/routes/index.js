@@ -37,7 +37,7 @@ module.exports = (app, sessionChecker) => {
       });
   });
   // route for Home-Page
-  app.get('/story=:qid', wikidataController.loadStory);
+  app.get('/Q:id', wikidataController.loadStory);
 
   // route for Home-Page
   app.get('/manifest', sessionChecker, (req, res) => {

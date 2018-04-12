@@ -10,7 +10,7 @@ function _api(url) {
 }
 module.exports = {
   loadStory(req, res) {
-    const qid = req.params.qid;
+    const qid = 'Q'+req.params.id;
     const sparql = `
       SELECT ?wdLabel ?ps_Label ?wdpqLabel ?pq_Label {
         VALUES (?company) {(wd:${qid})}
