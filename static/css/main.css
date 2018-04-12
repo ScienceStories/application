@@ -46,3 +46,11 @@ nav#mainNav a {
 nav#mainNav a:hover {
     color: white;
 }
+.navbar-brand img:hover {
+    opacity: 1;
+}
+.navbar-brand img {
+    width: 150px;
+    margin-top: -15px;
+    opacity: .7;
+}

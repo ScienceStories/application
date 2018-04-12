@@ -18,6 +18,9 @@ nav.navbar {
     margin: 100px 0 0px;
     border-bottom: 1px solid #eee;
 }
+.page-header img {
+    max-width: 55%;
+}
 
 
 .cont {
