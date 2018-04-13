@@ -1,4 +1,3 @@
-
 #homeButton {
     color: #ffffff9e;
     background: none;
@@ -109,7 +108,7 @@ width: 100%;
       background-position: center;
   background-repeat: no-repeat;
 }
-#section3 {
+#section3, #section4 {
   background-image: url(../images/stock/kjb-3.jpg);
       -webkit-background-size: cover;
       -moz-background-size: cover;
@@ -118,7 +117,10 @@ width: 100%;
       background-position: center;
   background-repeat: no-repeat;
 }
-#section4 .content {
+#section4 .page{
+      box-shadow: 0 0 6px #00000038;
+}
+#section5 .content {
     top: 100%;
     position: absolute;
     left: 0;
@@ -176,7 +178,7 @@ width: 100%;
     font-weight: bold;
     color: #000;
 }
-#section4 .intro {
+#section5 .intro {
     color: #000;
 }
 /* Content page

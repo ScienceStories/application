@@ -3,3 +3,4 @@ const wikidata = require('./wikidata');
 module.exports = {
   members, wikidata,
 };
+  
