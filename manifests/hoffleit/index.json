@@ -63,7 +63,7 @@
          "label":"Current Page Order",
          "viewingDirection":"left-to-right",
          "viewingHint":"non-paged",
-         "startCanvas":"/api/iiif/hoffleit/0",
+         "startCanvas":"/api/iiif/hoffleit/0/0",
          "canvases":[
             {
                "@context":"http://iiif.io/api/presentation/2/context.json",
@@ -280,6 +280,35 @@
                      ]
                   }
                ]
+            },
+            {
+               "@context":"http://iiif.io/api/presentation/2/context.json",
+               "@id":"/api/iiif/hoffleit/0/1",
+               "@type":"sc:Canvas",
+               "label":"p. 2",
+               "height":1000,
+               "width":750,
+               "thumbnail":{
+                  "@id":"/api/iiif/hoffleit/image/1.jpg",
+                  "@type":"dctypes:Image",
+                  "height":200,
+                  "width":150
+               },
+               "images":[
+                  {
+                     "@id":"/api/iiif/hoffleit/0/1/0",
+                     "@type":"oa:Annotation",
+                     "resource":{
+                        "@id":"/api/iiif/hoffleit/image/1.jpg",
+                        "@type":"dctypes:Image",
+                        "format":"image/jpg",
+                        "height":2236,
+                        "width":1732
+                     },
+                     "on":"/api/iiif/hoffleit/0/1/0"
+                  }
+               ]
+
             }
          ]
       }
