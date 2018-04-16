@@ -120,7 +120,7 @@ width: 100%;
 #section4 .page{
       box-shadow: 0 0 6px #00000038;
 }
-#section5 .content {
+.last-section .content {
     top: 100%;
     position: absolute;
     left: 0;
@@ -212,4 +212,40 @@ width: 100%;
     margin: 20px 0 0 0;
     line-height: 1.35em;
     color: #333;
+}
+.page.page-mirador {
+    width: 100%;
+    margin: 0;
+    padding-top: 5px;
+    padding-right: 5%;
+    padding-left: 5%;
+    padding-bottom: 100px;
+    background: black;
+}
+.page.page-youtube {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 100px;
+    background: black;
+}
+.page.page-timeline {
+    width: 90%;
+    margin: 60px auto;
+    background: #f0fffc;
+    padding: 20px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* timeline actions */
+.jqTimespaceTableContainer.jqTimespaceAnimated {
+    max-height: 100% !important;
+    max-width: 90vw !important;
+    width: 90vw !important;
+}
+.jqTimespaceEvent {
+    padding-top: 5px !important;
 }

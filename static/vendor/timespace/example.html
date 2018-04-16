@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>jQuery Timespace Plugin Examples</title>
+  <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+
+	<link href="css/jquery.timespace.dark.css?v2" rel="stylesheet">
+	<style>
+		body {
+			background:#262727;
+		}
+		a {
+			color: #8baac0;
+		}
+		h1,h2 {
+			text-align: center;
+			color: white;
+		}
+    h1 { margin: 150px auto 30px auto; text-align: center; }
+		#timeline, #timelineClock {
+			box-sizing: border-box;
+			padding: 10px;
+			width: 100%;
+		}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="jquery.timespace.js?v2"></script>
+</head>
+<body>
+  <div id="jquery-script-menu">
+<div class="jquery-script-center">
+<ul>
+<li><a href="https://www.jqueryscript.net/time-clock/Timeline-Slider-jQuery-Timespace.html">Download This Plugin</a></li>
+<li><a href="https://www.jqueryscript.net/">Back To jQueryScript.Net</a></li>
+</ul>
+<div class="jquery-script-ads"><script type="text/javascript"><!--
+google_ad_client = "ca-pub-2783044520727903";
+/* jQuery_demo */
+google_ad_slot = "2780937993";
+google_ad_width = 728;
+google_ad_height = 90;
+//-->
+</script>
+<script type="text/javascript"
+src="https://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script></div>
+<div class="jquery-script-clear"></div>
+</div>
+</div>
+  <h1>jQuery Timespace Plugin Examples</h1>
+	<h2>24-Hour Timeline</h2>
+	<div id="timelineClock"></div>
+	<h2>Event Timeline</h2>
+	<div id="timeline"></div>
+<script>
+	$(function () {
+
+		$('#timelineClock').timespace({
+
+			// Set the time suffix function for displaying as '12 A.M.'
+			timeSuffixFunction: s => ' ' + s[0].toUpperCase() + '.' + s[1].toUpperCase() + '.',
+			selectedEvent: -1,
+			data: {
+				headings: [
+					{start: 0, end: 6, title: 'Night'},
+					{start: 6, end: 12, title: 'Morning'},
+					{start: 12, end: 18, title: 'Afternoon'},
+					{start: 18, end: 24, title: 'Evening'},
+				],
+				events: [
+					{start: 6.50, title: 'Breakfast', description: 'Eat a healthy breakfast.'},
+					{start: 8, end: 10, title: 'Walk', description: 'Go for a walk.'},
+					{start: 14, title: 'Lunch', description: 'Eat a healthy lunch.'},
+					{start: 14.75, title: 'Meeting', description: 'Meeting with Co-workers.'},
+				]
+			},
+
+		});
+
+		$('#timeline').timespace({
+
+			timeType: 'date',
+			useTimeSuffix: false,
+			startTime: 500,
+			endTime: 2050,
+			markerIncrement: 50,
+			data: {
+				headings: [
+					{start: 500, end: 1750, title: 'Dark Ages'},
+					{start: 1750, end: 1917, title: 'Age of Revolution'},
+					{start: 1971, title: 'Information Age'},
+				],
+				events: [
+					{start: 1440, title: 'Gutenberg\'s Printing Press', width: 200},
+					{start: 1517, end: 1648, title: 'The Reformation',
+						description: $('<p>The Reformation was a turning point in the history of the world. '
+							+ 'Martin Luther was a key player in this event as he stood up against Papal tyranny '
+							+ 'and church apostasy.</p><p>Many other reformers followed in the steps of Luther '
+							+ 'and followed the convictions of their hearts, even unto death.</p>')},
+					{start: 1773, title: 'Boston Tea Party'},
+					{start: 1775, end: 1783, title: 'American Revolution', description: 'Description:', callback: function () {
+
+						this.container.find('.jqTimespaceDisplay section').append(
+							'<p>This description was brought to you by the callback function. For information on the American Revolution, '
+							+ '<a target="_blank" href="https://en.wikipedia.org/wiki/American_Revolution">visit the Wikipedia page.</a></p>'
+						);
+
+					}},
+					{start: 1789, title: 'French Revolution'},
+					{start: 1914, end: 1918, title: 'World War I', noDetails: true},
+					{start: 1929, end: 1939, title: 'Great Depression',
+						description: 'A period of global economic downturn. Many experienced unemployment and the basest poverty.'
+					},
+				]
+			},
+
+		}, function () {
+
+			// Edit the navigation amount
+			this.navigateAmount = 500;
+
+		});
+
+	});
+</script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36251023-1']);
+  _gaq.push(['_setDomainName', 'jqueryscript.net']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>
+</html>

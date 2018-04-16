@@ -7,53 +7,47 @@
 </button>
 <!-- slide types:
   * 1. Intro (background pic + name and 1-line description)
-    2. Universal viewer (pdf, video)
-  * 3. Mirador
-  * 4. youtube
+  !  2. Universal viewer (pdf, video) [Can't do until Mirador updates OpenSeaDragon]
+  # 3. Mirador
+  # 4. youtube
     5. Side-By-Side
-    6. Timeline
+  * 6. Timeline
   * 7. Wikipedia
-  * 8. Conclusion (Wikidata, all other resources)
+  * 8. Wikidata
+    9. Conclusion (Wikidata, all other resources)
 
  -->
 <div id="pagepiling">
-    <div class="section" id="section1">
+    <div class="section slide-intro" id="section1">
         <div class="intro">
             	<h1>{{name}}</h1>
 
             <p>Sample Intro Slide: Hover over bottom of page to go to the next window or use the side nav toggle on the right</p>
         </div>
     </div>
-    <div class="section pp-scrollable" id="section2">
-        <div class="content">
-          <div class="header">
-            <h1>Occupation: Marine Biologist & Zoologist</h1>
-            <p>This slide would contain a viewer of her specimens</p>
-          </div>
-      <div class="page">
-        <div id="viewer"></div>
-      </div>
-
-
+    <div class="section pp-scrollable slide-mirador" id="section2">
+      <div class="content">
+        <div class="header">
+          <h1>Occupation: Marine Biologist & Zoologist</h1>
+          <p>This slide would contain a viewer of her specimens</p>
         </div>
+        <div class="page page-mirador">
+          <div id="viewer"></div>
+        </div>
+      </div>
     </div>
-    <div class="section pp-scrollable" id="section3">
+    <div class="section pp-scrollable slide-youtube" id="section3">
         <div class="content">
           <div class="header" style="background:  rebeccapurple;">
              <h1>Her Research</h1>
             <p>This slide would contain all of her journal publications and drawings</p>
           </div>
-          <div class="page">
-            <!-- <video width="320" height="240" controls>
-              <source src="movie.mp4" type="video/mp4">
-              <source src="movie.ogg" type="video/ogg">
-            Your browser does not support the video tag.
-            </video> -->
-            <iframe width="90%" height="500" src="https://www.youtube.com/embed/ZR0ujwlvbkQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+          <div class="page page-youtube">
+            <iframe width="100%" height="500" src="https://www.youtube.com/embed/ZR0ujwlvbkQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
         </div>
         </div>
     </div>
-    <div class="section pp-scrollable" id="section4">
+    <div class="section pp-scrollable slide-wikipedia" id="section4">
         <div class="content">
           <div class="header" style="background:  rebeccapurple;">
              <h1>Wikipedia Article</h1>
@@ -66,7 +60,18 @@
         </div>
         </div>
     </div>
-    <div class="section pp-scrollable" id="section5">
+    <div class="section pp-scrollable slide-mirador" id="section5">
+      <div class="content">
+        <div class="header">
+          <h1>By The Numbers </h1>
+          <p><span id="section5Total"></span> Women Recorded in Wikidata to Have Recieved a PhD from Yale University</p>
+        </div>
+        <div class="page page-timeline">
+          <div id="timeline"></div>
+        </div>
+      </div>
+    </div>
+    <div class="section pp-scrollable last-section slide-wikidata" id="section6">
         <div class="content">
             <div class="header">
                 	<h1>{{name}}</h1>
@@ -84,8 +89,6 @@
                   </ul>
                 </div>
 
-              </div>
-              <div id="article">
               </div>
             </div>
 

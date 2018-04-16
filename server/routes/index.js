@@ -87,6 +87,9 @@ app.get('/logout', (req, res) => {
     message: 'Welcome to the Science Stories API!',
   }));
 
+  // route for Home-Page
+  app.post('/api/sqarql', wikidataController.customQuery);
+
   app.post('/api/members', membersController.create);
   app.get('/api/iiif/manifest-source/:source/:filename', (req, res) => {
     res.status(200).sendfile("manifests/_sources/"+req.params.source+'/'+req.params.filename);

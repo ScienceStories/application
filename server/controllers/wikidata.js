@@ -50,5 +50,13 @@ module.exports = {
 
   },
 
+  customQuery(req, res) {
+    var wd_url = wdk.sparqlQuery(req.body.query);
+    _api(wd_url).then(content => {
+      return content.results.bindings
+    }
+  ).then(simplifiedResults => res.status(200).send(simplifiedResults))
+
+  },
 
 };
