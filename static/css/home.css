@@ -33,6 +33,7 @@ nav.navbar {
   position: relative;
   height: 100%;
 }
+
 .cont__inner:hover .el__bg:after {
   opacity: 1;
 }
@@ -202,6 +203,9 @@ background: #663399eb;
     background: #ffb225e0;
     /* border-radius: 15px; */
     padding: 15px;
+}
+.el__text img {
+    width: 15vw;
 }
 .el__close-btn {
   z-index: -1;

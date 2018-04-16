@@ -249,3 +249,13 @@ width: 100%;
 .jqTimespaceEvent {
     padding-top: 5px !important;
 }
+.timeline-person img{
+    width: 30%;
+    position: relative;
+    display: inline-block;
+    padding: 20px;
+}
+.timeline-person .timeline-context{
+    display: inline-block;
+    font-size: 150%;
+}

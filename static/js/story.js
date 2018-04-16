@@ -82,14 +82,23 @@ $(document).ready(function(){
 
 
 
-      var query = `SELECT DISTINCT ?person ?personLabel ?year ?occ ?occLabel
-          WHERE {
-            ?person wdt:P21 wd:Q6581072.
-            ?person wdt:P106 ?occ.
-            ?person wdt:P69 wd:Q49112;
-                    p:P69 [pq:P512 wd:Q752297; pq:P582 ?year];
-            SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-          }`
+      var query = `SELECT DISTINCT ?person ?personLabel ?year ?occLabel ?occ ?img
+
+WHERE {
+
+  ?person wdt:P21 wd:Q6581072.
+
+  ?person wdt:P69 wd:Q49112;
+          p:P69 [pq:P512 wd:Q752297; pq:P582 ?year];
+          OPTIONAL {
+    ?person wdt:P106 ?occ;
+  }
+  OPTIONAL{
+    ?person wdt:P18|wdt:P117 ?img .
+    }
+
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}`
 
       $.ajax({
             method: "POST",
@@ -99,27 +108,35 @@ $(document).ready(function(){
             .done(function( msg ) {
               events = []
               temp = {}
-              console.log(msg[0])
               for (var i=0; i < msg.length; i++){
                 var item = msg[i]
                 var qid = item.person.value
                 var temp_i = temp[qid]
                 if (temp_i == null){
+                  desc = `<div class='timeline-person'>`
+                  if (item.img != null){
+                    console.log(item.img.value)
+                    desc += `<img src='${item.img.value}'> `
+                  }
+                  if (item.occ != null){
+                    desc += `<div class="timeline-context"><a href='${item.occ.value}' target='_blank'>${item.occLabel.value}</a>`
+                  }
+
                   events.push({
                     start: Number(item.year.value.substring(0,4)),
                     title: item.personLabel.value,
                     qid: qid,
-                    description: `<div><a href='${item.occ.value}' target='_blank'>${item.occLabel.value}</a>`
+                    description: desc
                   })
                   temp[qid] = events.length;
                 }
-                else {
+                else if (item.occ != null) {
                   events[temp_i-1].description += `, <a href='${item.occ.value}' target='_blank'>${item.occLabel.value}</a>`;
                 }
                 // console.log(item.occLabel.value, item.personLabel.value, item.year.value.substring(0,4))
               }
-              newEvents = events.map(item => { console.log(item, item.description)
-                item.description = $(`${item.description}<br><a href='${item.qid}' target='_blank'>Learn more</a></div>'`);
+              newEvents = events.map(item => {
+                item.description = $(`${item.description}<br><a href='${item.qid}' target='_blank'>Learn more</a></div></div>'`);
                 return item})
               $('#section5Total').html(newEvents.length)
               $('#timeline').timespace({
@@ -127,14 +144,13 @@ $(document).ready(function(){
 
                 timeType: 'date',
                 useTimeSuffix: false,
-                startTime: 1700,
-                endTime: 2050,
+                startTime: 1701,
+                endTime: 2019,
                 markerIncrement: 1,
                 data: {
                   headings: [
-                    {start: 1701, end: 1750, title: 'Dark Ages'},
-                    {start: 1750, end: 1917, title: 'Age of Revolution'},
-                    {start: 1970, title: 'Information Age'},
+                    {start: 1701, end: 1969, title: 'Before Co-education (undergraduate)'},
+                    {start: 1970, end: 2019, title: 'During Co-education (undergraduate)'},
                   ],
                   events: newEvents
                 },
