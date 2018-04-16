@@ -32,10 +32,13 @@ module.exports = {
     }
       ).then(simplifiedResults =>
       {
+
         _api(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
         .then(labels => {
-          console.log(labels.entities[qid].sitelinks.enwiki.title)
-          // const simplifiedResults = wdk.simplifySparqlResults(content)
+          wikipedia = ''
+          if (labels.entities[qid].sitelinks.enwiki){
+            wikipedia = labels.entities[qid].sitelinks.enwiki.title
+          }
           return res.render('full', {
         page: function(){ return 'story'},
         scripts: function(){ return 'story_scripts'},
@@ -43,7 +46,7 @@ module.exports = {
         title: "Story",
         nav: "Story",
         content: simplifiedResults.statements,
-        wikipedia: labels.entities[qid].sitelinks.enwiki.title,
+        wikipedia: wikipedia,
         name: labels.entities[qid].labels.en.value,
         qid: simplifiedResults.qid
       })
