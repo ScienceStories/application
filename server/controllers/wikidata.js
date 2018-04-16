@@ -12,7 +12,7 @@ module.exports = {
   loadStory(req, res) {
     const qid = 'Q'+req.params.id;
     const sparql = `
-      SELECT ?wdLabel ?ps_Label ?wdpqLabel ?pq_Label {
+      SELECT ?wdLabel ?ps_Label ?ps_ ?wdpqLabel ?pq_Label {
         VALUES (?company) {(wd:${qid})}
         ?company ?p ?statement .
         ?statement ?ps ?ps_ .
@@ -26,7 +26,7 @@ module.exports = {
       } ORDER BY ?wd ?statement ?ps_
     `
     const url = wdk.sparqlQuery(sparql);
-
+// console.log(url)
     _api(url).then(content => {
       return content.results.bindings
     }
