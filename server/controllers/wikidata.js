@@ -28,7 +28,7 @@ module.exports = {
     const url = wdk.sparqlQuery(sparql);
 // console.log(url)
     _api(url).then(content => {
-      return content.results.bindings
+      return {qid:qid, statements: content.results.bindings}
     }
       ).then(simplifiedResults =>
       {
@@ -41,8 +41,9 @@ module.exports = {
         links: function(){ return 'story_links'},
         title: "Story",
         nav: "Story",
-        content: simplifiedResults,
+        content: simplifiedResults.statements,
         name: labels.entities[qid].labels.en.value,
+        qid: simplifiedResults.qid
       })
         })
 

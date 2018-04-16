@@ -45,6 +45,10 @@ div#story_div ul {
     padding:  0;
     padding-top: 10px;
 }
+.claim_list a {
+    color: #faffb2;
+    text-decoration: underline;
+}
 
 span.prop {
     font-weight: 400;
@@ -191,6 +195,13 @@ width: 100%;
     font-size: 5em;
     font-weight: bold;
     color: #fff;
+}
+.header h1 img {
+    height: 1em;
+    border-right: 3px solid;
+}
+.header h1 a {
+    color: inherit;
 }
 .header p {
     color: #f2f2f2;
