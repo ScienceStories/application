@@ -32,8 +32,9 @@ module.exports = {
     }
       ).then(simplifiedResults =>
       {
-        _api(`https://www.wikidata.org/w/api.php?action=wbgetentities&props=labels&ids=${qid}&languages=en&format=json`)
+        _api(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
         .then(labels => {
+          console.log(labels.entities[qid].sitelinks.enwiki.title)
           // const simplifiedResults = wdk.simplifySparqlResults(content)
           return res.render('full', {
         page: function(){ return 'story'},
@@ -42,6 +43,7 @@ module.exports = {
         title: "Story",
         nav: "Story",
         content: simplifiedResults.statements,
+        wikipedia: labels.entities[qid].sitelinks.enwiki.title,
         name: labels.entities[qid].labels.en.value,
         qid: simplifiedResults.qid
       })
@@ -50,7 +52,6 @@ module.exports = {
   })
 
   },
-
   customQuery(req, res) {
     var wd_url = wdk.sparqlQuery(req.body.query);
     _api(wd_url).then(content => {
