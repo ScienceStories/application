@@ -35,6 +35,7 @@ module.exports = {
 
         _api(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
         .then(labels => {
+          name = labels.entities[qid].labels.en.value
           wikipedia = ''
           if (labels.entities[qid].sitelinks.enwiki){
             wikipedia = labels.entities[qid].sitelinks.enwiki.title
@@ -43,11 +44,11 @@ module.exports = {
         page: function(){ return 'story'},
         scripts: function(){ return 'story_scripts'},
         links: function(){ return 'story_links'},
-        title: "Story",
+        title: name +" - Story",
         nav: "Story",
         content: simplifiedResults.statements,
         wikipedia: wikipedia,
-        name: labels.entities[qid].labels.en.value,
+        name: name,
         qid: simplifiedResults.qid
       })
         })
