@@ -3,12 +3,26 @@
  */
 
  // $.fn.pagepiling.setMouseWheelScrolling(false);
- lastSlide = 6;
+ lastSlide = 7;
 $('#pagepiling').pagepiling({
   setMouseWheelScrolling: false,
     verticalCentered: false,
     css3: false,
-    sectionsColor: ['white', '#f9c93a', 'white', '#3C103C', '#1dc7ce', '#EC008C'],
+    sectionsColor: ['white', '#f9c93a', 'white', '#3C103C', '#1dc7ce', '#EC008C', 'rgb(255, 185, 125)'],
+    navigation: {
+            'textColor': '#000',
+            'bulletsColor': '#000',
+            'position': 'right',
+            'tooltips': [
+              'Welcome [demo]',
+              'IIIF Viewer [demo]',
+              'YouTube [demo]',
+              'Wikipedia [demo]',
+              'Timeline [demo]',
+              'Wikidata [demo]',
+              'Index [demo]'
+            ]
+        },
     onLeave: function (index, nextIndex, direction) {
 
         //fading out the txt of the leaving section
@@ -50,10 +64,11 @@ $('#arrow').click(function () {
 
 
 $(document).ready(function(){
-
+    var wikipedia_api = `http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&page=${wikititle}&callback=?`
+    var wikipedia_link = `https://en.wikipedia.org/wiki/${wikititle}`
     $.ajax({
         type: "GET",
-        url: `http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&page=${wikititle}&callback=?`,
+        url: wikipedia_api,
         contentType: "application/json; charset=utf-8",
         async: false,
         dataType: "json",
@@ -70,6 +85,7 @@ $(document).ready(function(){
             // remove cite error
             blurb.find('.mw-ext-cite-error').remove();
             $('#article').html($(blurb).find('p'));
+            document.getElementById("wikipediaLink").href = wikipedia_link
 
         },
         error: function (errorMessage) {

@@ -50,7 +50,7 @@
     <div class="section pp-scrollable slide-wikipedia" id="section4">
         <div class="content">
           <div class="header" style="background:  rebeccapurple;">
-             <h1>Wikipedia Article</h1>
+             <h1><a href="" id="wikipediaLink" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikidata Logo"></a> Wikipedia Article</h1>
             <p>[Demo of Wikipedia Slide] This slide loads all the text currently about the person</p>
           </div>
           <div class="page">
@@ -60,7 +60,7 @@
         </div>
         </div>
     </div>
-    <div class="section pp-scrollable slide-mirador" id="section5">
+    <div class="section pp-scrollable slide-timeline" id="section5">
       <div class="content">
         <div class="header">
           <h1>By The Numbers </h1>
@@ -71,7 +71,7 @@
         </div>
       </div>
     </div>
-    <div class="section pp-scrollable last-section slide-wikidata" id="section6">
+    <div class="section pp-scrollable slide-wikidata" id="section6">
         <div class="content">
             <div class="header">
                 	<h1> <a href="https://www.wikidata.org/wiki/{{qid}}"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo"></a> {{name}}</h1>
@@ -99,5 +99,32 @@
             </div>
 
         </div>
+    </div>
+    <div class="section pp-scrollable last-section slide-index" id="section7">
+      <div class="content">
+        <div class="header">
+          <h1>Learn More About {{name}} </h1>
+          <p>[Demo of Index Slide] This text will include resource links, contribution/attributions, forum comments</p>
+        </div>
+        <div class="page page-index">
+          <div id="">
+            <ul>
+              {{#each content}}
+              {{#if this.url }}
+                <li><span class="">{{this.wdLabel.value}}:</span>
+                    {{#if_equal this.ps_.type "uri"}}
+                  <a href="{{this.ps_.value}}" target="_blank">{{this.ps_Label.value}}</a>
+                    {{else}}
+                    {{this.ps_Label.value}}
+                    {{/if_equal}}
+                </li>
+                {{else}}
+                {{/if}}
+              {{/each}}
+
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
 </div>

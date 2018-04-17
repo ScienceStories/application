@@ -199,6 +199,7 @@ width: 100%;
 .header h1 img {
     height: 1em;
     border-right: 3px solid;
+    padding-right: 15px;
 }
 .header h1 a {
     color: inherit;
@@ -269,4 +270,9 @@ width: 100%;
 .timeline-person .timeline-context{
     display: inline-block;
     font-size: 150%;
+}
+.pp-tooltip {
+    background:  #38373791;
+    padding: 5px;
+    border-radius: 3px;
 }
