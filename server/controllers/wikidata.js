@@ -33,7 +33,12 @@ module.exports = {
 console.log(url)
     _api(url).then(content => {
       // console.log(content.results.bindings)
-      return {qid:qid, statements: content.results.bindings}
+      output = content.results.bindings.map(function(x){
+        if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value)
+        return x
+      })
+      console.log(output)
+      return {qid:qid, statements: output}
     }
       ).then(simplifiedResults =>
       {

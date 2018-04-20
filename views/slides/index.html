@@ -1,0 +1,23 @@
+<div class="section pp-scrollable last-section slide-index" id="section7">
+  <div class="content">
+    <div class="header">
+      <h1>Learn More About {{name}} </h1>
+      <p>[Demo of Index Slide] This text will include resource links, contribution/attributions, forum comments</p>
+    </div>
+    <div class="page page-index">
+      <div id="">
+        <ul>
+          {{#each content}}
+          {{#if this.url }}
+            <li><span class="prop">{{this.wdLabel.value}}:</span>
+              <a href="{{#if_equal this.ps_.type "uri"}}{{this.ps_.value}}{{else}}{{this.url.value}}{{/if_equal}}" target="_blank">{{this.ps_Label.value}}</a>
+            </li>
+            {{else}}
+            {{/if}}
+          {{/each}}
+
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

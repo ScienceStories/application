@@ -6,8 +6,9 @@
   <span>↓</span>
 </button>
 <!-- slide types:
+
   * 1. Intro (background pic + name and 1-line description)
-  !  2. Universal viewer (pdf, video) [Can't do until Mirador updates OpenSeaDragon]
+  ! 2. Universal viewer (pdf, video) [Can't do until Mirador updates OpenSeaDragon]
   # 3. Mirador
   # 4. youtube
     5. Side-By-Side
@@ -15,116 +16,13 @@
   * 7. Wikipedia
   * 8. Wikidata
     9. Conclusion (Wikidata, all other resources)
-
  -->
 <div id="pagepiling">
-    <div class="section slide-intro" id="section1">
-        <div class="intro">
-            	<h1>{{name}}</h1>
-
-            <p>[Demo of Intro Slide] Hover over bottom of page to go to the next window or use the side nav toggle on the right</p>
-        </div>
-    </div>
-    <div class="section pp-scrollable slide-mirador" id="section2">
-      <div class="content">
-        <div class="header">
-          <h1>Occupation: Marine Biologist & Zoologist</h1>
-          <p>[Demo of Mirador Viewer Slide]</p>
-        </div>
-        <div class="page page-mirador">
-          <div id="viewer"></div>
-        </div>
-      </div>
-    </div>
-    <div class="section pp-scrollable slide-youtube" id="section3">
-        <div class="content">
-          <div class="header" style="background:  rebeccapurple;">
-             <h1>Her Research</h1>
-            <p>[Demo of Youtube Slide]</p>
-          </div>
-          <div class="page page-youtube">
-            <iframe width="100%" height="500" src="https://www.youtube.com/embed/ZR0ujwlvbkQ" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        </div>
-        </div>
-    </div>
-    <div class="section pp-scrollable slide-wikipedia" id="section4">
-        <div class="content">
-          <div class="header" style="background:  rebeccapurple;">
-             <h1><a href="" id="wikipediaLink" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikidata Logo"></a> Wikipedia Article</h1>
-            <p>[Demo of Wikipedia Slide] This slide loads all the text currently about the person</p>
-          </div>
-          <div class="page">
-            <div id="article">
-
-            </div>
-        </div>
-        </div>
-    </div>
-    <div class="section pp-scrollable slide-timeline" id="section5">
-      <div class="content">
-        <div class="header">
-          <h1>By The Numbers </h1>
-          <p>[Demo of Timeline Slide] <span id="section5Total"></span> Women Recorded in Wikidata to Have Recieved a PhD from Yale University</p>
-        </div>
-        <div class="page page-timeline">
-          <div id="timeline"></div>
-        </div>
-      </div>
-    </div>
-    <div class="section pp-scrollable slide-wikidata" id="section6">
-        <div class="content">
-            <div class="header">
-                	<h1> <a href="https://www.wikidata.org/wiki/{{qid}}"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo"></a> {{name}}</h1>
-                  <p>
-                    [Demo of Wikidata Slide] View all of the statements made about her in Wikidata
-                  </p>
-            </div>
-            <div class="page">
-              <div id="story_div">
-                <div id="conent_panel">
-                  <ul class="claim_list">
-                  {{#each content}}
-                    <li><span class="prop">{{this.wdLabel.value}}:</span>
-                        {{#if_equal this.ps_.type "uri"}}
-                      <a href="{{this.ps_.value}}" target="_blank">{{this.ps_Label.value}}</a>
-                        {{else}}
-                        {{this.ps_Label.value}}
-                        {{/if_equal}}
-                    </li>
-                  {{/each}}
-                  </ul>
-                </div>
-
-              </div>
-            </div>
-
-        </div>
-    </div>
-    <div class="section pp-scrollable last-section slide-index" id="section7">
-      <div class="content">
-        <div class="header">
-          <h1>Learn More About {{name}} </h1>
-          <p>[Demo of Index Slide] This text will include resource links, contribution/attributions, forum comments</p>
-        </div>
-        <div class="page page-index">
-          <div id="">
-            <ul>
-              {{#each content}}
-              {{#if this.url }}
-                <li><span class="">{{this.wdLabel.value}}:</span>
-                    {{#if_equal this.ps_.type "uri"}}
-                  <a href="{{this.ps_.value}}" target="_blank">{{this.ps_Label.value}}</a>
-                    {{else}}
-                    {{this.ps_Label.value}}
-                    {{/if_equal}}
-                </li>
-                {{else}}
-                {{/if}}
-              {{/each}}
-
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+  {{> intro }}
+  {{> mirador }}
+  {{> youtube }}
+  {{> wikipedia }}
+  {{> timeline }}
+  {{> wikidata }}
+  {{> index }}
 </div>

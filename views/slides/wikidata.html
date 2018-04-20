@@ -1,0 +1,29 @@
+<div class="section pp-scrollable slide-wikidata" id="section6">
+    <div class="content">
+        <div class="header">
+              <h1> <a href="https://www.wikidata.org/wiki/{{qid}}"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo"></a> {{name}}</h1>
+              <p>
+                [Demo of Wikidata Slide] View all of the statements made about her in Wikidata
+              </p>
+        </div>
+        <div class="page">
+          <div id="story_div">
+            <div id="conent_panel">
+              <ul class="claim_list">
+              {{#each content}}
+                <li><span class="prop">{{this.wdLabel.value}}:</span>
+                    {{#if_equal this.ps_.type "uri"}}
+                  <a href="{{this.ps_.value}}" target="_blank">{{this.ps_Label.value}}</a>
+                    {{else}}
+                    {{this.ps_Label.value}}
+                    {{/if_equal}}
+                </li>
+              {{/each}}
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+    </div>
+</div>

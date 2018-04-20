@@ -43,6 +43,14 @@ fs.readdirSync(partials).forEach(function (file) {
 
     hbs.registerPartial(partial, source);
 });
+// Register partials
+var partials = "./views/slides/";
+fs.readdirSync(partials).forEach(function (file) {
+    var source = fs.readFileSync(partials + file, "utf8"),
+        partial = /(.+)\.html/.exec(file).pop();
+
+    hbs.registerPartial(partial, source);
+});
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser());
