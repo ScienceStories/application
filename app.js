@@ -12,6 +12,7 @@ const fetch = require('node-fetch');
 const cors = require('cors');
 // Set up the express app
 const app = express();
+const moment = require('moment');
 
 
 
@@ -35,6 +36,21 @@ hbs.registerHelper('if_equal', function(a, b, opts) {
         return opts.inverse(this)
     }
 })
+hbs.registerHelper('commonsImage', function dateFormat(title) {
+  title = title.replace(' ', '%20')
+    return 'http://commons.wikimedia.org/wiki/Special:FilePath/'+title;
+    // Going to page:
+    // title = title.replace(' ', '_')
+    // return `https://commons.wikimedia.org/wiki/File:${title}`;
+});
+
+hbs.registerHelper('dateFormat', function dateFormat(date, format, utc) {
+    return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
+});
+hbs.registerHelper('wikiDateTime', function dateFormat(date, format, utc) {
+  date = date.substr(1,)
+    return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
+});
 // Register partials
 var partials = "./views/partials/";
 fs.readdirSync(partials).forEach(function (file) {
@@ -53,7 +69,6 @@ fs.readdirSync(partials).forEach(function (file) {
 });
 
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
-app.use(bodyParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -70,6 +85,25 @@ app.use(session({
         expires: 600000
     }
 }));
+module.exports = {
+  // Wrapper for fetch
+  appFetch: function (url) {
+    return new Promise((resolve, reject) => {
+      fetch(url)
+        .then(res => res.json())
+        .then(data => resolve(data))
+        .catch(err => reject(err))
+    })
+  },
+  // Helper function to wrapp page load redering
+  loadPage: function (res, req, layout, data){
+    data.page  = function(){ return data.file_id}
+    data.scripts = function(){ return data.file_id+'_scripts'}
+    data.links = function(){ return data.file_id+'_links'}
+    res.render(layout, data);
+  },
+};
+
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
 // This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
 app.use((req, res, next) => {
@@ -83,7 +117,9 @@ app.use((req, res, next) => {
 // middleware function to check for logged-in users
 var sessionChecker = (req, res, next) => {
     if (req.session.user && req.cookies.user_sid) {
-        res.redirect('/dashboard');
+        // reroute to profile or dashboard
+        // res.redirect('/dashboard');
+        next();
     } else {
         next();
     }

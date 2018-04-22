@@ -1,19 +1,12 @@
 const membersController = require('../controllers').members;
+const storyController = require('../controllers').story;
 const wikidataController = require('../controllers').wikidata;
+const loadPage =  require('../../app').loadPage;
 const fetch = require('node-fetch');
 const fs = require('fs');
 module.exports = (app, sessionChecker) => {
-  // Wrapper function to fetch
-  function _api(url) {
-    return new Promise((resolve, reject) => {
-      fetch(url)
-        .then(res => res.json())
-        .then(data => resolve(data))
-        .catch(err => reject(err))
-    })
-  }
 
-
+// app.get('/browse', sessionChecker, (req, res) => loadPage(res, req, 'base', {file_id:'browse', nav:'browse'}));
   // route for Home-Page
   app.get('/', sessionChecker, (req, res) => {
       // res.redirect('/login');
@@ -38,7 +31,7 @@ module.exports = (app, sessionChecker) => {
   });
   // route for Home-Page
   app.get('/Q:id', wikidataController.loadStory);
-
+app.get('/browse', storyController.browse);
   // route for Home-Page
   app.get('/manifest', sessionChecker, (req, res) => {
       // res.redirect('/login');
@@ -55,7 +48,7 @@ module.exports = (app, sessionChecker) => {
       .get(sessionChecker, (req, res) => {
           res.render('signup');
       })
-app.post('/signup', membersController.signup);
+
 
   // route for user Login
 app.route('/login')
@@ -86,11 +79,13 @@ app.get('/logout', (req, res) => {
   app.get('/api', (req, res) => res.status(200).send({
     message: 'Welcome to the Science Stories API!',
   }));
-
+  // route for sign-up
+app.post('/api/member/register', membersController.register);
   // route for Home-Page
   app.post('/api/sqarql', wikidataController.customQuery);
 
-  app.post('/api/members', membersController.create);
+  app.post('/api/member/create', membersController.create);
+  app.post('/api/story/create', storyController.create);
   app.get('/api/iiif/manifest-source/:source/:filename', (req, res) => {
     res.status(200).sendfile("manifests/_sources/"+req.params.source+'/'+req.params.filename);
   });

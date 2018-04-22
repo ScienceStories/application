@@ -1,0 +1,222 @@
+.page-header {
+    font-size: 4em;
+    text-align: right;
+    margin: 20px;
+    font-weight: 300;
+    padding: 20px;
+}
+.grid-item {
+  width: 19%;
+  height: 600px;
+  display: inline-block;
+  vertical-align: top;
+  margin: 10px 0px;
+}
+.grid-item.no-image{
+  height: 200px;
+}
+
+
+a.browse-story-link{
+    color: inherit;
+    text-decoration: inherit;
+}
+
+div#inventoryList {
+    background:  #fafafa;
+    width:  100%;
+    padding:  5%;
+    min-height: 100vh;
+}
+
+div#inventoryList{
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    -ms-flex-wrap: wrap; /* IE10 */
+    flex-wrap: wrap;
+    padding: 0 4px;
+}
+
+
+.inventory-card {
+    border-radius: 5px;
+    padding: 24px;
+    background: white;
+    box-shadow: 0px 0px 9px 1px #0000004d;
+    margin: 10px;
+    opacity: .8;
+    height: 100%;
+}
+.inventory-card:hover {
+    opacity: 1;
+}
+.card-title {
+    border-bottom:  1px solid;
+    font-size:  150%;
+    font-weight: 400;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.card-body {
+    font-weight: 300;
+}
+
+
+
+/* Create four equal inventory-columns that sits next to each other */
+.inventory-column {
+    -ms-flex: 25%; /* IE10 */
+    flex: 25%;
+    max-width: 25%;
+    padding: 0 4px;
+}
+
+.inventory-column img {
+    margin-top: 8px;
+    vertical-align: middle;
+}
+/* Responsive layout - makes a two inventory-column-layout instead of four inventory-columns */
+@media screen and (max-width: 1500px) {
+  .grid-item {
+    width: 24%;
+  }
+
+}
+
+/* Responsive layout - makes a two inventory-column-layout instead of four inventory-columns */
+@media screen and (max-width: 900px) {
+  .grid-item {
+    width: 32%;
+  }
+
+}
+/* Responsive layout - makes a two inventory-column-layout instead of four inventory-columns */
+@media screen and (max-width: 700px) {
+  .grid-item {
+    width: 49%;
+  }
+
+}
+
+/* Responsive layout - makes the two inventory-columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .grid-item {
+    width: 100%;
+  }
+}
+
+.card-footer-sub {
+    width: 49%;
+    margin: 0 auto;
+    display: inline-block;
+}
+.card-condition {
+    display: inline-block;
+    padding: 2px 11px;
+    background: #0cbfb5;
+    font-size: 55%;
+    border-radius: 19px;
+    font-weight: bold;
+    color: white;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+.card-footer-sub.card-updated {
+    text-align: right;
+    width: 100%;
+    font-size: 70%;
+}
+.card-image-container img {
+    width: 100%;
+    /* border: 7px solid #b9b9b9; */
+    border-radius: 13px;
+    margin-bottom: 11px;
+    max-height: 425px;
+    object-fit: cover;
+    object-position: 50% 0;
+}
+.modal-title {
+    font-size: 3em;
+    font-weight: 300;
+    text-align: center;
+}
+.modal-calendar {
+    font-size: 150%;
+    font-weight: 300;
+    border-bottom: 1px solid #bcb9b9;
+    padding: 5px;
+}
+input.calendar {
+    width: 100%;
+    text-align: center;
+    border: 1px solid #929292;
+    opacity: .5;
+}
+input.calendar:hover {
+    opacity: 1;
+    cursor: pointer;
+    background: #0ebbac;
+    color: white;
+}
+.modal-image img {
+    width: 100%;
+    border: 4px solid #9f9f9f;
+}
+
+.modal-image {
+    width: 75%;
+    display: inline-block;
+    vertical-align: top;
+}
+.modal-info {
+    padding-top: 16px;
+    width: 23%;
+    display: inline-block;
+    right: 1%;
+    border-left: 1px solid #bbb9b9;
+    margin-left: 1%;
+}
+.modal-seller-image img {
+    width: 100%;
+    margin: 0 auto;
+    border-radius: 50%;
+    border: 2px solid #80808047;
+    box-shadow: 0 0 6px black;
+}
+
+.modal-seller-image {
+    margin: 0 auto;
+    width: 75%;
+    margin-bottom: 2em;
+}
+
+.modal-info ul {
+    list-style: none;
+    padding: 0 10px;
+}
+.modal-info li {
+    font-weight: bold;
+    padding: 4px 9px;
+    /* background: #dedede; */
+    margin: 14px 0;
+    border-bottom: 1px solid #dadada;
+    /* border-radius: 4px; */
+    width: 100%;
+    /* box-shadow: 0 0 2px black; */
+}
+
+span.info-label {
+    font-weight: 200;
+    letter-spacing: 1px;
+    font-size: 80%;
+}
+
+.modal-footer .requestBtn{
+   background: #13bbac;
+   border: none;
+}
+.modal-user-rating{
+    text-align: center;
+    color: #13bbac;
+}

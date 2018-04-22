@@ -21,39 +21,39 @@
             <li {{#if_equal nav "home"}} class="active" {{else}}{{/if_equal}}><a href="/">Home <span class="sr-only">(current)</span></a></li>
             <li {{#if_equal nav "manifest"}} class="active" {{else}}{{/if_equal}}><a href="/manifest">Manifest</a></li>
             <li {{#if_equal nav "about"}} class="active" {{else}}{{/if_equal}}><a href="https://www.wikidata.org/wiki/User:YULdigitalpreservation/ScienceStories" target="_blank">About</a></li>
-            <li><a href="/Q6376201">Sample Story</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+            <li {{#if_equal nav "story"}} class="active" {{else}}{{/if_equal}}><a href="/Q6376201">Sample Story</a></li>
+            <li {{#if_equal nav "browse"}} class="active" {{else}}{{/if_equal}}><a href="/browse">Browse</a></li>
+            <li class="dropdown" id="createDropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus"></i> Create <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#">Separated link</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#">One more separated link</a></li>
+                <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createStoryModal">
+                  <i class="fas fa-book"></i> | New Story
+                </button></li>
+
               </ul>
             </li>
           </ul>
-          <form class="navbar-form navbar-left">
-            <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
+          <form class="navbar-form navbar-left" id="navSearch">
+            <div class="form-group" >
+              <input type="text" class="form-control" placeholder="Search Here">
             </div>
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
           </form>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="https://github.com/ScienceStories" target="_blank">GitHub</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+            <li><a href="https://github.com/ScienceStories" target="_blank">GitHub <i class="fab fa-github"></i></a></li>
+            <li class="dropdown" id="accountDropDown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#">Separated link</a></li>
+                <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signupModal">
+                  Sign Up
+                </button></li>
+                <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+                  Login
+                </button></li>
               </ul>
             </li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
+{{> account_modals }}

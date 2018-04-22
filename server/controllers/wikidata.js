@@ -1,13 +1,7 @@
 const wdk = require('wikidata-sdk');
 const fetch = require('node-fetch');
-function _api(url) {
-  return new Promise((resolve, reject) => {
-    fetch(url)
-      .then(res => res.json())
-      .then(data => resolve(data))
-      .catch(err => reject(err))
-  })
-}
+const appFetch =  require('../../app').appFetch;
+
 module.exports = {
   loadStory(req, res) {
     const qid = 'Q'+req.params.id;
@@ -31,7 +25,7 @@ module.exports = {
     `
     const url = wdk.sparqlQuery(sparql);
 console.log(url)
-    _api(url).then(content => {
+    appFetch(url).then(content => {
       // console.log(content.results.bindings)
       output = content.results.bindings.map(function(x){
         if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value)
@@ -43,7 +37,7 @@ console.log(url)
       ).then(simplifiedResults =>
       {
 
-        _api(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
+        appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
         .then(labels => {
           name = labels.entities[qid].labels.en.value
           wikipedia = ''
@@ -68,7 +62,7 @@ console.log(url)
   },
   customQuery(req, res) {
     var wd_url = wdk.sparqlQuery(req.body.query);
-    _api(wd_url).then(content => {
+    appFetch(wd_url).then(content => {
       return content.results.bindings
     }
   ).then(simplifiedResults => res.status(200).send(simplifiedResults))
@@ -76,3 +70,19 @@ console.log(url)
   },
 
 };
+
+// SELECT ?story ?storyLabel ?birth ?death
+// WHERE
+// {
+//   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]". }
+//     VALUES ?story { wd:Q11641  wd:Q7309 wd:Q6376201 }.
+//     OPTIONAL{
+//     ?story wdt:P569 ?birth.
+//       }
+//   OPTIONAL{
+//     ?story wdt:P570 ?death.
+//       }
+//   OPTIONAL{
+//     ?story wdt:P13 ?image.
+//       }
+// }

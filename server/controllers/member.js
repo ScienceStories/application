@@ -13,21 +13,20 @@ module.exports = {
       .then(out => res.status(201).send(out))
       .catch(error => res.status(400).send(error));
   },
-  signup(req, res) {
+  register(req, res) {
     return Member
       .create({
         username: req.body.username,
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
+        name: req.body.name,
         email: req.body.email,
         password: req.body.password,
       }).then(user => {
               req.session.user = user.dataValues;
-              res.redirect('/dashboard');
+              res.redirect('/');
           })
           .catch(error => {
             console.log(error)
-              res.redirect('/home');
+              res.redirect('/');
           });
   },
   login(req, res) {

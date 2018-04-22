@@ -39,7 +39,35 @@ nav#mainNav .active a{
   color: #6dd4cf;
 
 }
+nav#mainNav input {
+    background: #54575a;
+    border: none;
+    color: #7bfff7;
+}
+#navSearch button {
+    float:  right;
+    color: #d3d3d4;
+    border-radius:  0;
+    background:  none;
+    border: none;
+    border-left: 1px solid;
 
+}
+
+#navSearch button:hover {
+    background: #35f5ea;
+    color: #202223;
+}
+
+form#navSearch {
+    opacity: .7;
+    padding-right: 0;
+    background: #4f5355;
+}
+
+form#navSearch:hover {
+    opacity:  1;
+}
 nav#mainNav a {
     color: #ffffffc2;
 }
@@ -53,4 +81,115 @@ nav#mainNav a:hover {
     width: 150px;
     margin-top: -15px;
     opacity: .7;
+}
+
+nav#mainNav .open a {
+    background: #56e6d5;
+    color: #46494c;
+}
+
+#mainNav form.navbar-form:hover {
+    opacity:  1;
+}
+#accountDropDown button, #createDropdown button {
+    background: none;
+    width: 100%;
+    border: none;
+    text-align: center;
+}
+li#accountDropDown {
+    border-left: 2px solid #3a3c3e;
+}
+#accountDropDown a.dropdown-toggle {
+    font-size: 150%;
+}
+
+#accountDropDown ul.dropdown-menu, #createDropdown ul.dropdown-menu {
+    background: #46494c;
+    border-radius: 0;
+}
+#accountDropDown ul.dropdown-menu li, #createDropdown ul.dropdown-menu li{
+    border-bottom: 1px solid;
+}
+#accountDropDown ul.dropdown-menu li:hover, #createDropdown ul.dropdown-menu li:hover  {
+    background: #3a3c3e;
+}
+.account-modal .modal-content {
+    background: #646362;
+    color: white;
+    border-radius: 0;
+    border: none;
+    padding: 15px;
+    font-weight: 300;
+    font-size: 150%;
+    text-align: center;
+}
+.account-modal .modal-header {
+    text-align: right;
+    font-size: 200%;
+    font-weight: 100;
+    padding-bottom: 0;
+    border-bottom: 2px solid #6cd5cf;
+}
+.account-modal input {
+    background: none;
+    border: none;
+    padding: 6px 15px;
+}
+.account-field {
+    text-align: left;
+    width: 80%;
+    border-bottom: 1px solid;
+    margin: 15px auto;
+     padding: 0 15px;
+}
+.account-modal input {
+    background: none;
+    padding: 6px 15px;
+    color: #6cd5cf;
+    font-weight: 500;
+    background: #505050;
+    border-radius: 5px;
+    margin: 10px auto;
+    width: 88%;
+    display: inherit;
+    text-align: center;
+}
+.account-modal .modal-footer{
+  border-top: 2px solid #6cd5cf;
+}
+.account-modal .modal-footer button {
+    background: none;
+    border: 1px solid;
+    border-radius: 0;
+}
+.account-modal .modal-footer button.btn-primary:hover {
+    color: #636362;
+    background: #6dd4cf;
+}
+
+.account-modal .modal-footer button.btn-primary {
+    color: #6dd4cf;
+}
+.account-field span.modal-icon {
+    color: #6dd4cf;
+}
+.modal-header button.close {
+    position: absolute;
+    left: .25em;
+    top: .25em;
+}
+.text-with-input {
+    background: #505050;
+    width: 80%;
+    margin: 0 auto;
+    padding: 5px 16px;
+    border-radius: 8px;
+    text-align: left;
+}
+.text-with-input input {
+    width: calc(100% - 3em);
+    display: inline;
+    margin: 0 auto;
+    text-align: left;
 }

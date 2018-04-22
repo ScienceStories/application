@@ -1,0 +1,87 @@
+<!-- login modal below  -->
+<div class="modal fade account-modal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        Welcome Back
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+    <div class="modal-body">
+      <form action="">
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-user"></i></span> | E-mail: <input type="email" placeholder="user@website.com" name="email"/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-lock"></i></span> | Password: <input type="password" placeholder="" name="pwd"/></div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary">Login</button>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!--  sign up modal below -->
+<div class="modal fade account-modal" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        Welcome to Science Stories
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <form action="/api/member/register" method="post">
+    <div class="modal-body">
+
+        <div class="account-field"><span class="modal-icon"><i class="far fa-address-card"></i></span> | Full Name: <input type="text" placeholder="Grace Hopper" name="name"/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-user"></i></span> | Username: <input type="text" placeholder="Ghopper" name="username"/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-at"></i></span> | E-mail: <input type="email" placeholder="ghopper@website.com" name="email"/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-lock"></i></span> | Password: <input type="password" placeholder="password" name="password"/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-user-secret"></i></span> | Confirm: <input type="password" placeholder="confirm password" name="pwd_confirm"/></div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+
+<!--  create story modal below -->
+<div class="modal fade account-modal" id="createStoryModal" tabindex="-1" role="dialog" aria-labelledby="createStoryModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        Tell A New Story
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <form action="/api/story/create" method="post">
+    <div class="modal-body">
+
+        <div class="account-field"><span class="modal-icon">
+          <i class="far fa-address-card"></i></span> | Wikidata Identifier:
+          <div class="text-with-input">
+              Q<input type="number" placeholder="11641" name="qid"/>
+            </div>
+          </div>
+          <div class="account-field"><span class="modal-icon">
+            <i class="fa fa-key"></i></span> | Key: 
+                <input type="password" placeholder="" name="key"/>
+            </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">Create Story</button>
+    </div>
+    </form>
+    </div>
+  </div>
+</div>
