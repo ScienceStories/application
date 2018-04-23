@@ -1,3 +1,7 @@
+body{
+  display: none;
+  background: white;
+}
 .page-wrapper {
     padding-top: 10vh;
     padding-bottom: 20vh;
@@ -63,6 +67,8 @@ form#navSearch {
     opacity: .7;
     padding-right: 0;
     background: #4f5355;
+
+    margin-left: 15px;
 }
 
 form#navSearch:hover {

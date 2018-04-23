@@ -1,3 +1,6 @@
+body{
+  display: inherit;
+}
 #homeButton {
     color: #ffffff9e;
     background: none;
@@ -41,9 +44,19 @@ div#story_div {
 }
 
 div#story_div ul {
-    list-style:  none;
-    padding:  0;
+    list-style: none;
+    padding: 0;
     padding-top: 10px;
+    columns: 3;
+}
+ul.claim_list li:hover {
+    background: #ec018c7a;
+}
+
+ul.claim_list li {
+    background: #ec018c29;
+    margin: 10px 0;
+    padding: 5px;
 }
 .claim_list a {
     color: #faffb2;
@@ -56,11 +69,12 @@ span.prop {
 }
 div#conent_panel {
   /* width: 30%; */
-width: 100%;
+    width: 100%;
     display: inline-block;
     background: #615763;
-    height: 80vh;
-    overflow-y: scroll;
+    padding: 20px;
+    /* height: 80vh;
+    overflow-y: scroll; */
 }
 /*  viewer */
 #viewer {
@@ -103,16 +117,8 @@ width: 100%;
         background-position: center;
     background-repeat: no-repeat;
 }
-#section2 {
-  background-image: url(../images/stock/kjb-2.jpg);
-      -webkit-background-size: cover;
-      -moz-background-size: cover;
-      -o-background-size: cover;
-      background-size: cover;
-      background-position: center;
-  background-repeat: no-repeat;
-}
-#section3, #section4 {
+
+ #section4 {
   background-image: url(../images/stock/kjb-3.jpg);
       -webkit-background-size: cover;
       -moz-background-size: cover;
@@ -241,6 +247,9 @@ width: 100%;
     padding-bottom: 100px;
     background: black;
 }
+.slide-youtube .header {
+padding: 2px ;
+}
 .page.page-timeline {
     width: 90%;
     margin: 60px auto;
@@ -279,4 +288,59 @@ width: 100%;
 .page-index span.prop {
     color: inherit;
     font-weight: 700;
+}
+
+div#leftIndex {
+    width: 70%;
+    display: table-cell;
+    background: #ecfcff;
+    padding: 25px;
+}
+
+div#rightIndex {
+    display: table-cell;
+    width: 27%;
+    vertical-align:  top;
+    background: #b6d6d8;
+    height:  100%;
+    padding: 25px;
+}
+
+.index-header {
+    text-align:  center;
+    font-size:  2em;
+    border-bottom:  2px solid;
+    color: #fb8e2f;
+    font-weight: 300;
+}
+
+.page.page-index {
+    display:  table;
+}
+
+#rightIndex .index-header {
+    color: white;
+}
+
+ul {
+    list-style:  none;
+    padding:  0;
+}
+
+div#leftIndex ul {
+    padding: 25px;
+    text-align:  center;
+    font-size: 125%;
+}
+
+#leftIndex li {
+    background: #ffb97c2e;
+    margin: 10px;
+    padding: 6px;
+    color: #6f7373;
+}
+
+#leftIndex li a {
+    color: #599aa0;
+    font-weight: 400;
 }

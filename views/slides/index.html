@@ -5,7 +5,8 @@
       <p>[Demo of Index Slide] This text will include resource links, contribution/attributions, forum comments</p>
     </div>
     <div class="page page-index">
-      <div id="">
+      <div id="leftIndex">
+        <div class="index-header">Helpful External Resources</div>
         <ul>
           {{#each content}}
           {{#if this.url }}
@@ -17,6 +18,10 @@
           {{/each}}
 
         </ul>
+
+      </div>
+      <div id="rightIndex">
+        <div class="index-header">Discussion</div>
       </div>
     </div>
   </div>
