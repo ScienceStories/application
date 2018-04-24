@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://a5fbf2c5-530d-4e55-ba1e-f0c7f3cca193",
+	"@type": "sc:Manifest",
+	"label": " Lt. Hopper standing behind a car parked near Cruft Lab.",
+	"metadata": [],
+	"description": "Person standing next to a car.",
+	"license": "unknown",
+	"attribution": "Grace Murray Hopper Collection, 1944-1965, Archives Center, National Museum of American History",
+	"sequences": [
+		{
+			"@id": "http://a9dfd109-1819-417a-a468-765a3ce8713f",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://e6c81016-0593-43ab-b0ef-734573d82bf3",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 424,
+					"width": 300,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://e429c91b-63b7-4058-b238-7d5c16acf6a4",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/hopperStandingCar.jpg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/hopperStandingCar.jpg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 424,
+								"width": 300
+							},
+							"on": "http://e6c81016-0593-43ab-b0ef-734573d82bf3"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}
