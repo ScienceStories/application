@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://46b3a348-04e3-4385-bcf4-057cc7005552",
+	"@type": "sc:Manifest",
+	"label": "Program tape on the Harvard Mark I, one of the first digital computers.",
+	"metadata": [],
+	"description": "A photograph of punched tape used to provide instructions to the Mark I computer.",
+	"license": "Attribution-ShareAlike 3.0 Unported",
+	"attribution": " \tArnoldReinhold",
+	"sequences": [
+		{
+			"@id": "http://e0f088f3-a265-4ae3-a2bc-ae0fff862eee",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://c6b1540c-ebdf-47b6-8d97-5d27d0b9597b",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 3264,
+					"width": 2448,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://aa507670-c3a4-4c5a-90de-2c2fc0c755fd",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/Harvard_Mark_I_program_tape.agr.jpg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/Harvard_Mark_I_program_tape.agr.jpg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 3264,
+								"width": 2448
+							},
+							"on": "http://c6b1540c-ebdf-47b6-8d97-5d27d0b9597b"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}
