@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://ffb5ac96-022b-4869-9a0a-4cc3c6484025",
+	"@type": "sc:Manifest",
+	"label": "Cmdr. Aiken and Lt. Hopper with parts of the difference engine.",
+	"metadata": [],
+	"description": "Two people looking at a replica of a piece of Babbage's Difference Engine.",
+	"license": "unknown",
+	"attribution": "Grace Murray Hopper Collection, 1944-1965, Archives Center, National Museum of American History",
+	"sequences": [
+		{
+			"@id": "http://227029a8-0690-4049-960d-fb4dd2b629c8",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://ec5b3067-9e0e-4cbe-9d14-e6edc04b6996",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 371,
+					"width": 300,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://1d1558d4-bc3c-40ac-a836-8f1922598ff7",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/aikenHopperDiffAnalyzer.jpg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/aikenHopperDiffAnalyzer.jpg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 371,
+								"width": 300
+							},
+							"on": "http://ec5b3067-9e0e-4cbe-9d14-e6edc04b6996"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}
