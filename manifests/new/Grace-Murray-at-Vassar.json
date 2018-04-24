@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://be52d929-2cd5-4161-8f05-39376db12bcf",
+	"@type": "sc:Manifest",
+	"label": "Grace Murray at Vassar",
+	"metadata": [],
+	"description": "Headshot of Grace Murray.",
+	"license": "unknown",
+	"attribution": "Vassar College Encyclopedia ",
+	"sequences": [
+		{
+			"@id": "http://2c401018-50c3-4f9a-9ea2-95080c032745",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://b9ea09bc-4639-422e-bf89-8b2ed0cba385",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 630,
+					"width": 458,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://c10c054f-c8e0-4173-9830-7a8be07e515f",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/Grace-Murray-at-Vassar.jpeg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/Grace-Murray-at-Vassar.jpeg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 630,
+								"width": 458
+							},
+							"on": "http://b9ea09bc-4639-422e-bf89-8b2ed0cba385"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}
