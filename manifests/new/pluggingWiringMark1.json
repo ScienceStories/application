@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://5c010e2f-5c01-42ee-9716-fee7f1b16c5d",
+	"@type": "sc:Manifest",
+	"label": "Working on the plugging and backboard wiring of the Mark II, 5 June 1946",
+	"metadata": [],
+	"description": "Four people working on the plugging and wiring for the Mark II computer.",
+	"license": "unknown",
+	"attribution": "Grace Murray Hopper Collection, 1944-1965, Archives Center, National Museum of American History",
+	"sequences": [
+		{
+			"@id": "http://0256a8e0-e40e-44f9-b2c3-7160d0719a8a",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://5f04a379-0c9e-4226-b431-2d386aef64db",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 216,
+					"width": 300,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://63a3df45-df1d-404b-a1c2-56268f0899f5",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/pluggingWiringMark1.jpg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/pluggingWiringMark1.jpg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 216,
+								"width": 300
+							},
+							"on": "http://5f04a379-0c9e-4226-b431-2d386aef64db"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}

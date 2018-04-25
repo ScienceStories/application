@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://8937020c-b4b4-4731-9c7c-9f3da226d599",
+	"@type": "sc:Manifest",
+	"label": "Thompson Library at Vassar College",
+	"metadata": [],
+	"description": "Photograph of a library on the campus of Vassar College.",
+	"license": "https://creativecommons.org/licenses/by-sa/4.0/",
+	"attribution": "Sabatheus (Jim Mills)",
+	"sequences": [
+		{
+			"@id": "http://321943db-c032-4c61-b68a-720d2812b870",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://4fd2b2da-1cac-4b59-91d9-a2ad5d24945c",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 2848,
+					"width": 4288,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://51d33922-3d7e-4542-b0a1-821a06c54a09",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/Thompson_Library_External_Vassar.jpg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/Thompson_Library_External_Vassar.jpg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 2848,
+								"width": 4288
+							},
+							"on": "http://4fd2b2da-1cac-4b59-91d9-a2ad5d24945c"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}

@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://9609c8e7-4597-4637-9e53-7eec13f88898",
+	"@type": "sc:Manifest",
+	"label": "Comdr. Howard H. Aiken, Lt (jg) Grace Hopper and Ensign Campbell [with section of Mark I computer] Harvard University News Office photograph, 8/4/1944",
+	"metadata": [],
+	"description": "People standing in front of Mark I computer. Grace Hopper holding punched tape.",
+	"license": "unknown",
+	"attribution": "Harvard University. Office of News and Public Affairs.\n",
+	"sequences": [
+		{
+			"@id": "http://1d59cc13-7994-4a7e-a850-05708765a6ca",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://a56113f8-6f95-4605-b2c4-ccec5bb26e5e",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 2029,
+					"width": 2399,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://4fd50431-41de-4571-a16c-d96849820a19",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/2339337HarvardPaperTape.jpg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/2339337HarvardPaperTape.jpg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 2029,
+								"width": 2399
+							},
+							"on": "http://a56113f8-6f95-4605-b2c4-ccec5bb26e5e"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}

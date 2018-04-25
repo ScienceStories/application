@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://519e5eda-7a73-4980-a9bc-fa8c94967566",
+	"@type": "sc:Manifest",
+	"label": "Close up detail of the bank of switches on the Harvard Mark I.",
+	"metadata": [],
+	"description": "Photograph of dials on the face of the Mark I computer.",
+	"license": "https://creativecommons.org/licenses/by-sa/3.0/",
+	"attribution": "ArnoldReinhold",
+	"sequences": [
+		{
+			"@id": "http://6536d524-70f0-43c6-9b69-9194b1d9bf15",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://c7225cd9-27e5-4f95-b4c4-35799697592f",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 600,
+					"width": 800,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://214e2ea0-0a15-4c61-a136-2abf374f5670",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/Harvard_Mark_I_constant_switches_detail.jpg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/Harvard_Mark_I_constant_switches_detail.jpg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 600,
+								"width": 800
+							},
+							"on": "http://c7225cd9-27e5-4f95-b4c4-35799697592f"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}

@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://39413d82-5ef5-486c-9519-c6ce18e4f527",
+	"@type": "sc:Manifest",
+	"label": "Grace Hopper upon graduation from Midshipman's School 27 June 1944",
+	"metadata": [],
+	"description": "Grace Murray Hopper in Northampton, MA",
+	"license": "unknown",
+	"attribution": "Grace Murray Hopper Collection, 1944-1965, Archives Center, National Museum of American History",
+	"sequences": [
+		{
+			"@id": "http://561be417-e978-48d2-b249-4d9fb1536175",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://fbb1ae58-8dbc-4db1-b265-2ea5ba1a3b5d",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 945,
+					"width": 1286,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://11c39dab-a631-49a1-a3b4-c499dd5c1cbd",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/HopperGradMidshipman.png/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/HopperGradMidshipman.png",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 945,
+								"width": 1286
+							},
+							"on": "http://fbb1ae58-8dbc-4db1-b265-2ea5ba1a3b5d"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}
