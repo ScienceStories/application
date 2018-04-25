@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://3a203ed9-9817-47b6-847f-f576af8afeb6",
+	"@type": "sc:Manifest",
+	"label": "Maxine Singer, Bruce Ames, Jesse Rabinowitz, and Victor Ginsburg playing wind instruments.",
+	"metadata": [],
+	"description": "Four people playing musical instruments.",
+	"license": "Public domain.",
+	"attribution": "United States National Library of Medicine",
+	"sequences": [
+		{
+			"@id": "http://8e067b8a-16da-4cc1-846a-bb5bf00abf66",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://dc4ffcb9-9719-48df-b54d-a7b336e42b57",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 4760,
+					"width": 5952,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://14dc3867-27c5-47ce-a886-be3580c55e9f",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/maxineSingerRecorder.jpg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/maxineSingerRecorder.jpg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 4760,
+								"width": 5952
+							},
+							"on": "http://dc4ffcb9-9719-48df-b54d-a7b336e42b57"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}
