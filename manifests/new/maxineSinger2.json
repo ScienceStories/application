@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://83a160ce-fa34-4de5-9a33-3f3748fa0921",
+	"@type": "sc:Manifest",
+	"label": "Maxine Singer",
+	"metadata": [],
+	"description": "Black and white photograph of Maxine Singer.",
+	"license": "Public domain.",
+	"attribution": "United States National Library of Medicine",
+	"sequences": [
+		{
+			"@id": "http://f54aa5b6-afcd-4dcb-b3a9-17261dc6d6a5",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://7812f257-92fb-4809-a590-235c15c8c548",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 3003,
+					"width": 2350,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://7c8f0e03-f401-4177-8ed1-e3ad83ce254e",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/maxineSinger2.jpeg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/maxineSinger2.jpeg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 3003,
+								"width": 2350
+							},
+							"on": "http://7812f257-92fb-4809-a590-235c15c8c548"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}
