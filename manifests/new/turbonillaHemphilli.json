@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://271f0f0b-86b3-4c3f-bde0-035eae28e103",
+	"@type": "sc:Manifest",
+	"label": "Turbonilla hemphilli Bush",
+	"metadata": [],
+	"description": "Photograph of a Turbonilla hemphilli.",
+	"license": "https://creativecommons.org/licenses/by/3.0/",
+	"attribution": "Academy of Natural Sciences of Philadelphia Malacology Specimen Collection",
+	"sequences": [
+		{
+			"@id": "http://da0bc847-887a-4faf-a2d7-4e70a8b5caa5",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://f3734626-693d-4f89-b57a-c7aebed8c587",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 1953,
+					"width": 600,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://511b755a-9019-4e2a-a64c-14821e96fcba",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/turbonillaHemphilli.jpeg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/turbonillaHemphilli.jpeg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 1953,
+								"width": 600
+							},
+							"on": "http://f3734626-693d-4f89-b57a-c7aebed8c587"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}
