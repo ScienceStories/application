@@ -24,7 +24,7 @@
   "author": "Kenneth Seals-Nutt",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^1.0.3",
+    "bcrypt": "^2.0.1",
     "biiif-cli": "0.0.13",
     "body-parser": "^1.18.2",
     "consolidate": "^0.15.0",
@@ -38,16 +38,16 @@
     "moment": "^2.22.1",
     "morgan": "^1.9.0",
     "node-fetch": "^2.0.0",
-    "npm": "^5.8.0",
+    "npm": "^6.0.0",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.33.4",
+    "sequelize": "^4.37.6",
     "sequelize-cli": "^4.0.0",
     "tabula-rasa": "^1.0.9",
     "universalviewer": "3.0.21",
-    "wikidata-sdk": "^5.9.0"
+    "wikidata-sdk": "^5.9.2"
   },
   "devDependencies": {
-    "nodemon": "^1.15.0"
+    "nodemon": "^1.17.3"
   }
 }
