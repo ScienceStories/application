@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://2be473f8-649e-4257-bbc8-8042c140c788",
+	"@type": "sc:Manifest",
+	"label": "Maxine Singer.",
+	"metadata": [],
+	"description": "Color photograph of Maxine Singer.",
+	"license": "unknown",
+	"attribution": "Jewish Women's Archive. \"Maxine Singer.\" <https://jwa.org/media/singer-maxine-still-image>.",
+	"sequences": [
+		{
+			"@id": "http://ea60b27a-da3e-450b-9b91-813d622e2740",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://0d6f648d-1014-442d-a1b3-a848f4b2988b",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 645,
+					"width": 480,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://ae8a67a3-26f7-4f0b-9aa4-996813eee67f",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/maxineSingerHeadshot.jpeg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/maxineSingerHeadshot.jpeg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 645,
+								"width": 480
+							},
+							"on": "http://0d6f648d-1014-442d-a1b3-a848f4b2988b"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}

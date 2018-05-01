@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://df8369fd-f24b-45a0-8653-7bde657b1eb9",
+	"@type": "sc:Manifest",
+	"label": "Maxine Singer speaking at lectern.",
+	"metadata": [],
+	"description": "Person speaking into a microphone at a podium.",
+	"license": "Public domain.",
+	"attribution": "United States National Library of Medicine",
+	"sequences": [
+		{
+			"@id": "http://28eb0d84-b5e3-4698-b580-54dc7e21f2c1",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://5246d5b8-ffbd-4d8d-8486-c81921d8e0f0",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 400,
+					"width": 319,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://4caaeb0b-5109-4543-ba5c-4cd499c3a176",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/maxineSingerPodium.jpeg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/maxineSingerPodium.jpeg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 400,
+								"width": 319
+							},
+							"on": "http://5246d5b8-ffbd-4d8d-8486-c81921d8e0f0"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}

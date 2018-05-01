@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://93c43786-3e4a-4923-853b-9ae3e442d38b",
+	"@type": "sc:Manifest",
+	"label": "Turbonilla asperula Bush",
+	"metadata": [],
+	"description": "Photograph of a Turbonilla asperula.",
+	"license": "https://creativecommons.org/licenses/by/3.0/",
+	"attribution": "Academy of Natural Sciences of Philadelphia Malacology Specimen Collection",
+	"sequences": [
+		{
+			"@id": "http://5f0f4a6e-db0f-4cc6-be1c-15d62bdb08f0",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://02383996-c058-4725-ad8c-3a46a24939df",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 1372,
+					"width": 600,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://d9cc113b-4d34-4964-8cce-4a195303ce3e",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/turponillaAsperula.jpeg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/turponillaAsperula.jpeg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 1372,
+								"width": 600
+							},
+							"on": "http://02383996-c058-4725-ad8c-3a46a24939df"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}

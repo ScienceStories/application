@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://70d16871-dc74-4638-abfd-c0268b2067ea",
+	"@type": "sc:Manifest",
+	"label": "Organization Chart A Family Tree of Computers Influences by Grace Hopper, 4 December 1953.",
+	"metadata": [],
+	"description": "Photograph of a hand-drawn diagram of computer design influence by Grace Murray Hopper.",
+	"license": "unknown",
+	"attribution": "Grace Murray Hopper Collection, 1944-1965, Archives Center, National Museum of American History",
+	"sequences": [
+		{
+			"@id": "http://38dcca79-cd21-4077-9e11-bec09d4ee323",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://53e29666-9277-4a3b-a2cb-bebe86313431",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 773,
+					"width": 1072,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://e84ceaa3-0f22-488e-bc5b-93af9ec740ec",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/Influences.png/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/Influences.png",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 773,
+								"width": 1072
+							},
+							"on": "http://53e29666-9277-4a3b-a2cb-bebe86313431"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}

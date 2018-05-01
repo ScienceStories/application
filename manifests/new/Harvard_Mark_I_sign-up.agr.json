@@ -1,0 +1,92 @@
+{
+	"@context": "http://iiif.io/api/presentation/2/context.json",
+	"@id": "http://aa6aca87-bb20-415c-8b5e-2e4fcebc76cf",
+	"@type": "sc:Manifest",
+	"label": "Bureau of Ships Computation Project Harvard University Duty officers, 23 April to 10 June, 1945.",
+	"metadata": [],
+	"description": "Photograph of a sign-in sheet for duty shifts.",
+	"license": "unknown",
+	"attribution": "Grace Murray Hopper Collection, 1944-1965, Archives Center, National Museum of American History.",
+	"sequences": [
+		{
+			"@id": "http://a0f9560b-be2c-4531-8619-ebe093d8268b",
+			"@type": "sc:Sequence",
+			"label": [
+				{
+					"@value": "Normal Sequence",
+					"@language": "en"
+				}
+			],
+			"canvases": [
+				{
+					"@id": "http://cf4738a3-8a33-47d8-beb8-e045c1725637",
+					"@type": "sc:Canvas",
+					"label": "Empty canvas",
+					"height": 960,
+					"width": 1280,
+					"images": [
+						{
+							"@context": "http://iiif.io/api/presentation/2/context.json",
+							"@id": "http://c7932837-3747-4b7f-98ab-3a828b8ab1d4",
+							"@type": "oa:Annotation",
+							"motivation": "sc:painting",
+							"resource": {
+								"@id": "http://iiif.ss.ksn.io/iiif/2/Harvard_Mark_I_sign-up.agr.jpg/full/full/0/default.jpg",
+								"@type": "dctypes:Image",
+								"format": "image/jpeg",
+								"service": {
+									"@context": "http://iiif.io/api/image/2/context.json",
+									"@id": "http://iiif.ss.ksn.io/iiif/2/Harvard_Mark_I_sign-up.agr.jpg",
+									"profile": [
+										"http://iiif.io/api/image/2/level2.json",
+										{
+											"formats": [
+												"jpg",
+												"tif",
+												"gif",
+												"png"
+											],
+											"maxArea": 400000000,
+											"qualities": [
+												"bitonal",
+												"default",
+												"gray",
+												"color"
+											],
+											"supports": [
+												"regionByPx",
+												"sizeByW",
+												"sizeByWhListed",
+												"cors",
+												"regionSquare",
+												"sizeByDistortedWh",
+												"sizeAboveFull",
+												"canonicalLinkHeader",
+												"sizeByConfinedWh",
+												"sizeByPct",
+												"jsonldMediaType",
+												"regionByPct",
+												"rotationArbitrary",
+												"sizeByH",
+												"baseUriRedirect",
+												"rotationBy90s",
+												"profileLinkHeader",
+												"sizeByForcedWh",
+												"sizeByWh",
+												"mirroring"
+											]
+										}
+									]
+								},
+								"height": 960,
+								"width": 1280
+							},
+							"on": "http://cf4738a3-8a33-47d8-beb8-e045c1725637"
+						}
+					]
+				}
+			]
+		}
+	],
+	"structures": []
+}
