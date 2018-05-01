@@ -108,4 +108,12 @@ WHERE
       })
       .catch(error => res.status(400).send(error));
   },
+  bulkCreate(array){
+    for (var i=0; i < array.length; i++){
+      Story.create({
+        qid: array[i],
+        status: 'basic',
+      })
+    }
+  }
 };
