@@ -40,6 +40,7 @@
             <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
           </form>
           <ul class="nav navbar-nav navbar-right">
+            <li {{#if_equal nav "bibliography"}} class="active" {{else}}{{/if_equal}}><a href="/bibliography">Bibliography</a></li>
             <li><a href="https://github.com/ScienceStories" target="_blank">GitHub <i class="fab fa-github"></i></a></li>
             <li class="dropdown" id="accountDropDown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i></a>

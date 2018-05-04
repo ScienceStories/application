@@ -1,0 +1,14 @@
+<div class="page-header">
+  Bibliography of Works on the Topic of Women in Science
+</div>
+<div id="bibliography">
+  {{#each data.works}}
+    <div class="work-item">
+      <a class="browse-story-link" target="_blank" href="{{this.item.value}}">
+        <div class="item-title">
+          {{this.itemLabel.value}}
+        </div>
+      </a>
+    </div>
+    {{/each}}
+</div>

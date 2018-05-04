@@ -24,7 +24,6 @@ module.exports = {
     } ORDER BY ?wd ?statement ?ps_
     `
     const url = wdk.sparqlQuery(sparql);
-console.log(url)
     appFetch(url).then(content => {
       // console.log(content.results.bindings)
       output = content.results.bindings.map(function(x){
@@ -58,6 +57,34 @@ console.log(url)
         })
 
   })
+
+  },
+  bibliography(req, res) {
+    const sparql = `
+      SELECT ?item ?itemLabel
+      WHERE
+      {
+        {?item wdt:P31 wd:Q13442814}
+        UNION {?item wdt:P31 wd:Q571}.
+        ?item wdt:P921 wd:Q113616.
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+      }
+    `
+    const url = wdk.sparqlQuery(sparql);
+    appFetch(url).then(content => {
+      console.log(content.results.bindings)
+      output = content.results.bindings
+
+      return res.render('base', {
+    page: function(){ return 'bibliography'},
+    scripts: function(){ return 'bibliography_scripts'},
+    links: function(){ return 'bibliography_links'},
+    title: "Bibliography",
+    nav: "bibliography",
+    data: {"works": output}
+  })
+    }
+      )
 
   },
   customQuery(req, res) {

@@ -31,7 +31,8 @@ module.exports = (app, sessionChecker) => {
   });
   // route for Home-Page
   app.get('/Q:id', wikidataController.loadStory);
-app.get('/browse', storyController.browse);
+  app.get('/browse', storyController.browse);
+  app.get('/bibliography', wikidataController.bibliography);
   // route for Home-Page
   app.get('/manifest', sessionChecker, (req, res) => {
       // res.redirect('/login');

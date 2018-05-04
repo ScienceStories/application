@@ -1,0 +1,22 @@
+.work-item {
+    margin: 25px 1%;
+    /* display:  inline-block; */
+}
+
+.item-title {
+    padding: 15px 5%;
+    background: #1bcca31f;
+    /* color:  white; */
+    font-size: 150%;
+    /* text-align:  center; */
+    border-bottom: 1px solid #b5b5b5;
+}
+
+div#bibliography {
+    padding:  10px 5%;
+}
+
+.item-title:hover {
+    background: #34eab5;
+    color:  white;
+}
