@@ -13,7 +13,11 @@ const cors = require('cors');
 // Set up the express app
 const app = express();
 const moment = require('moment');
-
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 
 // Log requests to the console.
@@ -23,11 +27,11 @@ app.use(logger('dev'));
 app.engine('html', cons.handlebars)
 app.set('view engine', 'html')
 app.set('views', __dirname + '/views')
-app.use('/scripts', express.static(__dirname + '/node_modules/'));
-app.use('/build/mirador', express.static(__dirname + '/static/vendor/mirador/'));
+app.use('/scripts', cors(), express.static(__dirname + '/node_modules/'));
+app.use('/build/mirador', cors(), express.static(__dirname + '/static/vendor/mirador/'));
 app.use('/collection',  cors(), express.static(__dirname + '/collection/'));
 app.use('/manifests',  cors(), express.static(__dirname + '/manifests/'));
-app.use('/static', express.static(__dirname + '/static/'));
+app.use('/static', cors(), express.static(__dirname + '/static/'));
 app.use('/uv-config.json', cors(), (req, res) => res.sendFile(__dirname + '/uv-config.json'));
 hbs.registerHelper('if_equal', function(a, b, opts) {
     if (a == b) {
