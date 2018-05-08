@@ -93,18 +93,18 @@ app.post('/api/dump/stories', (req, res) => {
   app.post('/api/member/create', membersController.create);
   app.post('/api/story/create', storyController.create);
   app.get('/api/iiif/manifest-source/:source/:filename', (req, res) => {
-    res.status(200).sendfile("manifests/_sources/"+req.params.source+'/'+req.params.filename);
+    res.status(200).sendFile("manifests/_sources/"+req.params.source+'/'+req.params.filename);
   });
-  app.get('/api/iiif/manifest/:filename', (req, res) => {
-    var content = JSON.parse(fs.readFileSync("manifests/"+req.params.filename));
-    res.status(200).send(content);
-  });
+  // app.get('/api/iiif/manifest/:filename', (req, res) => {
+  //   var content = JSON.parse(fs.readFileSync("manifests/"+req.params.filename));
+  //   res.status(200).send(content);
+  // });
   app.get('/api/iiif/:manifest', (req, res) => {
     var content = fs.readFileSync("manifests/"+req.params.manifest+'/index.json');
     res.status(200).send(JSON.parse(content));
   });
   app.get('/api/iiif/:manifest/image/:filename', (req, res) => {
-    res.status(200).sendfile("manifests/"+req.params.manifest+'/'+req.params.filename);
+    res.status(200).sendFile("manifests/"+req.params.manifest+'/'+req.params.filename);
   });
   app.get('/api/iiif/:manifest/thumbnail', (req, res) => res.status(200).send({
     message: 'Thumbnail for '+req.params.manifest,
@@ -121,7 +121,7 @@ app.post('/api/dump/stories', (req, res) => {
   });
   app.get('/api/iiif/:manifest/image/:filename', (req, res) => {
     // var content = fs.readFileSync("manifests/"+req.params.manifest+'/'+req.params.filename);
-    res.status(200).sendfile("manifests/"+req.params.manifest+'/'+req.params.filename);
+    res.status(200).sendFile("manifests/"+req.params.manifest+'/'+req.params.filename);
   });
   app.get('/api/iiif/:manifest/:sequence/:canvas/other/:id', (req, res) => {
     var content = JSON.parse(fs.readFileSync("manifests/"+req.params.manifest+'/index.json')).sequences[req.params.sequence].canvases[req.params.canvas].otherContent[req.params.id];

@@ -13,6 +13,8 @@ const cors = require('cors');
 // Set up the express app
 const app = express();
 const moment = require('moment');
+const url_path = (process.env.NODE_ENV == 'production') ? 'http://sciencestories.ksn.io/' : '/'
+console.log(url_path)
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -31,6 +33,7 @@ app.use('/scripts', cors(), express.static(__dirname + '/node_modules/'));
 app.use('/build/mirador', cors(), express.static(__dirname + '/static/vendor/mirador/'));
 app.use('/collection',  cors(), express.static(__dirname + '/collection/'));
 app.use('/manifests',  cors(), express.static(__dirname + '/manifests/'));
+app.use('/api/iiif/manifest/',  cors(), express.static(__dirname + '/manifests/'));
 app.use('/static', cors(), express.static(__dirname + '/static/'));
 app.use('/uv-config.json', cors(), (req, res) => res.sendFile(__dirname + '/uv-config.json'));
 hbs.registerHelper('if_equal', function(a, b, opts) {
@@ -47,7 +50,9 @@ hbs.registerHelper('commonsImage', function dateFormat(title) {
     // title = title.replace(' ', '_')
     // return `https://commons.wikimedia.org/wiki/File:${title}`;
 });
-
+hbs.registerHelper('app_url', function full_url(title) {
+    return url_path+title;
+});
 hbs.registerHelper('dateFormat', function dateFormat(date, format, utc) {
     return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
 });
