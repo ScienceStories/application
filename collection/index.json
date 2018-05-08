@@ -1,9 +1,9 @@
 {
-  "id": "http://localhost:3000/collection/index.json",
+  "id": "http://localhost:8000/collection/index.json",
   "type": "Collection",
   "items": [
     {
-      "id": "http://localhost:3000/collection/grace_hopper/index.json",
+      "id": "http://localhost:8000/collection/grace_hopper/index.json",
       "type": "Manifest",
       "label": {
         "@none": [
@@ -12,7 +12,7 @@
       },
       "thumbnail": [
         {
-          "id": "http://localhost:3000/collection/grace_hopper/thumb.jpg",
+          "id": "http://localhost:8000/collection/grace_hopper/thumb.jpg",
           "type": "Image"
         }
       ]

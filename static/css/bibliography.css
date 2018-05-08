@@ -15,7 +15,31 @@
 div#bibliography {
     padding:  10px 5%;
 }
+.work-description {
+    font-weight:  200;
+    font-size: 90%;
+    padding-left:  3%;
+}
 
+.item-author {
+    padding-left:  3%;
+    font-weight:  200;
+    font-size: 65%;
+}
+.work-icon {
+    display: inline-flex;
+    height:  100%;
+    vertical-align: top;
+    font-size: 183%;
+    border-right:  1px solid;
+    padding-right: 15px;
+    margin-right: 9px;
+}
+
+.work-content {
+    display: inline-block;
+    width: calc(95% - 10px - 2em);
+}
 .item-title:hover {
     background: #34eab5;
     color:  white;

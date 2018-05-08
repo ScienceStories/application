@@ -51,7 +51,7 @@ WHERE
           // console.log(qidString)
           var wd_url = wdk.sparqlQuery(query);
           // console.log(wd_url);
-          var qidsApi = 'Q11641|Q5298518|Q7309|Q6376201|Q451538'+ '|Q505476|Q5092271|Q446848|Q4273363|Q30320358|Q1601832';
+          var qidsApi = 'Q11641|Q5298518|Q7309|Q6376201|Q451538';
           var browseUrl = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qidString}&languages=en&format=json`
           appFetch(browseUrl).then(content => {
             // console.log(content.entities.Q6376201.claims.P5690.mainsnak)

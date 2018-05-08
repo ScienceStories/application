@@ -1,6 +1,7 @@
 const wdk = require('wikidata-sdk');
 const fetch = require('node-fetch');
 const appFetch =  require('../../app').appFetch;
+const loadPage =  require('../../app').loadPage;
 
 module.exports = {
   loadStory(req, res) {
@@ -61,30 +62,36 @@ module.exports = {
   },
   bibliography(req, res) {
     const sparql = `
-      SELECT ?item ?itemLabel
+      SELECT ?item
       WHERE
       {
         {?item wdt:P31 wd:Q13442814}
         UNION {?item wdt:P31 wd:Q571}.
         ?item wdt:P921 wd:Q113616.
-        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
       }
     `
     const url = wdk.sparqlQuery(sparql);
     appFetch(url).then(content => {
       console.log(content.results.bindings)
       output = content.results.bindings
+      var qidString = '';
+      for(var i = 0; i < output.length; i++){
+        //Current uri for Wikidata is a url that is http://www.wikidata.org/entity/<qid>
+        qidString  += '|'+output[i].item.value.substr(31,);
+      }
+      qidString = qidString.substr(1,)
+      var browseUrl = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qidString}&languages=en&format=json`
+      return appFetch(browseUrl).then(content => {
+        console.log(content.entities)
+        return content.entities
+        // console.log(content.results.bindings)
+        return content.results.bindings
+      }
+    ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'bibliography', nav:'bibliography', works: simplifiedResults}))
 
-      return res.render('base', {
-    page: function(){ return 'bibliography'},
-    scripts: function(){ return 'bibliography_scripts'},
-    links: function(){ return 'bibliography_links'},
-    title: "Bibliography",
-    nav: "bibliography",
-    data: {"works": output}
   })
-    }
-      )
+
+
 
   },
   customQuery(req, res) {

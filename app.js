@@ -53,6 +53,23 @@ hbs.registerHelper('commonsImage', function dateFormat(title) {
 hbs.registerHelper('app_url', function full_url(title) {
     return url_path+title;
 });
+hbs.registerHelper('itemIcon', function convert_item_fa_class(item) {
+    instances = item.claims.P31
+    if (instances){
+
+      for (i=0; i < instances.length; i++){
+        value = instances[i].mainsnak.datavalue.value.id
+        console.log (value)
+        if ( value == 'Q571'){ //Book
+          return 'fa fa-book';
+        }
+        else if (value == 'Q13442814') { //Scholarly Article
+          return 'far fa-file-alt';
+        }
+      }
+    }
+    return 'far fa-question-circle';
+});
 hbs.registerHelper('dateFormat', function dateFormat(date, format, utc) {
     return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
 });
