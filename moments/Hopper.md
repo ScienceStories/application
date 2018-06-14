@@ -2,7 +2,7 @@
 
 
 
-    Intro Slide:  https://yale.app.box.com/folder/46903030931
+    Intro Slide:  https://yale.app.box.com/file/285916410787
 
      Mirador Slide:  [{ "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/Grace-Murray-at-Vassar.json", "location": "Yale University"}, { "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/Thompson_Library_External_Vassar.json", "location": "Yale University"}]
           
