@@ -6,8 +6,7 @@
     
     Wikipedia Slide: Auto-generated
 
-    Mirador Slide: <json list of manifest urls & location>
-        example with local and external resource: [{ "manifestUri": "api/iiif/manifest/FirstGlossaryProgrammingTerminology.json", "location": "Yale University"}, { "manifestUri": "https://iiif.lib.harvard.edu/manifests/drs:9596592", "location": "Harvard University"}]
+    Mirador Slide: 
 
 [{ "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/turbonillaAsperula.json", "location": "Yale University"}, { "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/turbonillaHemphilli.json", "location": "Yale University"}, { "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/turbonillaIncisa.json", "location": "Yale University" ]
   
