@@ -10,6 +10,10 @@
 
 
      Mirador Slide:  [{ "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/FirstGlossaryProgrammingTerminology.json", "location": "Yale University"}]
+     
+     Mirador Slide: [{ "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/hopperSI.json", "location": "Smithsonian Institution"}]
+     
+     
 
     Youtube Slide: 
          https://www.youtube.com/embed/ZR0ujwlvbkQ "Grace Hopper at MIT" "This video is a lecture provided by MIT Lincoln Laboratory"
