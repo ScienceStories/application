@@ -11,6 +11,8 @@
 
      Mirador Slide:  [{ "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/FirstGlossaryProgrammingTerminology.json", "location": "Yale University"}]
      
+     Mirador Slide:  [{ "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/Influences.json", "location": "Yale University"}]
+     
      Mirador Slide: [{ "manifestUri": "https://github.com/ScienceStories/application/blob/master/manifests/hopperSI.json", "location": "Smithsonian Institution"}]
      
      
