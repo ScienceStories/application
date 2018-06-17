@@ -11,8 +11,8 @@
   {
     "id": "2",
     "type": "mirador",
-    "title": "mirador window",
-    "description": "this is a mirador test",
+    "title": "Grace Murray at Vassar College",
+    "description": "This collection is provided by Yale University Library Manuscripts and Archives",
     "tooltip": "The college years",
     "color": "#f9c93a",
     "config": {
@@ -34,9 +34,9 @@
   {
     "id": "3",
     "type": "mirador",
-    "title": "mirador window 2",
+    "title": "A Technologist and Pioneer",
     "tooltip": "Hopper at Work",
-    "description": "this is a mirador test",
+    "description": "This collection is provided by Yale University Library Manuscripts and Archives",
     "color": "#3c58aa",
     "config": {
       "layout": "2x2",
@@ -69,7 +69,7 @@
     "type": "mirador",
     "title": "The First Glossary of Programming Terminology",
     "tooltip": "Book: The First Glossary of Programming Terminology",
-    "description": "this is a mirador test",
+    "description": "This Book is provided by Yale University Library Manuscripts and Archives",
     "color": "#3af992",
     "config": {
       "layout": "1x1",
@@ -85,8 +85,8 @@
   {
     "id": "5",
     "type": "mirador",
-    "title": "mirador window 4",
-    "description": "this is a mirador test",
+    "title": "Hopper Drawing: The Family Tree of Computers",
+    "description": "This collection is provided by Yale University Library Manuscripts and Archives",
     "tooltip": "Drawing: The Family Tree of Computers",
     "color": "#602f2f",
     "config": {
@@ -103,9 +103,9 @@
   {
     "id": "6",
     "type": "mirador",
-    "title": "mirador window 5",
-    "description": "this is a mirador test",
-    "tooltip": "Image: Need Tooltip",
+    "title": "Grace Murray Hopper",
+    "description": "This collection is provided by the Smithsonian Institution",
+    "tooltip": "Image: Smithsonian Institution",
     "color": "#73d996",
     "config": {
       "layout": "1x1",
