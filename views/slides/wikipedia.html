@@ -1,8 +1,8 @@
-<div class="section pp-scrollable slide-wikipedia" id="section4">
+<div class="section pp-scrollable slide-wikipedia" id="sectionWikipedia">
     <div class="content">
-      <div class="header" style="background:  rebeccapurple;">
+      <div class="header">
          <h1><a href="" id="wikipediaLink" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikidata Logo"></a> Wikipedia Article</h1>
-        <p>[Demo of Wikipedia Slide] This slide loads all the text currently about the person</p>
+        <p></p>
       </div>
       <div class="page">
         <div id="article">
@@ -11,3 +11,35 @@
     </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function(){
+    var wikipedia_api = `http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&page=${wikititle}&callback=?`
+    var wikipedia_link = `https://en.wikipedia.org/wiki/${wikititle}`
+    $.ajax({
+        type: "GET",
+        url: wikipedia_api,
+        contentType: "application/json; charset=utf-8",
+        async: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            var markup = data.parse.text["*"];
+            var blurb = $('<div></div>').html(markup);
+
+            // remove links as they will not work
+            blurb.find('a').each(function() { $(this).replaceWith($(this).html()); });
+
+            // remove any references
+            blurb.find('sup').remove();
+
+            // remove cite error
+            blurb.find('.mw-ext-cite-error').remove();
+            $('#article').html($(blurb).find('p'));
+            document.getElementById("wikipediaLink").href = wikipedia_link
+
+        },
+        error: function (errorMessage) {
+        }
+    });
+});
+</script>

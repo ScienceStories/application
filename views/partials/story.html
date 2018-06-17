@@ -17,12 +17,78 @@
   * 8. Wikidata
     9. Conclusion (Wikidata, all other resources)
  -->
-<div id="pagepiling">
-  {{> intro }}
-  {{> mirador }}
-  {{> youtube }}
-  {{> wikipedia }}
-  {{> timeline }}
-  {{> wikidata }}
-  {{> index }}
-</div>
+ <script type="text/javascript">
+   var wikititle = '{{wikipedia}}'.replace(" ", "_")
+</script>
+  <div id="pagepiling">
+    {{#each data}}
+      {{loadMoment this.type this}}
+    {{/each}}
+    {{> wikidata }}
+    {{> wikipedia }}
+    {{> index }}
+  </div>
+<script>
+
+data = {{{json data}}}
+lastSlide = data.length
+tooltips = [];
+colors = [];
+for (x=0; x < lastSlide; x++){
+  tooltips.push(data[x].tooltip);
+  colors.push(data[x].color);
+}
+lastSlide += 3;
+tooltips = tooltips.concat(['Wikidata Statements', 'Wikipedia Article', 'Learn More About {{name}}'])
+colors = colors.concat([ '#EC008C', '#1dc7ce', 'rgb(255, 185, 125)'])
+$('#pagepiling').pagepiling({
+ setMouseWheelScrolling: false,
+   verticalCentered: false,
+   css3: false,
+   sectionsColor: colors,
+   navigation: {
+           'textColor': '#000',
+           'bulletsColor': '#000',
+           'position': 'right',
+           'tooltips': tooltips
+       },
+   onLeave: function (index, nextIndex, direction) {
+
+       //fading out the txt of the leaving section
+       $('.section').eq(index - 1).find('h1, p').fadeOut(700, 'easeInQuart');
+
+       //fading in the text of the destination (in case it was fadedOut)
+       $('.section').eq(nextIndex - 1).find('h1, p').fadeIn(700, 'easeInQuart');
+
+
+       //reaching our last section? The one with our normal site?
+       if (nextIndex == lastSlide) {
+           $('#arrow').hide();
+
+           //fading out navigation bullets
+           // $('#pp-nav').fadeOut();
+
+           $('#section'+lastSlide).find('.content').animate({
+               top: '0%'
+           }, 700, 'easeInQuart');
+       }
+
+       //leaving our last section? The one with our normal site?
+       if (index == lastSlide) {
+           $('#arrow').show();
+
+           //fadding in navigation bullets
+           $('#pp-nav').fadeIn();
+
+           $('#section'+lastSlide+' .content').animate({
+               top: '100%'
+           }, 700, 'easeInQuart');
+       }
+   },
+});
+$.fn.pagepiling.setAllowScrolling(false);
+$('#arrow').click(function () {
+   $.fn.pagepiling.moveSectionDown();
+});
+
+</script>

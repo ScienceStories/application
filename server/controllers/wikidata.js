@@ -2,9 +2,55 @@ const wdk = require('wikidata-sdk');
 const fetch = require('node-fetch');
 const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
-
+const fs = require('fs');
 module.exports = {
-  loadStory(req, res) {
+  bibliography(req, res) {
+    const sparql = `
+      SELECT ?item
+      WHERE
+      {
+        {?item wdt:P31 wd:Q13442814}
+        UNION {?item wdt:P31 wd:Q571}.
+        ?item wdt:P921 wd:Q113616.
+      }
+    `
+    const url = wdk.sparqlQuery(sparql);
+    appFetch(url).then(content => {
+      console.log(content.results.bindings)
+      output = content.results.bindings
+      var qidString = '';
+      // TODO: HANDLE MORE THAN 50 RESULTS
+      for(var i = 0; i < output.length && i < 50; i++){
+        //Current uri for Wikidata is a url that is http://www.wikidata.org/entity/<qid>
+        qidString  += '|'+output[i].item.value.substr(31,);
+      }
+      qidString = qidString.substr(1,)
+      var browseUrl = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qidString}&languages=en&format=json`
+      return appFetch(browseUrl).then(content => {
+        console.log(content.entities)
+        return content.entities
+        // console.log(content.results.bindings)
+        return content.results.bindings
+      }
+    ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'bibliography', nav:'bibliography', works: simplifiedResults}))
+
+  })
+
+
+
+  },
+  customQuery(req, res) {
+    var wd_url = wdk.sparqlQuery(req.body.query);
+    appFetch(wd_url).then(content => {
+      return content.results.bindings
+    }
+  ).then(simplifiedResults => res.status(200).send(simplifiedResults))
+
+  },
+
+  processStory(req, res, row) {
+    // const jsonData = JSON.parse(fs.readFileSync("moments/hopper.json"));
+    const jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
     SELECT ?ps ?wdLabel ?datatype ?ps_Label ?ps_ ?wdpqLabel ?pq_Label ?url {
@@ -31,7 +77,7 @@ module.exports = {
         if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value)
         return x
       })
-      console.log(output)
+      // console.log(output)
       return {qid:qid, statements: output}
     }
       ).then(simplifiedResults =>
@@ -53,53 +99,12 @@ module.exports = {
         content: simplifiedResults.statements,
         wikipedia: wikipedia,
         name: name,
-        qid: simplifiedResults.qid
+        qid: simplifiedResults.qid,
+        data: jsonData
       })
         })
 
   })
-
-  },
-  bibliography(req, res) {
-    const sparql = `
-      SELECT ?item
-      WHERE
-      {
-        {?item wdt:P31 wd:Q13442814}
-        UNION {?item wdt:P31 wd:Q571}.
-        ?item wdt:P921 wd:Q113616.
-      }
-    `
-    const url = wdk.sparqlQuery(sparql);
-    appFetch(url).then(content => {
-      console.log(content.results.bindings)
-      output = content.results.bindings
-      var qidString = '';
-      for(var i = 0; i < output.length; i++){
-        //Current uri for Wikidata is a url that is http://www.wikidata.org/entity/<qid>
-        qidString  += '|'+output[i].item.value.substr(31,);
-      }
-      qidString = qidString.substr(1,)
-      var browseUrl = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qidString}&languages=en&format=json`
-      return appFetch(browseUrl).then(content => {
-        console.log(content.entities)
-        return content.entities
-        // console.log(content.results.bindings)
-        return content.results.bindings
-      }
-    ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'bibliography', nav:'bibliography', works: simplifiedResults}))
-
-  })
-
-
-
-  },
-  customQuery(req, res) {
-    var wd_url = wdk.sparqlQuery(req.body.query);
-    appFetch(wd_url).then(content => {
-      return content.results.bindings
-    }
-  ).then(simplifiedResults => res.status(200).send(simplifiedResults))
 
   },
 

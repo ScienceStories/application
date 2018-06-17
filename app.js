@@ -59,7 +59,6 @@ hbs.registerHelper('itemIcon', function convert_item_fa_class(item) {
 
       for (i=0; i < instances.length; i++){
         value = instances[i].mainsnak.datavalue.value.id
-        console.log (value)
         if ( value == 'Q571'){ //Book
           return 'fa fa-book';
         }
@@ -77,6 +76,7 @@ hbs.registerHelper('wikiDateTime', function dateFormat(date, format, utc) {
   date = date.substr(1,)
     return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
 });
+
 // Register partials
 var partials = "./views/partials/";
 fs.readdirSync(partials).forEach(function (file) {
@@ -94,6 +94,17 @@ fs.readdirSync(partials).forEach(function (file) {
     hbs.registerPartial(partial, source);
 });
 
+hbs.registerHelper('loadMoment', function(template, data) {
+    var loadedPartial = hbs.partials[template];
+    if (typeof loadedPartial !== 'function') {
+      loadedPartial = hbs.compile(loadedPartial);
+    }
+    return new hbs.SafeString(loadedPartial(data));
+});
+hbs.registerHelper('json', function(data) {
+
+    return JSON.stringify(data)
+});
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -128,6 +139,9 @@ module.exports = {
     data.links = function(){ return data.file_id+'_links'}
     res.render(layout, data);
   },
+  loadError: function (req, res, msg){
+    return res.status(401).redirect('/error?msg='+encodeURIComponent(msg))
+  }
 };
 
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
@@ -150,10 +164,6 @@ var sessionChecker = (req, res, next) => {
         next();
     }
 };
-
-
-
-
 
 // Require our routes into the application.
 require('./server/routes')(app, sessionChecker);

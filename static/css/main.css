@@ -199,3 +199,16 @@ li#accountDropDown {
     margin: 0 auto;
     text-align: left;
 }
+div#errorMessage {
+    text-align: center;
+    margin-top: 25vh;
+}
+div#errorMessage img {
+    width: 50%;
+    max-width: 90px;
+    margin: 0 auto;
+    opacity: .4;
+    background: #bdbdbd;
+    padding: 20px;
+    border-radius: 25%;
+}

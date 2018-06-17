@@ -1,7 +1,11 @@
-<div class="section slide-intro" id="section1">
+<div class="section slide-intro" id="section{{id}}" >
     <div class="intro">
-      <!-- <h1>{{name}}</h1> -->
-        <h1>Katharine Jeanette Bush</h1>
-      <p>[Demo of Intro Slide] Hover over bottom of page to go to the next window or use the side nav toggle on the right</p>
+        <h1>{{title}}</h1>
+      <p>{{description}}</p>
     </div>
 </div>
+<style>
+  #section{{id}}{
+    background-image:  url({{image}});
+  }
+</style>

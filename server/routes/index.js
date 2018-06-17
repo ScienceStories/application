@@ -2,6 +2,7 @@ const membersController = require('../controllers').members;
 const storyController = require('../controllers').story;
 const wikidataController = require('../controllers').wikidata;
 const loadPage =  require('../../app').loadPage;
+const loadError =  require('../../app').loadError;
 const fetch = require('node-fetch');
 const fs = require('fs');
 module.exports = (app, sessionChecker) => {
@@ -30,7 +31,7 @@ module.exports = (app, sessionChecker) => {
       });
   });
   // route for Home-Page
-  app.get('/Q:id', wikidataController.loadStory);
+  app.get('/Q:id', storyController.select);
   app.get('/browse', storyController.browse);
   app.get('/bibliography', wikidataController.bibliography);
   // route for Home-Page
@@ -76,7 +77,15 @@ app.get('/logout', (req, res) => {
         res.redirect('/login');
     }
 });
-
+// route for Error Page
+  app.get('/error', (req, res) => res.render('base', {
+    page: function(){ return 'error'},
+    title: 'Error',
+    nav: 'error',
+    scripts: function(){ return 'error_scripts'},
+    links: function(){ return 'error_links'},
+    message: req.query.msg
+  }));
   app.get('/api', (req, res) => res.status(200).send({
     message: 'Welcome to the Science Stories API!',
   }));

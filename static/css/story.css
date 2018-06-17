@@ -108,8 +108,7 @@ div#conent_panel {
     background-position: 50% 0%;
     background-repeat: no-repeat;
 }
-#section1 {
-    background-image: url(../images/stock/kjb-1.jpg);
+.slide-intro, .slide-wikipedia {
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -117,21 +116,14 @@ div#conent_panel {
         background-position: center;
     background-repeat: no-repeat;
 }
-
- #section4 {
-  background-image: url(../images/stock/kjb-3.jpg);
-      -webkit-background-size: cover;
-      -moz-background-size: cover;
-      -o-background-size: cover;
-      background-size: cover;
-      background-position: center;
-  background-repeat: no-repeat;
+.slide-intro p {
+    padding: 0 10% 10px 10%;
 }
-#section4 .page{
+.slide-wikipedia .page{
       box-shadow: 0 0 6px #00000038;
 }
-.last-section .content {
-    top: 100%;
+.slide-index .content {
+    top: 0;
     position: absolute;
     left: 0;
     width: 100%;
@@ -188,14 +180,20 @@ div#conent_panel {
     font-weight: bold;
     color: #000;
 }
-#section5 .intro {
+.slide-timeline .intro {
     color: #000;
+}
+.pp-tooltip {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 /* Content page
 	 * --------------------------------------- */
- .header {
-    padding-top: 80px;
-    text-align: center;
+.header {
+   /* padding-top: 80px; */
+   text-align: center;
+   padding: 0 10%;
 }
 .header h1 {
     font-size: 5em;
@@ -239,6 +237,7 @@ div#conent_panel {
     padding-left: 5%;
     padding-bottom: 100px;
     background: black;
+    height: 100%;
 }
 .page.page-youtube {
     width: 100%;
@@ -343,4 +342,11 @@ div#leftIndex ul {
 #leftIndex li a {
     color: #599aa0;
     font-weight: 400;
+}
+.content {
+    height: 100%;
+}
+.mirador-container {
+    height: 100%;
+    position: relative;
 }

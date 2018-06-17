@@ -2,7 +2,8 @@ const Story = require('../models').story;
 const wdk = require('wikidata-sdk');
 const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
-
+const wikidataController = require('./wikidata');
+const loadError =  require('../../app').loadError;
 module.exports = {
   create(req, res) {
     qid = 'Q' + req.body.qid
@@ -13,9 +14,26 @@ module.exports = {
       .create({
         qid: qid,
         status: 'basic',
+        data: {}
       })
       .then(out => res.status(201).redirect('/'+qid))
       .catch(error => res.status(400).send(error));
+  },
+  select(req, res) {
+    return Story
+      .find({
+          where: {
+            qid: 'Q'+req.params.id,
+            status: 'basic'
+          },
+        })
+      .then(out => {
+        if (!out) {
+          return loadError(req, res, 'This story has not yet been curated.');
+        }
+        return wikidataController.processStory(req, res, out);
+      })
+      .catch(error => loadError(req, res, 'Trouble Loading this Story'));
   },
   browse(req, res) {
     return Story
@@ -44,7 +62,8 @@ WHERE
         // console.log(out);
         qidString = '';
         story_total = out.length;
-        for(var i = 0; i < story_total; i++){
+        //TODO: Make Work for more than 50
+        for(var i = 0; i < story_total && i < 50; i++){
             qidString  += '|'+out[i].dataValues.qid;
           }
           qidString = qidString.substr(1,)
@@ -85,6 +104,7 @@ WHERE
       })
       .catch(error => res.status(400).send(error));
   },
+
 
   destroy(req, res) {
     return Story
