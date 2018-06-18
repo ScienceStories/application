@@ -2,6 +2,7 @@ const wdk = require('wikidata-sdk');
 const fetch = require('node-fetch');
 const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
+const sparqlController = require('./sparql');
 const fs = require('fs');
 module.exports = {
   bibliography(req, res) {
@@ -105,6 +106,76 @@ module.exports = {
         })
 
   })
+
+  },
+  processAnnotation(req, res){
+    qid = req.params.qid;
+    appFetch(sparqlController.getClaims(qid, 'en'))
+      .then(content => {
+        claims = content.results.bindings
+        appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
+        .then(labels => {
+          name = labels.entities[qid].labels.en.value
+          wikipedia = ''
+          if (labels.entities[qid].sitelinks.enwiki){
+            wikipedia = labels.entities[qid].sitelinks.enwiki.title.replace(' ', '_')
+          }
+          annotationData = {
+            "type": "human",
+            "icon": "fa-user",
+            "label": name,
+            "summary": "this is some description",
+            "wikipedia": wikipedia,
+            "image": '',
+            "facts": {
+              "birthplace": '',
+              "educated": '',
+              "occupation": '',
+              "works":''
+            },
+          }
+          function addVal(pval, fact, prop, val){
+            if (pval == `http://www.wikidata.org/prop/statement/${prop}`){
+              if (!annotationData.facts[fact].length){
+                  annotationData.facts[fact] = val
+              }
+              else if (annotationData.facts[fact].includes(val)){
+
+              }
+              else{
+                  annotationData.facts[fact] += ', '+ val
+
+              }
+            }
+          }
+          for (i=0; i < claims.length; i++){
+            clm = claims[i]
+            pval = clm.ps.value
+            val = clm.ps_Label.value
+            if (pval == "http://www.wikidata.org/prop/statement/P18"){
+              annotationData["image"] = clm.ps_Label.value
+            }
+            addVal(pval, "birthplace", "P19", val)
+            addVal(pval, "educated", "P69", val)
+            addVal(pval, "occupation", "P106", val)
+            addVal(pval, "works", "P800", val)
+          }
+          if (wikipedia.length){
+            return appFetch('https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles='+wikipedia)
+              .then(wikipediaData => {
+                for (item in wikipediaData.query.pages){
+                  annotationData['summary'] = wikipediaData.query.pages[item].extract;
+                }
+                return res.send(annotationData)
+              })
+          }
+          else{
+            return res.send(annotationData)
+          }
+
+
+        })
+      })
 
   },
 

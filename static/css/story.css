@@ -350,3 +350,75 @@ div#leftIndex ul {
     height: 100%;
     position: relative;
 }
+
+.mirador-container .annotation-display.annotation-tooltip .button-container {
+    display: none;
+}
+
+
+.wdAntn-section-header{
+    background: #99a4af;
+    width: 90%;
+    margin: auto;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: white;
+}
+.wdAntn-image {
+    width: 80%;
+    text-align: center;
+    margin: 0 auto;
+}
+.wdAntn-image img {
+    width: 100%;
+    margin: 0 auto;
+
+}
+.wdAntn-header {
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    background: #14b8bf;
+    color:white;
+    margin: 0;
+    font-size: 125%;
+    padding: 5px;
+}
+.wdAntn {
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    background: #e8f3fd;
+}
+.wdAntn-description{
+    text-align: left;
+    margin: 10px;
+    padding: 0 5%;
+    font-size: 75%;
+}
+
+.wdAntn-btn{
+  width: 80%;
+  margin: 10px auto;
+  padding: 5px;
+  border: 1px solid #dfa23a;
+  color: #dfa23a;
+}
+.wdAntn-btn:hover{
+  background: #dfa23a;
+  color: white;
+}
+.wdAntn-btn a{
+    text-decoration: none !important;
+    border: none !important;
+
+}
+.wdAntn-statement{
+    font-size: 80%;
+    text-align: left;
+    padding: 0 10%;
+}
+.wdAntn-prop{
+    font-weight: bold;
+}

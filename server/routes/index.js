@@ -118,7 +118,7 @@ app.post('/api/dump/stories', (req, res) => {
   app.get('/api/iiif/:manifest/thumbnail', (req, res) => res.status(200).send({
     message: 'Thumbnail for '+req.params.manifest,
   }));
-
+  app.get('/api/wd/annotation/:qid', wikidataController.processAnnotation);
 
   app.get('/api/iiif/:manifest/:sequence', (req, res) => {
     var content = JSON.parse(fs.readFileSync("manifests/"+req.params.manifest+'/index.json')).sequences[req.params.sequence];
