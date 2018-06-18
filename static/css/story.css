@@ -364,6 +364,7 @@ div#leftIndex ul {
     margin-bottom: 5px;
     font-weight: bold;
     color: white;
+    text-transform: capitalize;
 }
 .wdAntn-image {
     width: 80%;
@@ -385,11 +386,13 @@ div#leftIndex ul {
     font-size: 125%;
     padding: 5px;
 }
+
 .wdAntn {
     width: 100%;
     margin: 0 auto;
     text-align: center;
     background: #e8f3fd;
+    padding-bottom: 20px;
 }
 .wdAntn-description{
     text-align: left;

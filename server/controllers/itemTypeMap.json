@@ -1,0 +1,25 @@
+{
+  "person": {
+    "properties":[ "P19", "P69", "P106", "P800"],
+    "mainIcon": "fa fa-user" ,
+    "pronouns": {
+      "interrogative": "who"
+    }
+  },
+  "device": {
+    "properties":[ "P31", "P127", "P1176", "P287", "P571"],
+    "mainIcon": "fas fa-globe" ,
+    "pronouns": {
+      "interrogative": "what"
+    }
+  },
+  "other": {
+    "properties":["P31", "P571"],
+    "mainIcon": "fas fa-globe" ,
+    "pronouns": {
+      "interrogative": "what"
+    }
+  }
+
+
+}

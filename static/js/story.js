@@ -20,22 +20,22 @@ $('.mirador-viewer .all-annotations .text-viewer p:not(.converted)').each(functi
       // Header
       annotationHtml = `
       <div class="wdAntn">
-        <div class="wdAntn-header"> ${data.label} <i class="fa ${data.icon} pull-right"></i></div>
+        <div class="wdAntn-header"> ${data.label} <i class="${data.icon} pull-right"></i></div>
       `
       // image
       if (data.image.length){
         annotationHtml += `<div class="wdAntn-image"><img src="${data.image}"></div>`
       }
       if (data.summary.length){
-        annotationHtml += `<div class="wdAntn-section-header"> Who is this? </div>
+        annotationHtml += `<div class="wdAntn-section-header"> ${data.pronoun} is this? </div>
         <div class="wdAntn-description">${data.summary}</div>`
       }
       if (data.facts){
         facts = data.facts
-        annotationHtml += `<div class="wdAntn-section-header"> Quick Facts </div>`
+        annotationHtml += `<div class="wdAntn-section-header"> Quick Facts </div><div class="wdAntn-statements">`
         for (fact in facts){
           if (facts[fact].length){
-            annotationHtml += `<div class="wdAntn-statements">
+            annotationHtml += `
               <div class="wdAntn-statement">
                 <span class="wdAntn-prop">${fact}:</span> ${facts[fact]}
               </div>`

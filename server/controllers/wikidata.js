@@ -4,6 +4,8 @@ const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
 const sparqlController = require('./sparql');
 const fs = require('fs');
+iconMap =  JSON.parse(fs.readFileSync("server/controllers/iconMap.json"));
+itemTypeMap =  JSON.parse(fs.readFileSync("server/controllers/itemTypeMap.json"));
 module.exports = {
   bibliography(req, res) {
     const sparql = `
@@ -113,41 +115,50 @@ module.exports = {
     appFetch(sparqlController.getClaims(qid, 'en'))
       .then(content => {
         claims = content.results.bindings
-        appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
+        appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|claims|sitelinks&sitefilter=enwiki&languages=en`)
         .then(labels => {
           name = labels.entities[qid].labels.en.value
+          // find type
+          itemType = "other"
+          itemIcon = "fas fa-globe"
+          instances = labels.entities[qid].claims['P31']
+          for (clm in instances){
+            temp = iconMap[instances[clm].mainsnak.datavalue.value.id];
+            if (temp){
+              itemType = temp.type;
+              itemIcon = temp.icon;
+              break;
+            }
+          }
           wikipedia = ''
           if (labels.entities[qid].sitelinks.enwiki){
             wikipedia = labels.entities[qid].sitelinks.enwiki.title.replace(' ', '_')
           }
+          itemTypeMapDetails = itemTypeMap[itemType];
+          itemProps = itemTypeMapDetails.properties;
           annotationData = {
-            "type": "human",
-            "icon": "fa-user",
+            "type": itemType,
+            "icon": itemIcon,
             "label": name,
-            "summary": "this is some description",
+            "summary": "",
             "wikipedia": wikipedia,
             "image": '',
-            "facts": {
-              "birthplace": '',
-              "educated": '',
-              "occupation": '',
-              "works":''
-            },
+            "facts": {},
+            "pronoun": itemTypeMapDetails.pronouns.interrogative
           }
           function addVal(pval, fact, prop, val){
             if (pval == `http://www.wikidata.org/prop/statement/${prop}`){
-              if (!annotationData.facts[fact].length){
+              if (!annotationData.facts[fact]){
                   annotationData.facts[fact] = val
               }
               else if (annotationData.facts[fact].includes(val)){
-
               }
               else{
                   annotationData.facts[fact] += ', '+ val
-
               }
             }
           }
+
           for (i=0; i < claims.length; i++){
             clm = claims[i]
             pval = clm.ps.value
@@ -155,10 +166,9 @@ module.exports = {
             if (pval == "http://www.wikidata.org/prop/statement/P18"){
               annotationData["image"] = clm.ps_Label.value
             }
-            addVal(pval, "birthplace", "P19", val)
-            addVal(pval, "educated", "P69", val)
-            addVal(pval, "occupation", "P106", val)
-            addVal(pval, "works", "P800", val)
+            for (j=0; j < itemProps.length; j++){
+              addVal(pval, clm.wdLabel.value, itemProps[j], val)
+            }
           }
           if (wikipedia.length){
             return appFetch('https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles='+wikipedia)
