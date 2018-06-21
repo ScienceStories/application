@@ -1,6 +1,6 @@
 {
 	"@context": "http://iiif.io/api/presentation/2/context.json",
-	"@id": "http://4da875f6-0a45-4051-9c17-aa5e7fafc092",
+	"@id": "http://sciencestories.io/api/iiif/manifest/HopperHarvardComputationLabStaff.json",
 	"@type": "sc:Manifest",
 	"label": "Staff Portrait, at the time of the dedication, August 1944 top: Bissell, Calvin, Verdonck, Livingston, White; bottom: Bloch, Arnold, Aiken, Hopper, Campbell.",
 	"metadata": [],
@@ -21,22 +21,22 @@
 				{
 					"@id": "http://4aeebfbc-3475-407b-8bda-62ff8ad9b4b4",
 					"@type": "sc:Canvas",
-					"label": "Empty canvas",
+					"label": "Computation Lab Photo",
 					"height": 246,
 					"width": 300,
 					"images": [
 						{
 							"@context": "http://iiif.io/api/presentation/2/context.json",
-							"@id": "http://5fe1b2d8-88b3-4e59-8a52-8487ba3d207c",
+							"@id": "http://83a08d8a-11cf-48cc-958a-dc1289a18211",
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/HopperHarvardComputationLabStaff.jpg/full/full/0/default.jpg",
+								"@id": "http://iiif.sciencestories.io/iiif/2/HopperHarvardComputationLabStaff.jpg/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/HopperHarvardComputationLabStaff.jpg",
+									"@id": "http://iiif.sciencestories.io/iiif/2/HopperHarvardComputationLabStaff.jpg",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{

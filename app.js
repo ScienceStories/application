@@ -13,7 +13,7 @@ const cors = require('cors');
 // Set up the express app
 const app = express();
 const moment = require('moment');
-const url_path = (process.env.NODE_ENV == 'production') ? 'http://sciencestories.ksn.io/' : '/'
+const url_path = (process.env.NODE_ENV == 'production') ? 'http://sciencestories.io/' : '/'
 console.log(url_path)
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

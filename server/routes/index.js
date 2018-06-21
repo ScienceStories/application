@@ -5,6 +5,7 @@ const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const fetch = require('node-fetch');
 const fs = require('fs');
+
 module.exports = (app, sessionChecker) => {
 
 // app.get('/browse', sessionChecker, (req, res) => loadPage(res, req, 'base', {file_id:'browse', nav:'browse'}));
@@ -108,6 +109,21 @@ app.post('/api/dump/stories', (req, res) => {
   //   var content = JSON.parse(fs.readFileSync("manifests/"+req.params.filename));
   //   res.status(200).send(content);
   // });
+  annotations =  JSON.parse(fs.readFileSync("server/controllers/annotations.json"));
+
+  app.post('/api/iiif/save', (req, res) => {
+    var content = JSON.parse(req.body.obj);
+    fs.writeFile("server/controllers/annotations.json", JSON.stringify(content))
+    annotations =  JSON.parse(fs.readFileSync("server/controllers/annotations.json"));
+    res.status(200).send(content);
+  });
+
+  app.get('/api/iiif/load', (req, res) => {
+    // var content = {"hello": "world"}
+    console.log("sending ", annotations)
+    res.status(200).send(annotations);
+  });
+
   app.get('/api/iiif/:manifest', (req, res) => {
     var content = fs.readFileSync("manifests/"+req.params.manifest+'/index.json');
     res.status(200).send(JSON.parse(content));
@@ -140,6 +156,9 @@ app.post('/api/dump/stories', (req, res) => {
     var content = JSON.parse(fs.readFileSync("manifests/"+req.params.manifest+'/index.json')).sequences[req.params.sequence].canvases[req.params.canvas].images[req.params.image];
     res.status(200).send(content);
   });
+
+
+
   // route for handling 404 requests(unavailable routes)
   app.use(function (req, res, next) {
     res.status(404).send("Sorry can't find that!")
