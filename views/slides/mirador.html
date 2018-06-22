@@ -12,54 +12,65 @@
 <script type="text/javascript">
 
  $( document ).ready(function() {
-   // Called without "let" or "var"
-   // so we can play with it in the browser
-   instanceData = {{{json config.data}}}
+   $.get("/api/iiif/load").done(function(data){
+        console.log(data)
+        for (item in data){
+          console.log('Setting->', item, data[item])
+          localStorage.setItem(item, data[item])
+        }
+      }).done(function(){
+        // Called without "let" or "var"
+        // so we can play with it in the browser
+        instanceData = {{{json config.data}}}
 
-   windowObjs = []
-   for (x=0; x < instanceData.length; x++ ){
-     windowObjs[x] = {
-       "loadedManifest": instanceData[x].manifestUri,
-       "viewType": instanceData[x].viewType,
-       "sidePanel": false,
-       "sidePanelVisible": false,
-       "bottomPanelVisible": false,
-       "canvasControls": {
-         "annotations" : {
-           "annotationLayer" : true,
-           "annotationCreation" : false,
-           "annotationState" : "on",
-           "annotationRefresh" : false
-         }
-       }
-     }
-   }
-   myMiradorInstance = Mirador(
-     {
-       "id": "mirador{{id}}",
-       "layout": "{{config.layout}}",
-       "data": instanceData,
-       "windowObjects": windowObjs,
-       "annotationEndpoint": {
-         "name": "Simple Annotation Store Endpoint",
-         "module": "SimpleASEndpoint",
-         "options": {
-           "url": "http://sciencestories-annotate.herokuapp.com/annotation",
-           "storeId":"comparison",
-           "APIKey":"user_auth"
-         }
-       },
-       "saveSession": false,
-       "annotationState": "annoOnCreateOff",
-       "sidePanelOptions" : {
-         "tocTabAvailable": false,
-         "layersTabAvailable": false,
-         "searchTabAvailable": false,
-         "annotations" : false
-       }
-     }
+        windowObjs = []
+        for (x=0; x < instanceData.length; x++ ){
+          windowObjs[x] = {
+            "loadedManifest": instanceData[x].manifestUri,
+            "viewType": instanceData[x].viewType,
+            "sidePanel": false,
+            "sidePanelVisible": false,
+            "bottomPanelVisible": false,
+            "canvasControls": {
+              "annotations" : {
+                "annotationLayer" : true,
+                "annotationCreation" : false,
+                "annotationState" : "on",
+                "annotationRefresh" : false
+              }
+            }
+          }
+        }
+        myMiradorInstance = Mirador(
+          {
+            "id": "mirador{{id}}",
+            "layout": "{{config.layout}}",
+            "data": instanceData,
+            "windowObjects": windowObjs,
+            "annotationEndpoint":
+             { "name":"Local Storage", "module": "LocalStorageEndpoint" },
+            // {
+            //   "name": "Simple Annotation Store Endpoint",
+            //   "module": "SimpleASEndpoint",
+            //   "options": {
+            //     "url": "http://sciencestories-annotate.herokuapp.com/annotation",
+            //     "storeId":"comparison",
+            //     "APIKey":"user_auth"
+            //   }
+            // },
+            "saveSession": false,
+            "annotationState": "annoOnCreateOff",
+            "sidePanelOptions" : {
+              "tocTabAvailable": false,
+              "layersTabAvailable": false,
+              "searchTabAvailable": false,
+              "annotations" : false
+            }
+          }
 
-   );
+        );
+      })
+
  });
 
 // SAMPLE CONFIG

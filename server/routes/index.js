@@ -1,6 +1,7 @@
 const membersController = require('../controllers').members;
 const storyController = require('../controllers').story;
 const wikidataController = require('../controllers').wikidata;
+const annotationController = require('../controllers').annotation;
 const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const fetch = require('node-fetch');
@@ -18,6 +19,16 @@ module.exports = (app, sessionChecker) => {
         links: function(){ return 'home_links'},
         title: "Welcome",
         nav: "home",
+      });
+  });
+  app.get('/annotate', sessionChecker, (req, res) => {
+      // res.redirect('/login');
+      res.render('full', {
+        page: function(){ return 'annotate'},
+        scripts: function(){ return 'annotate_scripts'},
+        links: function(){ return 'annotate_links'},
+        title: "Welcome",
+        nav: "annotate",
       });
   });
   // route for Test-Page
@@ -109,20 +120,10 @@ app.post('/api/dump/stories', (req, res) => {
   //   var content = JSON.parse(fs.readFileSync("manifests/"+req.params.filename));
   //   res.status(200).send(content);
   // });
-  annotations =  JSON.parse(fs.readFileSync("server/controllers/annotations.json"));
 
-  app.post('/api/iiif/save', (req, res) => {
-    var content = JSON.parse(req.body.obj);
-    fs.writeFile("server/controllers/annotations.json", JSON.stringify(content))
-    annotations =  JSON.parse(fs.readFileSync("server/controllers/annotations.json"));
-    res.status(200).send(content);
-  });
-
-  app.get('/api/iiif/load', (req, res) => {
-    // var content = {"hello": "world"}
-    console.log("sending ", annotations)
-    res.status(200).send(annotations);
-  });
+  app.post('/api/iiif/save', annotationController.save);
+  app.get('/api/iiif/load', annotationController.load);
+  app.post('/api/iiif/update', annotationController.update);
 
   app.get('/api/iiif/:manifest', (req, res) => {
     var content = fs.readFileSync("manifests/"+req.params.manifest+'/index.json');

@@ -1,0 +1,64 @@
+    <div id="viewer" style="width: 100%; height: 100%;position: fixed;"></div>
+    <script src="build/mirador/mirador.js"></script>
+    <script type="text/javascript">
+    function loadAnnotations(){
+      localStorage.clear();
+      $.get("/api/iiif/load").done(function(data){
+        console.log(data)
+        for (item in data){
+          console.log('Setting->', item, data[item])
+          localStorage.setItem(item, data[item])
+        }
+      })
+    }
+    function saveAnnotations(){
+      obj = JSON.stringify(localStorage)
+      console.log('Runnning with ->', obj)
+      $.post("/api/iiif/save", {obj: obj})
+        .done(function(data){
+          alert("Returned: " + JSON.stringify(data))
+        })
+    }
+    function updateAnnotation(){
+      for (anno in localStorage){
+        obj = JSON.stringify(localStorage[anno])
+        console.log('Runnning with ->', obj);
+
+        $.post("/api/iiif/update?uri="+anno, { memberId:1,
+          status: 'active',
+          state: localStorage[anno]})
+          .done(function(data){
+            console.log("Returned: " + JSON.stringify(data))
+          })}
+    }
+
+    $.get("/api/iiif/load").done(function(data){
+         console.log(data)
+         for (item in data){
+           console.log('Setting->', item, data[item])
+           localStorage.setItem(item, data[item])
+         }
+       }).done( 
+
+     $(function() {
+       // Called without "let" or "var"
+       myMiradorInstance = Mirador({
+         "id": "viewer",
+         "layout": "1x1",
+         "data": [
+           { "manifestUri": "/api/iiif/manifest/HopperHarvardComputationLabStaff.json", "location": "Yale University"},
+         ],
+         "windowObjects": [],
+         "annotationEndpoint": { "name":"Local Storage", "module": "LocalStorageEndpoint" },
+         "sidePanelOptions" : {
+           "tocTabAvailable": true,
+           "layersTabAvailable": true,
+           "searchTabAvailable": true,
+           "annotations" : true
+         },
+      });
+    }))
+    </script>
+    <!-- This enables live reloading of assets for improved developer experience. -->
+    <!-- Remove if copying this page as a basis for another project. -->
+    <script src="//localhost:35729/livereload.js"></script>
