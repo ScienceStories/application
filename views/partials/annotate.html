@@ -38,11 +38,11 @@
            console.log('Setting->', item, data[item])
            localStorage.setItem(item, data[item])
          }
-       }).done( 
+       }).done(
 
      $(function() {
        // Called without "let" or "var"
-       myMiradorInstance = Mirador({
+       return Mirador({
          "id": "viewer",
          "layout": "1x1",
          "data": [
@@ -56,9 +56,29 @@
            "searchTabAvailable": true,
            "annotations" : true
          },
-      });
-    }))
+      })
+    }))      .done( function (){
+      $('ul.mirador-main-menu').prepend(`<li>
+        <div class="mirador-admin-btns" onclick="saveAnnotations()">
+        Save Changes
+        </div>
+        </li>
+        <li>
+        <div class="mirador-admin-btns" onclick="location.reload()">
+        Reset
+        </div>
+        </li>`)
+        console.log('DONEEE')
+    }
+
+
+          )
     </script>
     <!-- This enables live reloading of assets for improved developer experience. -->
     <!-- Remove if copying this page as a basis for another project. -->
     <script src="//localhost:35729/livereload.js"></script>
+
+    <!-- <ul class="mirador-main-menu">
+      <li>
+        <a href="javascript:;" class="change-layout mainmenu-button" aria-label="Change the number of visible slots" data-hasqtip="0" oldtitle="Change the number of visible slots" title="">
+          Change Layout</a></li> -->
