@@ -47,7 +47,9 @@
          "id": "viewer",
          "layout": "1x1",
          "data": [
-           { "manifestUri": "/api/iiif/manifest/HopperHarvardComputationLabStaff.json", "location": "Yale University"},
+           {{#each data}}
+               { "manifestUri": "/api/iiif/manifest/{{this}}", "location": "Yale University"},
+            {{/each}}
          ],
          "windowObjects": [],
          "annotationEndpoint": { "name":"Local Storage", "module": "LocalStorageEndpoint" },

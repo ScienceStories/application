@@ -23,12 +23,14 @@ module.exports = (app, sessionChecker) => {
   });
   app.get('/annotate', sessionChecker, (req, res) => {
       // res.redirect('/login');
+      files = fs.readdirSync("manifests/");
       res.render('full', {
         page: function(){ return 'annotate'},
         scripts: function(){ return 'annotate_scripts'},
         links: function(){ return 'annotate_links'},
         title: "Welcome",
         nav: "annotate",
+        data: files
       });
   });
   // route for Test-Page
