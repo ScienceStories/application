@@ -33,6 +33,7 @@
     }
 
     $.get("/api/iiif/load").done(function(data){
+      localStorage.clear();
          console.log(data)
          for (item in data){
            console.log('Setting->', item, data[item])
@@ -68,7 +69,6 @@
         Reset
         </div>
         </li>`)
-        console.log('DONEEE')
     }
 
 

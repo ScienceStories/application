@@ -2,13 +2,14 @@ const Annotation = require('../models').annotation;
 const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
+const Sequelize = require('sequelize');
 const fs = require('fs');
 module.exports = {
   create(data) {
     return Annotation.create({
-        uri: uri,
+        uri: data.uri,
         status: 'active',
-        state: data[uri],
+        state: data[data.uri],
         memberId: 1
       }).catch(error => {return 0});
   },
@@ -39,6 +40,18 @@ module.exports = {
         res.status(200).send(sendData)
       })
   },
+  upsert(values, condition) {
+      return Annotation
+          .findOne({ where: condition })
+          .then(function(obj) {
+              if(obj) { // update
+                  return obj.update(values);
+              }
+              else { // insert
+                  return Annotation.create(values);
+              }
+          })
+      },
   update(data) {
     return Annotation
       .find({
@@ -46,38 +59,52 @@ module.exports = {
             uri: data.uri,
           },
         })
-      .then(out => {
-        if (!out){
+      .then(found => {
+        if (!found){
           return 0;
         }
-        return out
+        return found
           .update(data, { fields: Object.keys(data) })
           .then(() => {})
           .catch(error => {return 0});
       })
       .catch(error => {return error});
   },
+  updateOrCreate (model, where, newItem) {
+  // First try to find the record
+  return model
+  .findOne({where: where})
+  .then(function (foundItem) {
+      if (!foundItem) {
+          // Item not found, create a new one
+          return model
+              .create(newItem)
+              .then(function (item) { return  {item: item, created: true}; })
+      }
+       // Found an item, update it
+      return model
+          .update(newItem, {where: where})
+          .then(function (item) { return {item: item, created: false} }) ;
+        })
+  },
   save(req, res) {
     var content = JSON.parse(req.body.obj);
-    for (uri in content){
-      obj = {
-        uri: uri,
-        status: 'active',
-        state: content[uri],
-        memberId: 1
-      }
-      temp = module.exports.update(obj).then(temp => {
-        if (!temp){
-        temp = module.exports.create(temp)
-      }
-    })
-
+    for (let tempUri in content){
+      if (tempUri != 'i18nextLng'){
+        module.exports.updateOrCreate(Annotation,
+          {uri: tempUri},
+          {
+            uri: tempUri,
+            status: 'active',
+            state: content[tempUri],
+            memberId: 1
+          })
+        .then(function(result) {
+            result.item;  // the model
+            result.created; // bool, if a new item was created.
+        });
     }
-    return res.status(200).send({
-      message: 'Finished',
-    });
-  },
-
+  }},
   destroy(req, res) {
     return Annotation
       .find({
