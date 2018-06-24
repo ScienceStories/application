@@ -5,6 +5,10 @@
 <button id="arrow">
   <span>↓</span>
 </button>
+<button id="upArrow">
+  <span>↑</span>
+</button>
+
 <!-- slide types:
 
   * 1. Intro (background pic + name and 1-line description)
@@ -90,5 +94,8 @@ $.fn.pagepiling.setAllowScrolling(false);
 $('#arrow').click(function () {
    $.fn.pagepiling.moveSectionDown();
 });
-
+$('#upArrow').click(function () {
+   $.fn.pagepiling.moveSectionUp();
+});
+$('#upArrow').css('z-index', $('.section').length)
 </script>

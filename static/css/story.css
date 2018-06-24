@@ -16,6 +16,7 @@ body{
     opacity: .5;
     width: 10vw;
 }
+
 a#homeButton:hover {
     text-decoration: none;
     color: white;
@@ -24,6 +25,26 @@ a#homeButton:hover {
 }
 #homeButton img {
     width: 100%;
+}
+#upArrow {
+    color: #ffffff9e;
+    background: none;
+    position: fixed;
+    z-index: 10000000000000000;
+    right: 15px;
+    top: 15px;
+    font-size: 140%;
+    font-weight: bold;
+    background: #808080;
+    /* padding: 10px; */
+    border-radius: 50%;
+    opacity: .5;
+    width: 2em;
+    height: 2em;
+}
+button#upArrow:active, button#upArrow:focus {
+    border:  none;
+    outline: none;
 }
 
 .page-wrapper{
