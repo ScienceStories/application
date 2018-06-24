@@ -72,15 +72,21 @@
     var i = setInterval(function(){
         // do your thing
 
-        $('ul.mirador-main-menu').prepend(`<li>
-          <div class="mirador-admin-btns" onclick="saveAnnotations()">
-          Save Changes
-          </div>
+        $('ul.mirador-main-menu').prepend(`
+          <li>
+            <div class="mirador-admin-btns pull-left">
+              <a href="/">Home</a>
+            </div>
           </li>
           <li>
-          <div class="mirador-admin-btns" onclick="location.reload()">
-          Reset
-          </div>
+            <div class="mirador-admin-btns" onclick="saveAnnotations()">
+              <button>Save Changes</button>
+            </div>
+          </li>
+          <li>
+            <div class="mirador-admin-btns" onclick="location.reload()">
+              Reset
+            </div>
           </li>`)
         counter++;
         if($('.mirador-admin-btns').length  > 0) {

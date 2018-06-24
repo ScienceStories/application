@@ -35,7 +35,7 @@ module.exports = {
         // console.log(content.results.bindings)
         return content.results.bindings
       }
-    ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'bibliography', nav:'bibliography', works: simplifiedResults}))
+    ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'bibliography', title:'Bibliography', nav:'bibliography', works: simplifiedResults}))
 
   })
 

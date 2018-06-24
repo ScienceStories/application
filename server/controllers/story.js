@@ -78,7 +78,7 @@ WHERE
             // console.log(content.results.bindings)
             return content.results.bindings
           }
-        ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'browse', nav:'browse', stories: simplifiedResults}))
+        ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'browse',  title:'Browse Stories', nav:'browse', stories: simplifiedResults}))
       })
       .catch(error => {console.log(error);res.status(400).send(error)});
   },
