@@ -1,5 +1,8 @@
 {
   "Q5": {"icon": "fa fa-user", "type": "person" },
-  "Q68": {"icon": "fas fa-desktop", "type": "device" }
+  "Q68": {"icon": "fas fa-desktop", "type": "device" },
+  "Q3962":{"icon": "fas fa-laptop", "type": "device" },
+  "Q6256":{"icon": "fas fa-home", "type": "location" },
+  "Q3947":{"icon": "fas fa-home", "type": "location" }
 
 }

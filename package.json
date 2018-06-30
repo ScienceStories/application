@@ -5,8 +5,8 @@
   "main": "index.js",
   "config": {},
   "scripts": {
-    "start": "npm run manifest && node ./bin/www",
-    "start:dev": "npm run manifest:dev && nodemon ./bin/www",
+    "start": "node ./bin/www",
+    "start:dev": "nodemon ./bin/www",
     "manifest:dev": "biiif collection -u http://localhost:${PORT:-8000}/collection",
     "manifest": "biiif collection -u http://sciencestories.ksn.io/collection",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -38,7 +38,7 @@
     "moment": "^2.22.1",
     "morgan": "^1.9.0",
     "node-fetch": "^2.0.0",
-    "npm": "^6.0.0",
+    "npm": "^6.1.0",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.37.6",

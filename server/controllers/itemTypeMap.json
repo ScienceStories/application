@@ -13,6 +13,13 @@
       "interrogative": "what"
     }
   },
+  "location": {
+    "properties":[ "P31", "P127", "P1176", "P287", "P571"],
+    "mainIcon": "fas fa-map-marker-alt" ,
+    "pronouns": {
+      "interrogative": "where"
+    }
+  },
   "other": {
     "properties":["P31", "P571"],
     "mainIcon": "fas fa-globe" ,
