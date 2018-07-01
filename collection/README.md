@@ -1,1 +1,0 @@
-Add files to this folder using the [biiif conventions](https://github.com/edsilv/biiif/#examples)

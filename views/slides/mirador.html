@@ -9,123 +9,111 @@
     </div>
   </div>
 
-<script type="text/javascript">
-function loadAnnotationsFromManifest(uri){
-  console.log('loadAnnotationsFromManifest->', uri)
-  $.post("/api/iiif/loadFromManifest", {uri:uri}).done(function(data){
-    console.log(data)
-    for (item in data){
-      console.log('Setting->', item, data[item])
-      localStorage.setItem(item, data[item])
+  <script type="text/javascript">
+    function loadAnnotationsFromManifest(uri){
+      // console.log('loadAnnotationsFromManifest->', uri);
+      $.post("/api/iiif/loadFromManifest", {uri:uri}).done(function(data){
+        for (item in data){
+          console.log('Setting->', item);
+          localStorage.setItem(item, data[item]);
+        }
+      })
     }
-  })
-}
-instanceData = {{{json config.data}}}
-windowObjs = []
-for (x=0; x < instanceData.length; x++ ){
-    loadAnnotationsFromManifest(instanceData[x].manifestUri)
-
-  windowObjs[x] = {
-    "loadedManifest": instanceData[x].manifestUri,
-    "viewType": instanceData[x].viewType,
-    "sidePanel": false,
-    "sidePanelVisible": false,
-    "bottomPanelVisible": false,
-    "canvasControls": {
-      "annotations" : {
-        "annotationLayer" : true,
-        "annotationCreation" : false,
-        "annotationState" : "on",
-        "annotationRefresh" : false
+    instanceData = {{{json config.data}}};
+    windowObjs = [];
+    for (x=0; x < instanceData.length; x++ ){
+      loadAnnotationsFromManifest(instanceData[x].manifestUri);
+      windowObjs[x] = {
+        "loadedManifest": instanceData[x].manifestUri,
+        "viewType": instanceData[x].viewType,
+        "sidePanel": false,
+        "sidePanelVisible": false,
+        "bottomPanelVisible": false,
+        "canvasControls": {
+          "annotations" : {
+            "annotationLayer" : true,
+            "annotationCreation" : false,
+            "annotationState" : "on",
+            "annotationRefresh" : false
+          }
+        }
       }
     }
-  }
-}
- $( document ).ready(function() {
-        // Called without "let" or "var"
-        // so we can play with it in the browser
+    $( document ).ready(function() {
+      myMiradorInstance = Mirador({
+        "id": "mirador{{id}}",
+        "layout": "{{config.layout}}",
+        "data": instanceData,
+        "windowObjects": windowObjs,
+        "annotationEndpoint": { "name":"Local Storage", "module": "LocalStorageEndpoint" },
+        // {
+        //   "name": "Simple Annotation Store Endpoint",
+        //   "module": "SimpleASEndpoint",
+        //   "options": {
+        //     "url": "http://sciencestories-annotate.herokuapp.com/annotation",
+        //     "storeId":"comparison",
+        //     "APIKey":"user_auth"
+        //   }
+        // },
+        "saveSession": false,
+        "annotationState": "annoOnCreateOff",
+        "sidePanelOptions" : {
+          "tocTabAvailable": false,
+          "layersTabAvailable": false,
+          "searchTabAvailable": false,
+          "annotations" : false
+        }
+      });
+    });
 
-
-        myMiradorInstance = Mirador(
-          {
-            "id": "mirador{{id}}",
-            "layout": "{{config.layout}}",
-            "data": instanceData,
-            "windowObjects": windowObjs,
-            "annotationEndpoint":
-             { "name":"Local Storage", "module": "LocalStorageEndpoint" },
-            // {
-            //   "name": "Simple Annotation Store Endpoint",
-            //   "module": "SimpleASEndpoint",
-            //   "options": {
-            //     "url": "http://sciencestories-annotate.herokuapp.com/annotation",
-            //     "storeId":"comparison",
-            //     "APIKey":"user_auth"
-            //   }
-            // },
-            "saveSession": false,
-            "annotationState": "annoOnCreateOff",
-            "sidePanelOptions" : {
-              "tocTabAvailable": false,
-              "layersTabAvailable": false,
-              "searchTabAvailable": false,
-              "annotations" : false
-            }
-          }
-
-        );
-
-
- });
-
-// SAMPLE CONFIG
-//  {
-//    "id": "mirador{{id}}",
-//    "layout": "1x1",
-//    "data": [
-//      // { "manifestUri": "http://127.0.0.1:8000/collection/test.json", "location": "Yale"},
-//
-//      { "manifestUri": "{{app_url 'api/iiif/hoffleit'}}", "location": "Yale"},
-//      { "manifestUri": "{{app_url 'api/iiif/manifest/FirstGlossaryProgrammingTerminology.json'}}", "location": "Yale"},
-//      { "manifestUri": "/api/iiif/hopper", "location": "Yale"},
-//      { "manifestUri": "/api/iiif/hopper2", "location": "Yale"},
-//      { "manifestUri": "https://iiif.lib.harvard.edu/manifests/drs:9596592", "location": "Harvard University"},
-//
-//    ],
-//    "windowObjects": [
-//      {loadedManifest: "/api/iiif/hoffleit",
-//      sidePanel: false,
-//      sidePanelVisible: false,
-//      "canvasControls": { // The types of controls available to be displayed on a canvas
-//        "annotations" : {
-//          "annotationLayer" : true, //whether or not to make annotation layer available in this window
-//          "annotationCreation" : false, /*whether or not to make annotation creation available in this window,
-//                       only valid if annotationLayer is set to True and an annotationEndpoint is defined.
-//                       This setting does NOT affect whether or not a user can edit an individual annotation that has already been created.*/
-//          "annotationState" : 'on', //[_'off'_, 'on'] whether or not to turn on the annotation layer on window load
-//          "annotationRefresh" : false, //whether or not to display the refresh icon for annotations
-//        },
-//      },
-//    }
-//    ],
-//
-//    // "annotationEndpoint": { "name":"Local Storage", "module": "LocalStorageEndpoint" },
-//     "annotationEndpoint": {
-// name: 'Simple Annotation Store Endpoint',
-// module: 'SimpleASEndpoint',
-// options: {
-//   url: 'http://sciencestories-annotate.herokuapp.com/annotation',
-//   storeId:'comparison',
-//   APIKey:'user_auth'
-// }
-// },
-// "annotationState": 'annoOnCreateOff',
-//    "sidePanelOptions" : {
-//      "tocTabAvailable": false,
-//      "layersTabAvailable": false,
-//      "searchTabAvailable": false,
-//      "annotations" : false
-//    },
-// }
-</script>
+  // SAMPLE CONFIG
+  //  {
+  //    "id": "mirador{{id}}",
+  //    "layout": "1x1",
+  //    "data": [
+  //      // { "manifestUri": "http://127.0.0.1:8000/collection/test.json", "location": "Yale"},
+  //
+  //      { "manifestUri": "{{app_url 'api/iiif/hoffleit'}}", "location": "Yale"},
+  //      { "manifestUri": "{{app_url 'api/iiif/manifest/FirstGlossaryProgrammingTerminology.json'}}", "location": "Yale"},
+  //      { "manifestUri": "/api/iiif/hopper", "location": "Yale"},
+  //      { "manifestUri": "/api/iiif/hopper2", "location": "Yale"},
+  //      { "manifestUri": "https://iiif.lib.harvard.edu/manifests/drs:9596592", "location": "Harvard University"},
+  //
+  //    ],
+  //    "windowObjects": [
+  //      {loadedManifest: "/api/iiif/hoffleit",
+  //      sidePanel: false,
+  //      sidePanelVisible: false,
+  //      "canvasControls": { // The types of controls available to be displayed on a canvas
+  //        "annotations" : {
+  //          "annotationLayer" : true, //whether or not to make annotation layer available in this window
+  //          "annotationCreation" : false, /*whether or not to make annotation creation available in this window,
+  //                       only valid if annotationLayer is set to True and an annotationEndpoint is defined.
+  //                       This setting does NOT affect whether or not a user can edit an individual annotation that has already been created.*/
+  //          "annotationState" : 'on', //[_'off'_, 'on'] whether or not to turn on the annotation layer on window load
+  //          "annotationRefresh" : false, //whether or not to display the refresh icon for annotations
+  //        },
+  //      },
+  //    }
+  //    ],
+  //
+  //    // "annotationEndpoint": { "name":"Local Storage", "module": "LocalStorageEndpoint" },
+  //     "annotationEndpoint": {
+  // name: 'Simple Annotation Store Endpoint',
+  // module: 'SimpleASEndpoint',
+  // options: {
+  //   url: 'http://sciencestories-annotate.herokuapp.com/annotation',
+  //   storeId:'comparison',
+  //   APIKey:'user_auth'
+  // }
+  // },
+  // "annotationState": 'annoOnCreateOff',
+  //    "sidePanelOptions" : {
+  //      "tocTabAvailable": false,
+  //      "layersTabAvailable": false,
+  //      "searchTabAvailable": false,
+  //      "annotations" : false
+  //    },
+  // }
+  </script>
 </div>

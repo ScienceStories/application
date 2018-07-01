@@ -31,7 +31,6 @@ app.set('view engine', 'html')
 app.set('views', __dirname + '/views')
 app.use('/scripts', cors(), express.static(__dirname + '/node_modules/'));
 app.use('/build/mirador', cors(), express.static(__dirname + '/static/vendor/mirador/'));
-app.use('/collection',  cors(), express.static(__dirname + '/collection/'));
 app.use('/manifests',  cors(), express.static(__dirname + '/manifests/'));
 app.use('/api/iiif/manifest/',  cors(), express.static(__dirname + '/manifests/'));
 app.use('/static', cors(), express.static(__dirname + '/static/'));
