@@ -124,9 +124,11 @@ module.exports = {
           .then(function(result) {
             result.item;  // the model
             result.created; // bool, if a new item was created.
+
           });
       }
     }
+    return res.send('Saved Successfully')
   },
   destroy(req, res) {
     return Annotation
