@@ -125,6 +125,7 @@ app.use(session({
 module.exports = {
   // Wrapper for fetch
   appFetch: function (url) {
+    if (url[0] == '/') url = 'http://sciencestories.io'+url
     return new Promise((resolve, reject) => {
       fetch(url)
         .then(res => res.json())

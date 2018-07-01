@@ -31,7 +31,39 @@ module.exports = {
       })
       .catch(error => loadError(req, res, 'Trouble Loading this Annotation'));
   },
-  load(req, res) {
+  loadFromUri(req, res, next=null, uriArray=false) {
+    uriArray = (uriArray) ? uriArray : req.body.uri;
+    sendData = {};
+    return Annotation
+      .findAll({where: {uri:uriArray}})
+      .then(out => {
+        for (anno in out){
+          sendData[out[anno].uri] = out[anno].state;
+        }
+        res.status(200).send(sendData);
+      })
+  },
+  loadFromManifest(req, res, next=null, manifestUri=false) {
+    manifestUri = (manifestUri) ? manifestUri : req.body.uri;
+    return appFetch(manifestUri)
+      .then(content => {
+        lst = module.exports.getUriListFromManifest(content);
+        return module.exports.loadFromUri(req, res, null, lst);
+      })
+   },
+  getUriListFromManifest(manifestObj){
+    var output = []
+    var sequences = manifestObj.sequences
+    for (seqNum = 0; seqNum < sequences.length; seqNum++){
+      var canvases = sequences[seqNum].canvases
+      for (canNum = 0; canNum < canvases.length; canNum++){
+        // console.log('Calling on -> ' + canvases[canNum]['@id'])
+        output.push(canvases[canNum]['@id'])
+      }
+    }
+    return output;
+  },
+  loadAll(req, res) {
     sendData = {};
     return Annotation
       .all()

@@ -23,14 +23,29 @@ module.exports = (app, sessionChecker) => {
   });
   app.get('/annotate', sessionChecker, (req, res) => {
       // res.redirect('/login');
-      files = fs.readdirSync("manifests/");
+      files = fs.readdirSync("manifests/").filter(function(file) {
+    if(file.indexOf(".json")>-1) return file;
+});
+      annoIds = []
+      for (f=0; f < files.length; f++){
+        var sequences = JSON.parse(fs.readFileSync("manifests/"+files[f])).sequences
+        for (seqNum = 0; seqNum < sequences.length; seqNum++){
+          var canvases = sequences[seqNum].canvases
+          for (canNum = 0; canNum < canvases.length; canNum++){
+            // console.log('Calling on -> ' + canvases[canNum]['@id'])
+            annoIds.push(canvases[canNum]['@id'])
+          }
+        }
+
+      }
+      // console.log(annoIds)
       res.render('full', {
         page: function(){ return 'annotate'},
         scripts: function(){ return 'annotate_scripts'},
         links: function(){ return 'annotate_links'},
-        title: "Welcome",
+        title: "Annotate Manifests",
         nav: "annotate",
-        data: files
+        data: {'files':files, 'uriList':annoIds}
       });
   });
   // route for Test-Page
@@ -124,7 +139,9 @@ app.post('/api/dump/stories', (req, res) => {
   // });
 
   app.post('/api/iiif/save', annotationController.save);
-  app.get('/api/iiif/load', annotationController.load);
+  app.get('/api/iiif/load', annotationController.loadAll);
+  app.post('/api/iiif/loadFromUri', annotationController.loadFromUri);
+app.post('/api/iiif/loadFromManifest', annotationController.loadFromManifest);
   app.post('/api/iiif/update', annotationController.update);
 
   app.get('/api/iiif/:manifest', (req, res) => {

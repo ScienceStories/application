@@ -11,6 +11,31 @@
         }
       })
     }
+
+    function loadAnnotationsFromUri(uri){
+      $.post("/api/iiif/loadFromUri", {uri:uri}).done(function(data){
+        console.log(data)
+        for (item in data){
+          console.log('Setting->', item, data[item])
+          localStorage.setItem(item, data[item])
+        }
+      })
+    }
+    function loadAnnotationsFromManifest(uri){
+      console.log('loadAnnotationsFromManifest->', uri)
+      $.post("/api/iiif/loadFromManifest", {uri:uri}).done(function(data){
+        console.log(data)
+        for (item in data){
+          console.log('Setting->', item, data[item])
+          localStorage.setItem(item, data[item])
+        }
+      })
+    }
+    loadAnnotationsFromUri(
+      [{{#each data.uriList}}
+        '{{this}}',
+      {{/each}}]
+    )
     function saveAnnotations(){
       obj = JSON.stringify(localStorage)
       console.log('Runnning with ->', obj)
@@ -47,8 +72,8 @@
          "id": "viewer",
          "layout": "1x1",
          "data": [
-           {{#each data}}
-               { "manifestUri": "/api/iiif/manifest/{{this}}", "location": "Yale University"},
+            {{#each data.files}}
+               {"manifestUri": "/api/iiif/manifest/{{this}}", "location": "Yale University"},
             {{/each}}
          ],
          "windowObjects": [],
@@ -88,6 +113,10 @@
               Reset
             </div>
           </li>`)
+          $('#url-load-form').submit(function(){
+            loadAnnotationsFromManifest($('#url-loader').val())
+            console.log('LOADED')})
+
         counter++;
         if($('.mirador-admin-btns').length  > 0) {
             clearInterval(i);
