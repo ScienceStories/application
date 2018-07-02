@@ -61,6 +61,7 @@ module.exports = (app, sessionChecker) => {
   });
   // route for Home-Page
   app.get('/Q:id', storyController.select);
+  app.get('/preview', storyController.preview);
   app.get('/browse', storyController.browse);
   app.get('/bibliography', wikidataController.bibliography);
   // route for Home-Page
@@ -106,6 +107,15 @@ app.get('/logout', (req, res) => {
         res.redirect('/login');
     }
 });
+// route for Building Stories
+  app.get('/build', (req, res) => res.render('base', {
+    page: function(){ return 'build'},
+    title: 'Story Creation',
+    nav: 'build',
+    scripts: function(){ return 'build_scripts'},
+    links: function(){ return 'build_links'},
+    message: req.query.msg
+  }));
 // route for Error Page
   app.get('/error', (req, res) => res.render('base', {
     page: function(){ return 'error'},
@@ -130,6 +140,7 @@ app.post('/api/dump/stories', (req, res) => {
 
   app.post('/api/member/create', membersController.create);
   app.post('/api/story/create', storyController.create);
+  app.post('/api/story/update', storyController.update);
   app.get('/api/iiif/manifest-source/:source/:filename', (req, res) => {
     res.status(200).sendfile("manifests/_sources/"+req.params.source+'/'+req.params.filename);
   });

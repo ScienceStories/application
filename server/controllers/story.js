@@ -35,6 +35,15 @@ module.exports = {
       })
       .catch(error => loadError(req, res, 'Trouble Loading this Story'));
   },
+  preview(req, res) {
+    // console.log(req.query.data)
+    req.params.id = req.query.id
+    // console.log(req.params.id, req.query.id )
+    return wikidataController.processStory(req, res, {data: JSON.parse(req.query.data)});
+
+
+
+  },
   browse(req, res) {
     return Story
       .all()
@@ -84,23 +93,16 @@ WHERE
   },
   update(req, res) {
     return Story
-      .find({
+      .findOrCreate({
           where: {
-            id: req.params.StoryId,
-            bracketId: req.params.bracketId,
+            qid: req.body.qid,
           },
         })
-      .then(out => {
-        if (!out) {
-          return res.status(404).send({
-            message: 'Story Not Found',
-          });
-        }
-
-        return out
-          .update(req.body, { fields: Object.keys(req.body) })
-          .then(updatedStory => res.status(200).send(updatedStory))
-          .catch(error => res.status(400).send(error));
+      .spread((found, created) =>{
+        found.update({data: JSON.parse(req.body.data)})
+          .then(output => {
+            return res.redirect('/'+output.qid)
+          })
       })
       .catch(error => res.status(400).send(error));
   },

@@ -1,0 +1,226 @@
+<div class="page-header">
+  Build a Science Story
+</div>
+<div id="buildStoryDiv">
+  <form  onsubmit="updateStory()" id="buildStoryForm">
+  <div class="buildSection" id="qidSection">
+    Wikidata Identifier: Q<input type="number" id="wdIdentifier"/>
+  </div>
+  <div class="buildSection" id="momentList">
+
+  </div>
+  <div id="actionButtons">
+    <div><button class="buildBtn" onclick="addMoment()"  type="button" id="addMomentBtn">+ Moment</button></div>
+    <div><button class="buildBtn" onclick="previewStory()"  type="button" id="previewBtn">Preview</button> <button onclick="updateStory()" class="buildBtn"type="button" id="submitBtn">Finish <span id="submitLoader" style="display:hide"><i class="fas fa-spinner fa-spin"></i></span></button></div>
+  </div>
+
+  </form>
+
+</div>
+<script>
+$(document).ready(function () {
+
+  $(function () {
+      $('#submitLoader').fadeOut('slow');
+      $("#momentList").sortable({placeholder: "ui-state-highlight"});
+      $("#momentList").disableSelection();
+      addMoment()
+  });
+});
+  function addMoment(){
+
+    $('#momentList').append(`
+      <div class="momentDiv">
+        <div class="momentHeader">Layout:</div>
+        <div class="momentContent">
+            <select name="type" id="" class="moment-input" onchange="selectType(this)">
+              <option value="" disabled selected>--select type--</option>
+              <option value="intro">Intro</option>
+              <option value="mirador">Mirador</option>
+              <option value="youtube">Youtube</option>
+            </select>
+            <div id="momentDetails">
+
+            </div>
+
+        </div>
+        <div class="moment-btn" onclick="$(this).parent().remove()">
+          <i class="far fa-trash-alt"></i>
+        </div>
+      </div>
+      `)
+      $("#momentList").sortable("refresh");
+  }
+  function addManifestForm(div){
+    $(div).append(`<div class="moment-config-data-div">
+      <input class="moment-config-data-input" name="manifestUri" placeholder="Manifest URI" />
+      <input class="moment-config-data-input" name="location" placeholder="Location" />
+      <select name="viewType" id="" class="moment-config-data-input">
+        <option value="ImageView">Images</option>
+        <option value="BookView">Book</option>
+      </select>
+      <div class="moment-btn" onclick="$(this).parent().remove()">
+        <i class="far fa-trash-alt"></i>
+      </div>
+    </div>
+      `)
+      $(div).sortable()
+  }
+  function selectType(select){
+    $(select).next().html(FORM_TYPE_TEMPLATE[$(select).val()])
+    console.log($(select).val())
+
+  }
+
+  function updateStory(){
+    
+    qid = $('#wdIdentifier').val()
+    if (qid){
+      $('#submitLoader').fadeIn('slow');
+      qid = 'Q'+ qid;
+      output = processForm();
+      return $.post('/api/story/update', {data: JSON.stringify(output), qid: qid }).done( function(data){
+        location.href = '/'+qid;
+        $('#submitLoader').fadeOut('slow');
+      }
+
+      )
+    }
+    else return alert('Please enter Wikidata Identifier')
+
+
+  }
+
+  function processForm(){
+    var output = []
+    var momentId = 1;
+    $('#momentList > div.momentDiv').each(function(){
+      var moment = {"id": momentId}
+      var momentConfig = {'data':[]}
+      $(this).find('.moment-input').each(function(){
+       moment[this.name] = this.value;
+      })
+      $(this).find('.moment-config-input').each(function(){
+        momentConfig[this.name] = this.value;
+      })
+      $(this).find('.moment-config-data-div').each(function(){
+        var dataItem = {}
+        $(this).find('.moment-config-data-input').each(function(){
+          dataItem[this.name] = this.value;
+        })
+        momentConfig.data.push(dataItem);
+      })
+      moment['config'] = momentConfig;
+      if (moment.type){
+        output.push(moment)
+        momentId++;
+      }
+
+    })
+    console.log('process-->', output)
+    return output
+  }
+
+function previewStory(){
+  qid = $('#wdIdentifier').val()
+  if (qid){
+    output = processForm();
+    return openInNewTab('/preview?id='+qid+'&data='+encodeURIComponent(JSON.stringify(output)))
+  }
+  else return alert('Please enter Wikidata Identifier')
+
+
+}
+
+function openInNewTab(url) {
+  var win = window.open(url, '_blank');
+  win.focus();
+}
+
+var FORM_TYPE_TEMPLATE = {
+  'intro' : `
+    <div class="inputDiv">
+      <div class="inputLabel">Title: </div>
+      <input name='title' class="moment-input"/>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Description: </div>
+      <textarea class="moment-input" name="description"></textarea>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Background Image Url: </div>
+      <input class="moment-input" type="url" name="image" />
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Tooltip: </div>
+      <input class="moment-input" name="tooltip" />
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Background Color: </div>
+      <input class="moment-input" type="color" name="color" value="#ffffff">
+    </div>
+
+      <!--
+    <div class="inputDiv">
+      <div class="inputLabel">Overlay Color: </div>
+      <input class="moment-input" type="color" name="overlay-color" value="#1acca7">
+    </div>
+
+    --!>
+  `,
+  'mirador': `
+    <div class="inputDiv">
+      <div class="inputLabel">Title: </div>
+      <input name='title' class="moment-input"/>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Description: </div>
+      <textarea class="moment-input" name="description"></textarea>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Manifest Data: </div>
+      <div id="manifestDataList">
+      </div>
+      <div>
+        <button type="button" onclick="addManifestForm($(this).parent().prev())">+Manifest</button>
+      </div>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Layout Dimensions </div>
+      <input class="moment-config-input" name="layout"  placeholder="1x1"/>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Tooltip: </div>
+      <input class="moment-input" name="tooltip" />
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Background Color: </div>
+      <input class="moment-input" type="color" name="color" value="#ffffff">
+    </div>
+
+  `,
+  'youtube' : `
+    <div class="inputDiv">
+      <div class="inputLabel">Title: </div>
+      <input name='title' class="moment-input"/>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Description: </div>
+      <textarea class="moment-input" name="description"></textarea>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Embed Video Source Url: </div>
+      <input class="moment-input" type="url" name="video" />
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Tooltip: </div>
+      <input class="moment-input" name="tooltip" />
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Background Color: </div>
+      <input class="moment-input" type="color" name="color" value="#ffffff">
+    </div>
+
+  `,
+}
+</script>
