@@ -44,7 +44,7 @@ $(document).ready(function () {
             </div>
 
         </div>
-        <div class="moment-btn" onclick="$(this).parent().remove()">
+        <div class="moment-btn" onclick="$(this).parent().fadeOutAndRemove('slow')">
           <i class="far fa-trash-alt"></i>
         </div>
       </div>
@@ -59,7 +59,7 @@ $(document).ready(function () {
         <option value="ImageView">Images</option>
         <option value="BookView">Book</option>
       </select>
-      <div class="moment-btn" onclick="$(this).parent().remove()">
+      <div class="moment-btn" onclick="$(this).parent().fadeOutAndRemove('slow')">
         <i class="far fa-trash-alt"></i>
       </div>
     </div>
@@ -73,7 +73,7 @@ $(document).ready(function () {
   }
 
   function updateStory(){
-    
+
     qid = $('#wdIdentifier').val()
     if (qid){
       $('#submitLoader').fadeIn('slow');

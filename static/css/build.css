@@ -52,7 +52,12 @@ button.buildBtn {
     font-weight:  bold;
 }
 div#qidSection {
-    font-size:  150%;
+    font-size: 250%;
+    font-weight: bold;
+}
+input#wdIdentifier {
+    border: none;
+    background: whitesmoke;
 }
 
 .buildSection {

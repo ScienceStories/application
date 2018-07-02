@@ -1,8 +1,9 @@
 body{
-  display: none;
+  /* display: none; */
   background: white;
 }
 .page-wrapper {
+    display: none;
     padding-top: 10vh;
     padding-bottom: 20vh;
 }

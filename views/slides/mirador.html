@@ -19,13 +19,13 @@
         }
       })
     }
-    instanceData = {{{json config.data}}};
-    windowObjs = [];
-    for (x=0; x < instanceData.length; x++ ){
-      loadAnnotationsFromManifest(instanceData[x].manifestUri);
-      windowObjs[x] = {
-        "loadedManifest": instanceData[x].manifestUri,
-        "viewType": instanceData[x].viewType,
+    instanceData{{id}} = {{{json config.data}}};
+    var windowObjs{{id}} = [];
+    for (x=0; x < instanceData{{id}}.length; x++ ){
+      loadAnnotationsFromManifest(instanceData{{id}}[x].manifestUri);
+      windowObjs{{id}}[x] = {
+        "loadedManifest": instanceData{{id}}[x].manifestUri,
+        "viewType": instanceData{{id}}[x].viewType,
         "sidePanel": false,
         "sidePanelVisible": false,
         "bottomPanelVisible": false,
@@ -40,11 +40,11 @@
       }
     }
     $( document ).ready(function() {
-      myMiradorInstance = Mirador({
+      var myMiradorInstance{{id}} = Mirador({
         "id": "mirador{{id}}",
         "layout": "{{config.layout}}",
-        "data": instanceData,
-        "windowObjects": windowObjs,
+        "data": instanceData{{id}},
+        "windowObjects": windowObjs{{id}},
         "annotationEndpoint": { "name":"Local Storage", "module": "LocalStorageEndpoint" },
         // {
         //   "name": "Simple Annotation Store Endpoint",
