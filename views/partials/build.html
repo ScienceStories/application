@@ -4,10 +4,87 @@
 <div id="buildStoryDiv">
   <form  onsubmit="updateStory()" id="buildStoryForm">
   <div class="buildSection" id="qidSection">
-    Wikidata Identifier: Q<input type="number" id="wdIdentifier"/>
+    Wikidata Identifier: Q<input type="number" id="wdIdentifier" value="{{idVal}}"/>
   </div>
   <div class="buildSection" id="momentList">
+  {{#each data}}
+  <div class="momentDiv">
+    <div class="momentHeader">Layout:</div>
+    <div class="momentContent">
+        <select name="type" id="" class="moment-input" onchange="selectType(this)">
+          <option value="" disabled>--select type--</option>
+          <option value="intro" {{#if_equal this.type "intro"}} selected {{else}}{{/if_equal}}>Intro</option>
+          <option value="mirador"{{#if_equal this.type "mirador"}} selected {{else}}{{/if_equal}}>Mirador</option>
+          <option value="youtube" {{#if_equal this.type "youtube"}} selected {{else}}{{/if_equal}}>Youtube</option>
+        </select>
+        <div id="momentDetails">
+          <div class="inputDiv">
+            <div class="inputLabel">Title: </div>
+            <input name='title' class="moment-input" value="{{this.title}}"/>
+          </div>
+          <div class="inputDiv">
+            <div class="inputLabel">Description: </div>
+            <textarea class="moment-input" name="description">{{this.description}}</textarea>
+          </div>
+          {{#if_equal this.type "intro" }}
+                  <div class="inputDiv">
+                    <div class="inputLabel">Background Image Url: </div>
+                    <input class="moment-input" type="url" name="image" value="{{this.image}}" />
+                  </div>
+          {{else}}
+          {{/if_equal}}
+          {{#if_equal this.type "mirador" }}
 
+            <div class="inputDiv">
+              <div class="inputLabel">Manifest Data: </div>
+              <div id="manifestDataList">
+                {{#each this.config.data}}
+                <div class="moment-config-data-div">
+                  <input class="moment-config-data-input" name="manifestUri" placeholder="Manifest URI" value="{{this.manifestUri}}"/>
+                  <input class="moment-config-data-input" name="location" placeholder="Location" value="{{this.location}}" />
+                  <select name="viewType" id="" class="moment-config-data-input">
+                    <option value="ImageView" {{#if_equal this.viewType "ImageView"}} selected {{else}}{{/if_equal}}>Images</option>
+                    <option value="BookView" {{#if_equal this.viewType "BookView"}} selected {{else}}{{/if_equal}}>Book</option>
+                  </select>
+                  <div class="moment-btn" onclick="$(this).parent().fadeOutAndRemove('slow')">
+                    <i class="far fa-trash-alt"></i>
+                  </div>
+                </div>
+                {{/each}}
+              </div>
+              <div>
+                <button type="button" onclick="addManifestForm($(this).parent().prev())">+Manifest</button>
+              </div>
+            </div>
+            <div class="inputDiv">
+              <div class="inputLabel">Layout Dimensions </div>
+              <input class="moment-config-input" name="layout"  placeholder="1x1" value="{{this.config.layout}}"/>
+            </div>
+          {{else}}
+          {{/if_equal}}
+          {{#if_equal this.type "youtube" }}
+              <div class="inputDiv">
+                <div class="inputLabel">Embed Video Source Url: </div>
+                <input class="moment-input" type="url" name="video" value="{{this.video}}" />
+              </div>
+          {{else}}
+          {{/if_equal}}
+          <div class="inputDiv">
+            <div class="inputLabel">Tooltip: </div>
+            <input class="moment-input" name="tooltip"  value="{{this.tooltip}}"/>
+          </div>
+          <div class="inputDiv">
+            <div class="inputLabel">Background Color: </div>
+            <input class="moment-input" type="color" name="color" value="{{this.color}}">
+          </div>
+        </div>
+    </div>
+    <div class="moment-btn" onclick="$(this).parent().fadeOutAndRemove('slow')">
+      <i class="far fa-trash-alt"></i>
+    </div>
+  </div>
+
+  {{/each}}
   </div>
   <div id="actionButtons">
     <div><button class="buildBtn" onclick="addMoment()"  type="button" id="addMomentBtn">+ Moment</button></div>
@@ -18,12 +95,15 @@
 
 </div>
 <script>
+
 $(document).ready(function () {
 
   $(function () {
       $('#submitLoader').fadeOut('slow');
       $("#momentList").sortable({placeholder: "ui-state-highlight"});
       $("#momentList").disableSelection();
+      $("#manifestDataList").sortable({placeholder: "ui-state-highlight"});
+      $("#manifestDataList").disableSelection();
       addMoment()
   });
 });
@@ -40,9 +120,7 @@ $(document).ready(function () {
               <option value="youtube">Youtube</option>
             </select>
             <div id="momentDetails">
-
             </div>
-
         </div>
         <div class="moment-btn" onclick="$(this).parent().fadeOutAndRemove('slow')">
           <i class="far fa-trash-alt"></i>
@@ -64,13 +142,14 @@ $(document).ready(function () {
       </div>
     </div>
       `)
-      $(div).sortable()
+      $(div).sortable({placeholder: "ui-state-highlight"})
   }
   function selectType(select){
     $(select).next().html(FORM_TYPE_TEMPLATE[$(select).val()])
     console.log($(select).val())
 
   }
+
 
   function updateStory(){
 

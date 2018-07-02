@@ -108,14 +108,7 @@ app.get('/logout', (req, res) => {
     }
 });
 // route for Building Stories
-  app.get('/build', (req, res) => res.render('base', {
-    page: function(){ return 'build'},
-    title: 'Story Creation',
-    nav: 'build',
-    scripts: function(){ return 'build_scripts'},
-    links: function(){ return 'build_links'},
-    message: req.query.msg
-  }));
+  app.get('/build', storyController.build);
 // route for Error Page
   app.get('/error', (req, res) => res.render('base', {
     page: function(){ return 'error'},

@@ -35,6 +35,21 @@ module.exports = {
       })
       .catch(error => loadError(req, res, 'Trouble Loading this Story'));
   },
+  getData(qid, next){
+    return Story.findOne({where: {qid:qid}})
+  },
+  build(req, res){
+    if (req.query.qid){
+      Story.findOne({where: {qid:req.query.qid}})
+        .then(story => {
+          console.log(story.data)
+          return loadPage(res, req, 'base', {file_id:'build',  title:'Story Creation', nav:'build', data:story.data, idVal:req.query.qid.substr(1)})
+        })
+    }
+    else{
+      return loadPage(res, req, 'base', {file_id:'build',  title:'Story Creation', nav:'build'})
+    }
+  },
   preview(req, res) {
     // console.log(req.query.data)
     req.params.id = req.query.id
