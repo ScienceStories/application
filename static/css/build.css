@@ -5,18 +5,26 @@
     font-weight: 300;
     padding: 20px;
 }
+input, textarea, option, select {
+    padding: 5px;
+    text-align: center;
+}
+
+input.moment-config-data-input[name=manifestUri] {
+    width: 90%;
+}
 div#buildStoryDiv {
     padding:  20px;
     text-align:  center;
 }
 
 .momentDiv {
-    background: whitesmoke;
+    background: white;
     padding: 2em;
     width:  80%;
-    box-shadow: 0 0 7px #0000003b;
+    box-shadow: 1px 2px 13px 7px #0000003b;
     text-align:  center;
-    margin: 20px auto;
+    margin: 75px auto;
     font-size:  139%;
     font-weight: 200;
 }
@@ -50,6 +58,7 @@ button.buildBtn {
     border: 2px solid;
     font-size: 150%;
     font-weight:  bold;
+    margin: 0px 10px;
 }
 div#qidSection {
     font-size: 250%;
@@ -58,6 +67,7 @@ div#qidSection {
 input#wdIdentifier {
     border: none;
     background: whitesmoke;
+    text-align: left;
 }
 
 .buildSection {
@@ -103,8 +113,11 @@ button#submitBtn:hover {
 }
 .moment-btn {
     float: right;
-    opacity: .8;
+    opacity: .5;
     cursor: pointer;
+}
+.moment-btn:hover{
+  opacity: 1;
 }
 div#momentList {
     padding: 3em 0px;
