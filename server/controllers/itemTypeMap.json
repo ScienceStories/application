@@ -7,7 +7,7 @@
     }
   },
   "device": {
-    "properties":[ "P31", "P127", "P1176", "P287", "P571"],
+    "properties":[ "P31", "P127", "P1176", "P287", "P571", "P737"],
     "mainIcon": "fas fa-globe" ,
     "pronouns": {
       "interrogative": "what"
@@ -21,7 +21,7 @@
     }
   },
   "other": {
-    "properties":["P31", "P571"],
+    "properties":["P31", "P571", "P737"],
     "mainIcon": "fas fa-globe" ,
     "pronouns": {
       "interrogative": "what"
