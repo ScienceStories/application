@@ -24,6 +24,7 @@
   "author": "Kenneth Seals-Nutt",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.268.1",
     "bcrypt": "^2.0.1",
     "biiif-cli": "0.0.13",
     "body-parser": "^1.18.2",
@@ -45,6 +46,7 @@
     "sequelize-cli": "^4.0.0",
     "tabula-rasa": "^1.0.9",
     "universalviewer": "3.0.21",
+    "uuid": "^3.3.2",
     "wikidata-sdk": "^5.9.2"
   },
   "devDependencies": {

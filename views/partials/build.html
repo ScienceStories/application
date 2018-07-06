@@ -9,7 +9,7 @@
   <div class="buildSection" id="momentList">
   {{#each data}}
   <div class="momentDiv">
-    <div class="momentHeader">Layout:</div>
+    <div class="momentHeader">Slide Layout:</div>
     <div class="momentContent">
         <select name="type" id="" class="moment-input" onchange="selectType(this)">
           <option value="" disabled>--select type--</option>
@@ -37,7 +37,7 @@
 
             <div class="inputDiv">
               <div class="inputLabel">Manifest Data: </div>
-              <div id="manifestDataList">
+              <div class="manifestDataList">
                 {{#each this.config.data}}
                 <div class="moment-config-data-div">
                   <input class="moment-config-data-input" name="manifestUri" placeholder="Manifest URI" value="{{this.manifestUri}}"/>
@@ -88,7 +88,7 @@
   </div>
   <div id="actionButtons">
     <div><button class="buildBtn" onclick="addMoment()"  type="button" id="addMomentBtn">+ Moment</button></div>
-    <div><button class="buildBtn" onclick="previewStory()"  type="button" id="previewBtn">Preview</button> <button onclick="updateStory()" class="buildBtn"type="button" id="submitBtn">Finish <span id="submitLoader" style="display:hide"><i class="fas fa-spinner fa-spin"></i></span></button></div>
+    <div><button class="buildBtn" onclick="previewStory()"  type="button" id="previewBtn">Preview</button> <button onclick="updateStory()" class="buildBtn"type="button" id="submitBtn">Publish Story <span id="submitLoader" style="display:hide"><i class="fas fa-spinner fa-spin"></i></span></button></div>
   </div>
 
   </form>
@@ -102,16 +102,18 @@ $(document).ready(function () {
       $('#submitLoader').fadeOut('slow');
       $("#momentList").sortable({placeholder: "ui-state-highlight"});
       $("#momentList").disableSelection();
-      $("#manifestDataList").sortable({placeholder: "ui-state-highlight"});
-      $("#manifestDataList").disableSelection();
-      addMoment()
+      $(".manifestDataList").each(function(){
+        $(this).sortable({placeholder: "ui-state-highlight"});
+        $(this).disableSelection();
+      })
+      // addMoment()
   });
 });
   function addMoment(){
 
     $('#momentList').append(`
       <div class="momentDiv">
-        <div class="momentHeader">Layout:</div>
+        <div class="momentHeader">Slide Layout:</div>
         <div class="momentContent">
             <select name="type" id="" class="moment-input" onchange="selectType(this)">
               <option value="" disabled selected>--select type--</option>
@@ -146,7 +148,14 @@ $(document).ready(function () {
   }
   function selectType(select){
     $(select).next().html(FORM_TYPE_TEMPLATE[$(select).val()])
-    console.log($(select).val())
+    //Make background color change with color picker
+    // $(".moment-input[name=color]").each(function(){
+    //   $(this).change(function(){
+    //     $(this).parent().parent().parent().parent()
+    //       .css('background-color', this.value)
+    //   })
+    // })
+    // console.log($(select).val())
 
   }
 
@@ -159,7 +168,13 @@ $(document).ready(function () {
       qid = 'Q'+ qid;
       output = processForm();
       return $.post('/api/story/update', {data: JSON.stringify(output), qid: qid }).done( function(data){
-        location.href = '/'+qid;
+
+        if (data == 'success'){
+          location.href = '/'+qid;
+        }
+        else{
+          alert(data)
+        }
         $('#submitLoader').fadeOut('slow');
       }
 
@@ -258,7 +273,7 @@ var FORM_TYPE_TEMPLATE = {
     </div>
     <div class="inputDiv">
       <div class="inputLabel">Manifest Data: </div>
-      <div id="manifestDataList">
+      <div class="manifestDataList">
       </div>
       <div>
         <button type="button" onclick="addManifestForm($(this).parent().prev())">+Manifest</button>

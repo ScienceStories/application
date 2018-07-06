@@ -31,8 +31,7 @@ app.set('view engine', 'html')
 app.set('views', __dirname + '/views')
 app.use('/scripts', cors(), express.static(__dirname + '/node_modules/'));
 app.use('/build/mirador', cors(), express.static(__dirname + '/static/vendor/mirador/'));
-app.use('/manifests',  cors(), express.static(__dirname + '/manifests/'));
-app.use('/api/iiif/manifest/',  cors(), express.static(__dirname + '/manifests/'));
+app.use('/api/iiif/manifest/local/',  cors(), express.static(__dirname + '/manifests/'));
 app.use('/static', cors(), express.static(__dirname + '/static/'));
 app.use('/uv-config.json', cors(), (req, res) => res.sendFile(__dirname + '/uv-config.json'));
 hbs.registerHelper('if_equal', function(a, b, opts) {
@@ -42,6 +41,43 @@ hbs.registerHelper('if_equal', function(a, b, opts) {
         return opts.inverse(this)
     }
 })
+hbs.registerHelper('ifCond', function (v1, operator, v2, options) {
+
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        case '!==':
+            return (v1 !== v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+});
+const USER_ACCESS_MAP = {
+  'user': ['basic', 'author', 'admin'],
+  'author': ['author', 'admin'],
+  'admin': ['admin', ]
+}
+hbs.registerHelper('ifUserType', function accessCheck(type, level, opts) {
+  if (USER_ACCESS_MAP[level].indexOf(type) >= 0) return opts.fn(this);
+  else return  opts.inverse(this);
+});
+
 hbs.registerHelper('commonsImage', function dateFormat(title) {
   title = title.replace(' ', '%20')
     return 'http://commons.wikimedia.org/wiki/Special:FilePath/'+title;
@@ -113,13 +149,9 @@ app.use(cookieParser());
 
 // initialize express-session to allow us track the logged-in user across sessions.
 app.use(session({
-    key: 'user_sid',
-    secret: 'thisIsAFakeSecret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: 600000
-    }
+    secret: 'SSSECRETKEY',
+    resave: true,
+    saveUninitialized: true
 }));
 module.exports = {
   // Wrapper for fetch
@@ -137,11 +169,18 @@ module.exports = {
     data.page  = function(){ return data.file_id}
     data.scripts = function(){ return data.file_id+'_scripts'}
     data.links = function(){ return data.file_id+'_links'}
+    if (req.session.user){
+      if (data.data == undefined) {
+        data.data = {}
+      }
+      data.data.user = req.session.user;
+    }
+
     res.render(layout, data);
   },
   loadError: function (req, res, msg){
     return res.status(401).redirect('/error?msg='+encodeURIComponent(msg))
-  }
+  },
 };
 
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.

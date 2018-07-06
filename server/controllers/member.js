@@ -1,5 +1,7 @@
 const Member = require('../models').member;
 const bcrypt = require('bcrypt');
+const loadPage =  require('../../app').loadPage;
+const loadError =  require('../../app').loadError;
 module.exports = {
   create(req, res) {
     return Member
@@ -9,6 +11,7 @@ module.exports = {
         last_name: req.body.last_name,
         email: req.body.email,
         password: req.body.password,
+        type: 'basic'
       })
       .then(out => res.status(201).send(out))
       .catch(error => res.status(400).send(error));
@@ -20,6 +23,7 @@ module.exports = {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
+        type: 'basic'
       }).then(user => {
               req.session.user = user.dataValues;
               res.redirect('/');
@@ -33,9 +37,10 @@ module.exports = {
     return Member
       .findOne({ where: { username: req.body.username } })
       .then(function (user) {
+        // console.log('USER-?', user)
         if (!user) {
             res.redirect('/login');
-        } else if (! bcrypt.compareSync(req.body.password, user.password)) {
+        } else if (! bcrypt.compareSync(req.body.pwd, user.password)) {
             res.redirect('/login');
         } else {
             req.session.user = user.dataValues;
@@ -43,11 +48,46 @@ module.exports = {
         }
     })
   },
+  logout(req, res) {
+    req.session.destroy(function(err) {
+      if(err) {
+        loadError(req, res, 'Oops... Problem Logging Out')
+      } else {
+        res.redirect('/');
+      }
+    });
+  },
   list(req, res) {
     return Member
       .all()
       .then(out => res.status(200).send(out))
       .catch(error => res.status(400).send(error));
+  },
+  accessCheck(req, res, level, next){
+    // Levels are public, user, author, admin
+    if (level == 'public'){
+      return next(req, res);
+    }
+    else{
+      // console.log(req.session)
+      user = req.session.user;
+      accessType = {
+        'user': ['basic', 'author', 'admin'],
+        'author': ['author', 'admin'],
+        'admin': ['admin', ]
+      }
+      if (user && user.id){
+        Member.findById(user.id)
+        .then(member => {
+          type = member.type
+          if (accessType[level].indexOf(type) >= 0) {
+            return next(req, res);
+          }
+          else loadError(req, res, 'unauthorized access')
+        })
+      }
+      else loadError(req, res, 'unauthorized access')
+    }
   },
   update(req, res) {
     return Member
@@ -71,7 +111,13 @@ module.exports = {
       })
       .catch(error => res.status(400).send(error));
   },
-
+  profile(req, res) {
+    return Member.findById(req.session.user.id)
+    .then(member => {
+      data = {user:member}
+      return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Profile', nav:'profile', data:data})
+    })
+  },
   destroy(req, res) {
     return Member
       .find({

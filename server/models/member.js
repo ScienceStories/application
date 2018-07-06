@@ -19,6 +19,13 @@ module.exports = (sequelize, DataTypes) => {
         isEmail: true,
       }
     },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      defaultValue: 'basic',
+
+    },
     confirmed: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,

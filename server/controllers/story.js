@@ -1,9 +1,11 @@
 const Story = require('../models').story;
+const LogStory = require('../models').logstory;
 const wdk = require('wikidata-sdk');
 const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
 const wikidataController = require('./wikidata');
 const loadError =  require('../../app').loadError;
+
 module.exports = {
   create(req, res) {
     qid = 'Q' + req.body.qid
@@ -107,7 +109,9 @@ WHERE
       .catch(error => {console.log(error);res.status(400).send(error)});
   },
   update(req, res) {
-    return Story
+    user_id = (req.session.user) ? req.session.user.id : false;
+    if (!user_id) return res.send('Session Has Expired') 
+    else return Story
       .findOrCreate({
           where: {
             qid: req.body.qid,
@@ -116,7 +120,10 @@ WHERE
       .spread((found, created) =>{
         found.update({data: JSON.parse(req.body.data)})
           .then(output => {
-            return res.redirect('/'+output.qid)
+            LogStory.create({memberId:user_id, storyId:output.id, data:JSON.parse(req.body.data)})
+              .then(logOutput => {
+                return res.send('success')
+              })
           })
       })
       .catch(error => res.status(400).send(error));

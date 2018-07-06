@@ -4,7 +4,49 @@ const loadPage = require('../../app').loadPage;
 const loadError = require('../../app').loadError;
 const Sequelize = require('sequelize');
 const fs = require('fs');
+const awsController = require('./aws');
+
 module.exports = {
+
+  showPage(req, res) {
+    // res.redirect('/login');
+    awsController.loadManifestList(req, res, function (s3, files){
+      annoIds = []
+      for (f=0; f < files.length; f++){
+        s3.getObject({
+          Bucket: "sciencestories",
+          Key: files[f],
+         }, function(err, data)
+        {
+            if (!err) {
+              var sequences = JSON.parse(data.Body.toString()).sequences
+              for (seqNum = 0; seqNum < sequences.length; seqNum++){
+                var canvases = sequences[seqNum].canvases
+                for (canNum = 0; canNum < canvases.length; canNum++){
+                  // console.log('Calling on -> ' + canvases[canNum]['@id'])
+                  annoIds.push(canvases[canNum]['@id'])
+                }
+              }
+            }
+
+        });
+        files[f] = files[f].replace('manifests/', '')
+
+      }
+      var data = {
+        file_id:'annotate',
+        nav:'annotate',
+        title:'Annotate Manifests',
+        data: {
+          'files':files,
+          'uriList':annoIds
+        }
+      }
+      loadPage(res, req, 'base',  data)
+    });
+
+
+  },
   create(data) {
     return Annotation
       .create({

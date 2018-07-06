@@ -9,16 +9,18 @@
       </button>
       </div>
     <div class="modal-body">
-      <form action="">
-        <div class="account-field"><span class="modal-icon"><i class="fa fa-user"></i></span> | E-mail: <input type="email" placeholder="user@website.com" name="email"/></div>
+      <form action="/login" method="POST">
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-user"></i></span> | Username: <input type="text"  name="username"/></div>
         <div class="account-field"><span class="modal-icon"><i class="fa fa-lock"></i></span> | Password: <input type="password" placeholder="" name="pwd"/></div>
-      </form>
+
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-primary">Login</button>
+      <button type="submit" class="btn btn-primary">Login</button>
+      </form>
     </div>
     </div>
+
   </div>
 </div>
 
@@ -73,7 +75,7 @@
             </div>
           </div>
           <div class="account-field"><span class="modal-icon">
-            <i class="fa fa-key"></i></span> | Key: 
+            <i class="fa fa-key"></i></span> | Key:
                 <input type="password" placeholder="" name="key"/>
             </div>
     </div>

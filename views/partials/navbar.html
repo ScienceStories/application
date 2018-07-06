@@ -23,15 +23,19 @@
             <li {{#if_equal nav "about"}} class="active" {{else}}{{/if_equal}}><a href="https://www.wikidata.org/wiki/User:YULdigitalpreservation/ScienceStories" target="_blank">About</a></li>
             <li {{#if_equal nav "story"}} class="active" {{else}}{{/if_equal}}><a href="/Q11641">Sample Story</a></li>
             <li {{#if_equal nav "browse"}} class="active" {{else}}{{/if_equal}}><a href="/browse">Browse</a></li>
+            {{#ifUserType data.user.type 'author'}}
             <li class="dropdown" id="createDropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Create </a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Author Tools </a>
               <ul class="dropdown-menu">
-                <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createStoryModal">
+                <!-- <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createStoryModal">
                   <i class="fas fa-book"></i> | New Story
-                </button></li>
+                </button></li> -->
+                <li {{#if_equal nav "build"}} class="active" {{else}}{{/if_equal}}><a href="/build"><i class="fas fa-book"></i> | Build Story</a></li>
+                <li {{#if_equal nav "annotate"}} class="active" {{else}}{{/if_equal}}><a href="/annotate"><i class="fas fa-feather-alt"></i> | Annotate Manifest</a></li>
 
               </ul>
             </li>
+            {{/ifUserType}}
           </ul>
           <form class="navbar-form navbar-left" id="navSearch">
             <div class="form-group" >
@@ -45,12 +49,24 @@
             <li class="dropdown" id="accountDropDown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i></a>
               <ul class="dropdown-menu">
+                {{#ifUserType data.user.type 'user'}}
+                <li{{#if_equal nav "profile"}} class="active" {{else}}{{/if_equal}}><a href="/profile">
+                  <button type="button" class="btn btn-primary" >
+                  Profile
+                </button></a></li>
+                <li><a href="/logout">
+                  <button type="button" class="btn btn-primary" >
+                  Logout
+                </button></a></li>
+                {{else}}
                 <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signupModal">
                   Sign Up
                 </button></li>
                 <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
                   Login
                 </button></li>
+                {{/ifUserType}}
+
               </ul>
             </li>
           </ul>

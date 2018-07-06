@@ -1,0 +1,9 @@
+<div class="page-header">
+  Welcome {{data.user.name}}
+</div>
+<div id="profileBody">
+<a href="/browse">Browse Stories</a><br />
+{{#ifUserType data.user.type 'author'}}
+<a href="/build">Build a New Story</a>
+{{/ifUserType}}
+</div>

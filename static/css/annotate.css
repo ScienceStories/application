@@ -1,3 +1,9 @@
+.page-wrapper {
+    background: #56e6d5;
+}
+div#viewer {
+    height: 90vh !important;
+}
 .mirador-admin-btns button {
     background: #139292;
 }
