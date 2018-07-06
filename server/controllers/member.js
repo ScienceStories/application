@@ -26,11 +26,11 @@ module.exports = {
         type: 'basic'
       }).then(user => {
               req.session.user = user.dataValues;
-              res.redirect('/');
+              res.redirect('/profile');
           })
           .catch(error => {
             console.log(error)
-              res.redirect('/');
+            loadError(req, res, 'Trouble Creating Your Account')
           });
   },
   login(req, res) {
