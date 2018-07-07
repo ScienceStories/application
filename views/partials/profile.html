@@ -1,9 +1,97 @@
-<div class="page-header">
-  Welcome {{data.user.name}}
+<div id="sideBar">
+
 </div>
-<div id="profileBody">
-<a href="/browse">Browse Stories</a><br />
-{{#ifUserType data.user.type 'author'}}
-<a href="/build">Build a New Story</a>
-{{/ifUserType}}
+<div id="mainContent">
+  <div class="page-header"><div class="overlayHeader">
+    <div class="smallText">WELCOME BACK</div>  {{data.user.name}}
+    <div class="smallText" id="lastLogin">
+      <div id="accountTypeIcons">
+        {{#ifUserType data.user.type 'user'}}
+          <span class="accountIcon"><i class="far fa-user"></i></span>
+        {{/ifUserType}}
+        {{#ifUserType data.user.type 'author'}}
+          <span class="accountIcon"><i class="fas fa-feather-alt"></i></span>
+        {{/ifUserType}}
+        {{#ifUserType data.user.type 'admin'}}
+          <span class="accountIcon"><i class="fas fa-wrench"></i></span>
+        {{/ifUserType}}
+      </div>
+      MEMBER SINCE: {{dateFormat data.user.creadedAt 'll' false}}
+    </div>
+  </div></div>
+  <div id="profileBody">
+    <div class="profile-list">
+      <div class="profile-list-header">
+        Favorite Stories
+      </div>
+      <div class="profile-list-content">
+        {{#each data.favorites}}
+        <a href="/{{this.qid}}">
+        <div class="profile-list-item">
+          <div class="profile-list-image">
+            <img src="{{this.image}}" alt="">
+          </div>
+          <div class="profile-list-details">
+            <div class="profile-list-title">
+              {{this.label}}
+            </div>
+            <div class="profile-list-description">
+              {{this.description}}
+            </div>
+          </div>
+
+        </div></a>
+        {{/each}}
+      </div>
+    </div>
+    <div class="profile-list">
+      <div class="profile-list-header">
+        My Top Stories
+      </div>
+      <div class="profile-list-content">
+        {{#each data.mostViews}}
+        <a href="/{{this.qid}}">
+        <div class="profile-list-item">
+          <div class="profile-list-image">
+            <img src="{{this.image}}" alt="">
+          </div>
+          <div class="profile-list-details">
+            <div class="profile-list-title">
+              {{this.label}}
+            </div>
+            <div class="profile-list-description">
+              {{this.description}}
+            </div>
+          </div>
+
+        </div></a>
+        {{/each}}
+      </div>
+    </div>
+    <div class="profile-list">
+      <div class="profile-list-header">
+        Trending Stories
+      </div>
+      <div class="profile-list-content">
+        {{#each data.trending}}
+        <a href="/{{this.qid}}">
+        <div class="profile-list-item">
+          <div class="profile-list-image">
+            <img src="{{this.image}}" alt="">
+          </div>
+          <div class="profile-list-details">
+            <div class="profile-list-title">
+              {{this.label}}
+            </div>
+            <div class="profile-list-description">
+              {{this.description}}
+            </div>
+          </div>
+
+        </div></a>
+        {{/each}}
+        <a href="/browse" class="profile-list-end-action">Browse More <i class="fas fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
 </div>

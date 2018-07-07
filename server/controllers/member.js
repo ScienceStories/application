@@ -1,7 +1,11 @@
 const Member = require('../models').member;
+const Story = require('../models').story;
+const StoryActivity = require('../models').storyactivity;
 const bcrypt = require('bcrypt');
+const wikidataController = require('./wikidata');
 const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
+const sequelize = require('../models').sequelize
 module.exports = {
   create(req, res) {
     return Member
@@ -111,11 +115,69 @@ module.exports = {
       })
       .catch(error => res.status(400).send(error));
   },
+  getActivityList(req, res, listName, filter, data, callback){
+    return StoryActivity.findAll(filter)
+      .then(activities => {
+        // console.log(activities)
+        // console.log(listName,'OUTPUT->', activities)
+        allList = activities.dataValues
+        favoriteList = []
+        favQids = []
+        for (i = 0; i < activities.length; i++){
+
+            favoriteList.push(activities[i].dataValues)
+            favQids.push(activities[i].dataValues.story.qid)
+
+        }
+        wikidataController.getDetailsList(req, res, favQids, 'small', function(favList){
+
+          data[listName] = favList
+          callback(data)
+
+        })
+
+      })
+  },
   profile(req, res) {
+
     return Member.findById(req.session.user.id)
     .then(member => {
+      //find Favorites
+      favFilter = {where: {memberId: member.id, favorite: 1},
+        order: [
+            ['updatedAt', 'DESC'],
+        ],
+        include: [
+          { model: Story, required: true, as:'story'}
+        ],}
+      topFilter = {where: {memberId: member.id},
+        order: [
+            ['views', 'DESC'],
+        ],
+        limit: 10,
+        include: [
+          { model: Story, required: true, as:'story'}
+        ],}
+      trendFilter =  {
+        group: ['story.id', ],
+        attributes: ['story.id', [sequelize.fn('SUM', sequelize.col('views')), 'totalViews']],
+          order: [
+              [sequelize.fn('SUM', sequelize.col('views')), 'DESC'],
+          ],
+          limit: 10,
+          include: [
+            { model: Story, required: true, as:'story'}
+          ],}
       data = {user:member}
-      return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Profile', nav:'profile', data:data})
+      module.exports.getActivityList(req, res, 'favorites', favFilter, data, function(favoriteActivity){
+        module.exports.getActivityList(req, res, 'mostViews', topFilter, data, function(favoriteActivity){
+          module.exports.getActivityList(req, res, 'trending', trendFilter, data, function(favoriteActivity){
+            return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Profile', nav:'profile', data:data})
+          })
+        })
+
+      } )
+
     })
   },
   destroy(req, res) {
@@ -139,5 +201,13 @@ module.exports = {
           .catch(error => res.status(400).send(error));
       })
       .catch(error => res.status(400).send(error));
+  },
+  toggleFavorite(req, res) {
+    StoryActivity.findOne({where: {memberId: req.session.user.id, storyId:req.body.storyId}})
+      .then(activity => {
+        newVal = (activity.favorite) ? 0 : 1
+        activity.update({favorite: newVal})
+          .then(out => res.send(out))
+      })
   },
 };

@@ -93,7 +93,7 @@ app.post('/api/dump/stories', (req, res) => {
 });
   // route for Home-Page
   app.post('/api/sqarql', wikidataController.customQuery);
-
+  app.post('/api/member/toggleFavorite', membersController.toggleFavorite);
   app.post('/api/member/create', membersController.create);
   app.post('/api/story/create', storyController.create);
   app.post('/api/story/update', storyController.update);

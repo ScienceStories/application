@@ -45,7 +45,7 @@ module.exports = {
       Story.findOne({where: {qid:req.query.qid}})
         .then(story => {
           console.log(story.data)
-          return loadPage(res, req, 'base', {file_id:'build',  title:'Story Creation', nav:'build', data:story.data, idVal:req.query.qid.substr(1)})
+          return loadPage(res, req, 'base', {file_id:'build',  title:'Story Creation', nav:'build', data:{moments:story.data}, idVal:req.query.qid.substr(1)})
         })
     }
     else{
@@ -110,7 +110,7 @@ WHERE
   },
   update(req, res) {
     user_id = (req.session.user) ? req.session.user.id : false;
-    if (!user_id) return res.send('Session Has Expired') 
+    if (!user_id) return res.send('Session Has Expired')
     else return Story
       .findOrCreate({
           where: {

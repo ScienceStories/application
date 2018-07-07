@@ -2,8 +2,11 @@ const wdk = require('wikidata-sdk');
 const fetch = require('node-fetch');
 const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
+const loadError =  require('../../app').loadError;
 const sparqlController = require('./sparql');
+const StoryActivity = require('../models').storyactivity;
 const fs = require('fs');
+const moment = require('moment');
 iconMap =  JSON.parse(fs.readFileSync("server/controllers/iconMap.json"));
 itemTypeMap =  JSON.parse(fs.readFileSync("server/controllers/itemTypeMap.json"));
 module.exports = {
@@ -41,6 +44,29 @@ module.exports = {
 
 
 
+  },
+  getDetailsList(req, res, qidList, detailLevel, callback){
+    if (detailLevel == 'small'){
+      // Just label, description, optional image
+      var queryUrl = sparqlController.getSmallDetailsList(qidList, 'en');
+      appFetch(queryUrl).then(output => {
+        rawData = output.results.bindings;
+        content = []
+        for (var i=0; i<rawData.length;i++){
+          var record = rawData[i]
+          var newRecord = {
+            qid: record.item.value.replace('http://www.wikidata.org/entity/', ''),
+            label: record.itemLabel.value,
+            description: record.itemDescription.value
+          }
+          if (record.image && record.image.value){
+            newRecord.image = record.image.value
+          }
+          content.push(newRecord)
+        }
+        callback(content);
+      })
+    }
   },
   customQuery(req, res) {
     var wd_url = wdk.sparqlQuery(req.body.query);
@@ -93,7 +119,41 @@ module.exports = {
           if (labels.entities[qid].sitelinks.enwiki){
             wikipedia = labels.entities[qid].sitelinks.enwiki.title
           }
-          return res.render('full', {
+          if (req.session.user && (req.url.indexOf('/preview') == -1)) {
+            StoryActivity.findOrCreate({
+                where: {
+                  memberId: req.session.user.id,
+                  storyId: row.id
+                },
+              })
+            .spread((found, created) =>{
+              // console.log(moment().format("YYYY-MM-DD HH:mm:ss"))
+              found.update({
+              views: found.views+1,
+              lastViewed: moment().format("YYYY-MM-DD HH:mm:ss")})
+                .then(output => {
+                  // console.log(output.lastViewed)
+                  // console.log('OUTPUT->', output)
+                      return res.render('full', {
+                    page: function(){ return 'story'},
+                    scripts: function(){ return 'story_scripts'},
+                    links: function(){ return 'story_links'},
+                    title: name +" - Story",
+                    nav: "Story",
+                    content: simplifiedResults.statements,
+                    wikipedia: wikipedia,
+                    name: name,
+                    qid: simplifiedResults.qid,
+                    storyActivity: output.dataValues,
+                    data: jsonData,
+                    user: req.session.user,
+                    row: row
+                  })
+                })
+            })
+            .catch(error => {loadError(req, res, 'Something went wrong.')});
+          }
+          else return res.render('full', {
         page: function(){ return 'story'},
         scripts: function(){ return 'story_scripts'},
         links: function(){ return 'story_links'},
@@ -103,7 +163,8 @@ module.exports = {
         wikipedia: wikipedia,
         name: name,
         qid: simplifiedResults.qid,
-        data: jsonData
+        data: jsonData,
+        row: row
       })
         })
 

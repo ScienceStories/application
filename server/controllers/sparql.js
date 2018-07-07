@@ -24,4 +24,21 @@ module.exports = {
     return wdk.sparqlQuery(query);
 
 },
+  getSmallDetailsList(qidList, lang){
+    var qidStr = ''
+    for (var i=0; i < qidList.length; i++){
+      qidStr += `(wd:${qidList[i]} ${i}) `
+    }
+    var query = `
+      SELECT ?item ?itemLabel  ?itemDescription ?image #
+      WHERE {
+        VALUES (?item ?place) { ${qidStr} }.
+        optional {?item wdt:P18 ?image  .}
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+
+      }
+      ORDER BY ?place
+    `
+    return wdk.sparqlQuery(query);
+  },
 }

@@ -1,6 +1,31 @@
 body{
   display: inherit;
 }
+
+
+button#favoriteBtn, button#favoriteBtn.favorited:hover  {
+    color: #ffffff9e;
+    background: none;
+    position: fixed;
+    z-index: 10000000000000000;
+    left: 15px;
+    top: 15px;
+    font-size: 140%;
+    font-weight: bold;
+    background: #808080;
+    padding: 5px;
+    border-radius: 5px;
+    opacity: .5;
+    margin-left: 10vw;
+    /* width: 10vw; */
+    position: absolute;
+    z-index: 1000000000000;
+}
+button#favoriteBtn:hover, button#favoriteBtn.favorited {
+    color: red;
+}
+
+
 #homeButton {
     color: #ffffff9e;
     background: none;
@@ -16,6 +41,7 @@ body{
     opacity: .5;
     width: 10vw;
 }
+
 
 a#homeButton:hover {
     text-decoration: none;

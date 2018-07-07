@@ -8,7 +8,13 @@
 <button id="upArrow">
   <span>↑</span>
 </button>
+{{#ifUserType user.type 'user'}}
+<button id="favoriteBtn" class="{{#if_equal storyActivity.favorite 1}} favorited{{else}}{{/if_equal}}" onclick="toggleFavorite({{row.id}})">
+  <span><i class="fas fa-heart"></i></span>
+  <span id="favoriteLoader" style="display:hide"><i class="fas fa-spinner fa-spin"></i></span>
 
+</button>
+{{/ifUserType}}
 <!-- slide types:
 
   * 1. Intro (background pic + name and 1-line description)
@@ -87,4 +93,14 @@
      $.fn.pagepiling.moveSectionUp();
   });
   $('#upArrow').css('z-index', $('.section').length)
+$('#favoriteLoader').fadeOut('slow');
+  function toggleFavorite(storyId){
+    $('#favoriteLoader').fadeIn('slow');
+    $.post('/api/member/toggleFavorite', {storyId:storyId})
+      .done(function(data){
+        $('#favoriteLoader').fadeOut('slow');
+        if (data.favorite) $('#favoriteBtn').addClass('favorited')
+        else $('#favoriteBtn').removeClass('favorited')
+      })
+  }
 </script>
