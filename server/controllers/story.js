@@ -77,71 +77,29 @@ module.exports = {
             loadPage(res, req, 'base', {file_id:'search',  title:'Search '+req.query.search, nav:'search', data:data})
           })
         })
-
-
-
     })
   },
   browse(req, res) {
     return Story
       .all()
       .then(out => {
-        var qids = 'wd:Q11641  wd:Q7309 wd:Q6376201';
-        var query = `
-        SELECT ?story ?storyLabel ?storyDescription ?birth ?death ?image
-WHERE
-{
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-    VALUES ?story { ${qids} }.
-    OPTIONAL{
-    ?story wdt:P569 ?_birth.
-      bind (year(?_birth) as ?birth).
-      }
-  OPTIONAL{
-    ?story wdt:P570 ?_death.
-    bind (year(?_death) as ?death)
-      }
-  OPTIONAL{
-    ?story wdt:P18|wdt:P117 ?image.
-      }
-}
-        `
-        // console.log(out);
-        qidString = '';
         story_total = out.length;
-        qidList = []
-        //TODO: Make Work for more than 50
-        for(var i = 0; i < story_total && i < 50; i++){
-            qidString  += '|'+out[i].dataValues.qid;
-          }
-          for(var i = 0; i < story_total; i++){
-              qidString  += '|'+out[i].dataValues.qid;
-              qidList.push(out[i].dataValues.qid)
+        qidList = [];
+        for(var i = 0; i < story_total; i++){
+          qidList.push(out[i].dataValues.qid)
+        }
+        data = {}
+        return wikidataController.getDetailsList(req, res, qidList, 'small_with_age',
+          function(qidList){
+            for(var i = 0; i < story_total; i++){
+              for(var key in out[i].dataValues) {
+                qidList[i][key] = out[i].dataValues[key];
+              }
             }
-            data = {}
-            return wikidataController.getDetailsList(req, res, qidList, 'small_with_age', function(qidList){
-              for(var i = 0; i < story_total; i++){
-                  for(var key in out[i].dataValues) qidList[i][key] = out[i].dataValues[key];
-                }
-              data['browseList'] = qidList
-              loadPage(res, req, 'base', {file_id:'browse',  title:'Browse Stories', nav:'browse', data:data})
-
-            })
-          qidString = qidString.substr(1,)
-          // console.log(qidString)
-          var wd_url = wdk.sparqlQuery(query);
-          // console.log(wd_url);
-          var qidsApi = 'Q11641|Q5298518|Q7309|Q6376201|Q451538';
-          var browseUrl = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qidString}&languages=en&format=json`
-          appFetch(browseUrl).then(content => {
-            // console.log(content.entities.Q6376201.claims.P5690.mainsnak)
-            return content.entities
-            // console.log(content.results.bindings)
-            return content.results.bindings
-          }
-        ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'browse',  title:'Browse Stories', nav:'browse', stories: simplifiedResults}))
+            data['browseList'] = qidList
+            loadPage(res, req, 'base', {file_id:'browse',  title:'Browse Stories', nav:'browse', data:data})
+          })
       })
-      .catch(error => {console.log(error);res.status(400).send(error)});
   },
   update(req, res) {
     user_id = (req.session.user) ? req.session.user.id : false;
