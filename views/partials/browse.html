@@ -1,22 +1,28 @@
 <div class="page-header">
-  Browse Science Stories
+  <div class="overlayHeader">
+    Browse Science Stories
+  </div>
 </div>
 <div id="browseStories">
-  {{#each stories}}
+  {{#each data.browseList}}
     <div class="grid-item">
-      <a class="browse-story-link" href="/{{this.id}}">
+      <a class="browse-story-link" href="/{{this.qid}}">
               <div class="inventory-card"  >
                 <div class="card-header">
 
+                  <!-- <div class="card-image-container">
+                    <img src="{{#if this.hasImage}}{{this.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}" alt="">
+                  </div> -->
+                  {{#if this.hasImage}}
                   <div class="card-image-container">
-                    <img src="{{#if this.claims.P18.0.mainsnak.datavalue.value}}{{commonsImage this.claims.P18.0.mainsnak.datavalue.value}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}" alt="">
+                    <img src="{{this.image}}" alt="">
                   </div>
-
+                  {{/if}}
                   <div class="card-title">
-                    {{this.labels.en.value}}
-                    {{#if this.claims.P569}}
+                    {{this.label}}
+                    {{#if this.birth}}
                       <div class="card-condition">
-                        {{wikiDateTime this.claims.P569.0.mainsnak.datavalue.value.time 'Y'}}-{{#if this.claims.P570}}{{wikiDateTime this.claims.P570.0.mainsnak.datavalue.value.time 'Y'}}{{/if}}
+                        {{dateFormat this.birth 'Y'}}-{{#if this.death}}{{dateFormat this.death 'Y'}}{{/if}}
                       </div>
                     {{/if}}
                   </div>
@@ -24,14 +30,14 @@
                 <div class="card-body">
 
                   <p class="card-desc">
-                    {{this.descriptions.en.value}}
+                    {{this.description}}
                   </p>
 
                 </div>
                 <div class="card-footer">
                     <div class="card-footer-sub card-updated">
                     <i class="far fa-clock"></i> Updated:
-                    {{dateFormat this.modified 'MM/DD/YY'}}
+                    {{dateFormat this.updatedAt 'MM/DD/YY'}}
                     </div>
 
                 </div>

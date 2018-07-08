@@ -88,10 +88,24 @@ WHERE
         // console.log(out);
         qidString = '';
         story_total = out.length;
+        qidList = []
         //TODO: Make Work for more than 50
         for(var i = 0; i < story_total && i < 50; i++){
             qidString  += '|'+out[i].dataValues.qid;
           }
+          for(var i = 0; i < story_total; i++){
+              qidString  += '|'+out[i].dataValues.qid;
+              qidList.push(out[i].dataValues.qid)
+            }
+            data = {}
+            return wikidataController.getDetailsList(req, res, qidList, 'small_with_age', function(qidList){
+              for(var i = 0; i < story_total; i++){
+                  for(var key in out[i].dataValues) qidList[i][key] = out[i].dataValues[key];
+                }
+              data['browseList'] = qidList
+              loadPage(res, req, 'base', {file_id:'browse',  title:'Browse Stories', nav:'browse', data:data})
+
+            })
           qidString = qidString.substr(1,)
           // console.log(qidString)
           var wd_url = wdk.sparqlQuery(query);

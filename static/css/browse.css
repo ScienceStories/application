@@ -5,9 +5,38 @@
     font-weight: 300;
     padding: 20px;
 }
+.page-header {
+    line-height: 1;
+    margin:  0;
+    /* margin-top: 50px; */
+    padding: 0;
+    background-image: url(https://images.unsplash.com/photo-1512567100135-223e140cd167?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8da2d287529b3ca7bd2dd0c9ba462db0&auto=format&fit=crop&w=1950&q=80);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:  cover;
+    font-weight:  bold;
+    color: white;
+    text-shadow: 1px 2px 6px black;
+    font-size: 5em;
+}
+.overlayHeader {
+    line-height: 1;
+    margin: 0;
+    padding: 35px;
+    padding-top: 75px;
+    /* background-position: center; */
+    /* background-repeat: no-repeat; */
+    /* background-size: cover; */
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 2px 6px black;
+    /* font-size: 5em; */
+    background: #3cffe799;
+}
 .grid-item {
   width: 19%;
-  height: 600px;
+  /* height: 550px; */
+  /* height: 100%; */
   display: inline-block;
   vertical-align: top;
   margin: 10px 0px;
@@ -38,24 +67,32 @@ div#inventoryList{
 }
 
 
+.card-title, .card-body, .card-footer {
+    padding: 0 24px;
+}
+
 .inventory-card {
-    border-radius: 5px;
-    padding: 24px;
+    /* border-radius: 5px; */
+    /* padding: 24px; */
     background: white;
     box-shadow: 0px 0px 9px 1px #0000004d;
     margin: 10px;
     opacity: .8;
-    height: 100%;
+    /* height: 100%; */
 }
+
 .inventory-card:hover {
     opacity: 1;
+    background: #489a95;
+    color: white;
 }
 .card-title {
-    border-bottom:  1px solid;
-    font-size:  150%;
+    border-bottom: 1px solid;
+    font-size: 150%;
     font-weight: 400;
-    margin-bottom: 10px;
     padding: 5px;
+    margin: 0 20px 10px 20px;
+    text-align: center;
 }
 
 .card-body {
@@ -113,11 +150,11 @@ div#inventoryList{
 }
 .card-condition {
     display: inline-block;
-    padding: 2px 11px;
+    padding: 1px 6px;
     background: #0cbfb5;
-    font-size: 55%;
-    border-radius: 19px;
-    font-weight: bold;
+    font-size: 40%;
+    /* border-radius: 19px; */
+    font-weight: 300;
     color: white;
     margin-left: 5px;
     margin-top: 5px;
@@ -126,11 +163,12 @@ div#inventoryList{
     text-align: right;
     width: 100%;
     font-size: 70%;
+    margin-bottom:  15px;
 }
 .card-image-container img {
     width: 100%;
     /* border: 7px solid #b9b9b9; */
-    border-radius: 13px;
+    /* border-radius: 13px; */
     margin-bottom: 11px;
     max-height: 425px;
     object-fit: cover;

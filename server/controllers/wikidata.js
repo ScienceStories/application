@@ -22,7 +22,7 @@ module.exports = {
     `
     const url = wdk.sparqlQuery(sparql);
     appFetch(url).then(content => {
-      console.log(content.results.bindings)
+      // console.log(content.results.bindings)
       output = content.results.bindings
       var qidString = '';
       // TODO: HANDLE MORE THAN 50 RESULTS
@@ -33,7 +33,7 @@ module.exports = {
       qidString = qidString.substr(1,)
       var browseUrl = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qidString}&languages=en&format=json`
       return appFetch(browseUrl).then(content => {
-        console.log(content.entities)
+        // console.log(content.entities)
         return content.entities
         // console.log(content.results.bindings)
         return content.results.bindings
@@ -57,14 +57,44 @@ module.exports = {
           var newRecord = {
             qid: record.item.value.replace('http://www.wikidata.org/entity/', ''),
             label: record.itemLabel.value,
-            description: record.itemDescription.value,
+            description: ' ',
             image: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
             hasImage: false
+          }
+          if (record.description) newRecord.description = record.itemDescription.value
+          if (record.image && record.image.value){
+            newRecord.image = record.image.value
+            newRecord.hasImage = true
+          }
+          content.push(newRecord)
+        }
+        callback(content);
+      })
+    }
+    else if (detailLevel == 'small_with_age'){
+      // Just label, description, optional image
+      var queryUrl = sparqlController.getSmallDetailsListWithAge(qidList, 'en');
+      appFetch(queryUrl).then(output => {
+        rawData = output.results.bindings;
+        content = []
+        for (var i=0; i<rawData.length;i++){
+          var record = rawData[i]
+          var newRecord = {
+            qid: record.item.value.replace('http://www.wikidata.org/entity/', ''),
+            label: record.itemLabel.value,
+            description: ' ',
+            image: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
+            hasImage: false,
+            birth: false,
+            death: false
           }
           if (record.image && record.image.value){
             newRecord.image = record.image.value
             newRecord.hasImage = true
           }
+          if (record.itemDescription) newRecord.description = record.itemDescription.value
+          if (record.birth) newRecord.birth = record.birth.value
+          if (record.death) newRecord.death = record.death.value
           content.push(newRecord)
         }
         callback(content);

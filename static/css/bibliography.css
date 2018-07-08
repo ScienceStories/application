@@ -1,3 +1,11 @@
+.page-header{
+      background-image: url(https://images.unsplash.com/photo-1458040937381-49c067dfd49a?ixlib=rb-0.3.5…EyMDd9&s=a2d5938…&auto=format&fit=crop&w=1950&q=80);
+}
+
+.overlayHeader {
+    background: #6633998c;
+}
+
 .work-item {
     margin: 25px 1%;
     /* display:  inline-block; */
@@ -5,7 +13,7 @@
 
 .item-title {
     padding: 15px 5%;
-    background: #1bcca31f;
+    /* background: #1bcca31f; */
     /* color:  white; */
     font-size: 150%;
     /* text-align:  center; */
@@ -41,6 +49,6 @@ div#bibliography {
     width: calc(95% - 10px - 2em);
 }
 .item-title:hover {
-    background: #34eab5;
-    color:  white;
+    background: #5b298091;
+    color: white;
 }
