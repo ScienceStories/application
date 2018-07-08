@@ -22,9 +22,17 @@ module.exports = (sequelize, DataTypes) => {
     type: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
       defaultValue: 'basic',
 
+    },
+    wikidata: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     confirmed: {
       type: DataTypes.BOOLEAN,
@@ -34,22 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-//   password_digest: {
-//   type: DataTypes.STRING,
-//   validate: {
-//     notEmpty: true
-//   }
-// },
-// password: {
-//   type: DataTypes.VIRTUAL,
-//   allowNull: false,
-//   validate: {
-//     notEmpty: true
-//   }
-// },
-// password_confirmation: {
-//   type: DataTypes.VIRTUAL
-// }
+
   },
 
   {

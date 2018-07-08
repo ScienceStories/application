@@ -1,3 +1,6 @@
+* {
+    transition: all .4s ease;
+}
 body{
   /* display: none; */
   background: white;
@@ -7,6 +10,7 @@ body{
     display: none;
     padding-top: 10vh;
     padding-bottom: 20vh;
+    transition: none;
 }
 .page-wrapper .container {
     width: 100%;

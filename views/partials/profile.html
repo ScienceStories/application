@@ -1,5 +1,29 @@
 <div id="sideBar">
-
+  <div class="user-image" style="background-image: url('{{data.user.image}}')">
+    <div class="user-image-overlay"></div>
+  </div>
+  <div class="user-details">
+    <div class="user-username">@{{data.user.username}}</div>
+    {{#if data.user.wikidata}}
+      <div class="user-wikidata">Wikidata: <a href="https://www.wikidata.org/wiki/User:{{data.user.wikidata}}">{{data.user.wikidata}}</a></div>
+    {{/if}}
+  </div>
+  <div class="sidebar-nav-btns">
+    <div class="sidebar-nav-btn active">
+      Overview
+    </div>
+    <div class="sidebar-nav-btn" title="Coming Soon">
+      Story Feed
+    </div>
+    <div class="sidebar-nav-btn" title="Coming Soon">
+      Analytics
+    </div>
+    {{#ifUserType data.user.type 'author'}}
+    <div class="sidebar-nav-btn" title="Coming Soon">
+      Contributions
+    </div>
+    {{/ifUserType}}
+  </div>
 </div>
 <div id="mainContent">
   <div class="page-header"><div class="overlayHeader">
@@ -66,6 +90,7 @@
 
         </div></a>
         {{/each}}
+        <a href="/browse" class="profile-list-end-action">Browse More <i class="fas fa-arrow-right"></i></a>
       </div>
     </div>
     <div class="profile-list">
@@ -95,3 +120,13 @@
     </div>
   </div>
 </div>
+<script>
+  $( function() {
+    // $( document ).tooltip({
+    //   track: true
+    // });
+    $(document ).tooltip({
+  position: { my: "left+15 center", at: "right center" }
+});
+  } );
+  </script>

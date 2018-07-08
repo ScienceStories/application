@@ -27,7 +27,9 @@ module.exports = {
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
-        type: 'basic'
+        type: 'basic',
+        wikidata: req.body.wikidata,
+        image: req.body.image
       }).then(user => {
               req.session.user = user.dataValues;
               res.redirect('/profile');
@@ -138,10 +140,19 @@ module.exports = {
 
       })
   },
+  loggedIn(req) {
+    if (req.session && req.session.user && req.session.user.id) return true
+    else return false
+  },
+  homeRedirect(req, res) {
+    if (module.exports.loggedIn(req)) res.redirect('/profile')
+    else res.redirect('/')
+  },
   profile(req, res) {
 
     return Member.findById(req.session.user.id)
     .then(member => {
+      req.session.user = member;
       //find Favorites
       favFilter = {where: {memberId: member.id, favorite: 1},
         order: [

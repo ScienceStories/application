@@ -22,6 +22,7 @@ div#mainContent {
     min-height:  100vh;
     width:  100%;
     margin-top: 50px;
+    transition: none;
 }
 div#accountTypeIcons {
     display: inline;
@@ -36,8 +37,9 @@ span.accountIcon {
     /* font-size: 82%; */
     margin-left:  6px;
 }
-.profilimg {}
-
+  div.profile-list-item:hover .profile-list-image {
+      height: 100px;
+  }
 .profile-list-image {
     width: 75px;
     display:  inline-block;
@@ -103,14 +105,15 @@ div.profile-list-content > a {
     text-decoration: none;
     height: 100%;
 }
+.profile-list-content * {
+    transition: none;
+}
 
-.profile-list-item {
+.profile-list-content .profile-list-item {
     width: 100%;
     text-align: left;
     padding: 5px;
     margin: 5px;
-     /* delays for 1 second */
-     /* for Safari & Chrome */
     transition: all .4s ease;
 }
 .profile-list-item:hover {
@@ -155,4 +158,58 @@ div.profile-list-content > a.profile-list-end-action {
 .profile-list-description {
     font-weight: 300;
     font-size: 91%;
+}
+
+.user-image {
+    height: 200px;
+    background-position:  top;
+    background-repeat:  no-repeat;
+    background-size:  cover;
+    width:  100%;
+    opacity:  .8;
+}
+
+.user-image-overlay {
+    width:  100%;
+    height:  100%;
+    background: rgb(39,39,42);
+    background: -moz-linear-gradient(0deg, rgba(39,39,42,1) 12%, rgba(39,39,42,0) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(39,39,42,1) 12%, rgba(39,39,42,0) 100%);
+    background: linear-gradient(0deg, rgba(39,39,42,1) 12%, rgba(39,39,42,0) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#27272a",endColorstr="#27272a",GradientType=1);
+}
+.user-details {
+    text-align:  center;
+    font-size: 75%;
+    font-weight:  300;
+    color: #afafaf;
+    opacity: .9;
+}
+
+.user-username {
+    font-size:  142%;
+}
+
+.user-wikidata {
+    font-size:  72%;
+}
+
+.user-wikidata a {
+    color: #4bbfaf;
+}
+.sidebar-nav-btns {
+    /* vertical-align: bottom; */
+    /* height:  100%; */
+    width:  100%;
+    font-size:  85%;
+    text-align:  center;
+    margin-top:  20px;
+}
+
+.sidebar-nav-btn {vertical-align:  bottom;padding: 5px 15px;width:  100%;}
+
+.sidebar-nav-btn.active {
+    background: black;
+    border-left:  3px solid;
+    color: #39bfaf;
 }

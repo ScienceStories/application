@@ -57,10 +57,13 @@ module.exports = {
           var newRecord = {
             qid: record.item.value.replace('http://www.wikidata.org/entity/', ''),
             label: record.itemLabel.value,
-            description: record.itemDescription.value
+            description: record.itemDescription.value,
+            image: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
+            hasImage: false
           }
           if (record.image && record.image.value){
             newRecord.image = record.image.value
+            newRecord.hasImage = true
           }
           content.push(newRecord)
         }

@@ -131,3 +131,12 @@ div#momentList {
     margin:  9px;
     text-align:  center;
 }
+.ui-tooltip {
+    padding: 10px 20px;
+    color: white;
+    font-size: 50%;
+    text-transform: uppercase;
+    box-shadow: 0 0 7px black;
+    background: black;
+    border: none;
+}

@@ -37,11 +37,13 @@
       <form action="/api/member/register" method="post">
     <div class="modal-body">
 
-        <div class="account-field"><span class="modal-icon"><i class="far fa-address-card"></i></span> | Full Name: <input type="text" placeholder="Grace Hopper" name="name"/></div>
-        <div class="account-field"><span class="modal-icon"><i class="fa fa-user"></i></span> | Username: <input type="text" placeholder="Ghopper" name="username"/></div>
-        <div class="account-field"><span class="modal-icon"><i class="fa fa-at"></i></span> | E-mail: <input type="email" placeholder="ghopper@website.com" name="email"/></div>
-        <div class="account-field"><span class="modal-icon"><i class="fa fa-lock"></i></span> | Password: <input type="password" placeholder="password" name="password"/></div>
-        <div class="account-field"><span class="modal-icon"><i class="fa fa-user-secret"></i></span> | Confirm: <input type="password" placeholder="confirm password" name="pwd_confirm"/></div>
+        <div class="account-field"><span class="modal-icon"><i class="far fa-address-card"></i></span> | Full Name: <input type="text" placeholder="Grace Hopper" name="name" required/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-user"></i></span> | Username: <input type="text" placeholder="Ghopper" name="username" required/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-at"></i></span> | E-mail: <input type="email" placeholder="ghopper@website.com" name="email" required/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fab fa-wikipedia-w"></i></span> | Wikimedia Username: <input type="text" placeholder="optional" name="wikidata"/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fas fa-camera-retro"></i></span> | Image Url: <input type="text" placeholder="optional" name="image"/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-lock"></i></span> | Password: <input type="password" placeholder="password" name="password" required/></div>
+        <div class="account-field"><span class="modal-icon"><i class="fa fa-user-secret"></i></span> | Confirm: <input type="password" placeholder="confirm password" name="pwd_confirm" required/></div>
 
     </div>
     <div class="modal-footer">

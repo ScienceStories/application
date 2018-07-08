@@ -1,5 +1,5 @@
 $(window).load(function(){
-  $('body>div.page-wrapper').fadeIn(2000)
+  $('body>div.page-wrapper').fadeIn(1000)
 
 });
 jQuery.fn.fadeOutAndRemove = function(speed){

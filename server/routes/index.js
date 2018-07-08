@@ -13,7 +13,7 @@ module.exports = (app, sessionChecker) => {
 // app.get('/browse', sessionChecker, (req, res) => loadPage(res, req, 'base', {file_id:'browse', nav:'browse'}));
   // route for Home-Page
   app.get('/', (req, res) => loadPage(res, req, 'full', {file_id:'home', nav:'home', title:'Welcome'}))
-
+  app.get('/home', membersController.homeRedirect)
   app.get('/annotate', (req, res) => membersController.accessCheck(req, res, 'author', annotationController.showPage));
   // route for Test-Page
   app.get('/test', (req, res) => {
