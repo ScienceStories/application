@@ -10,6 +10,10 @@ const hbs = require('handlebars');
 const path = require('path');
 const fetch = require('node-fetch');
 const cors = require('cors');
+// initalize sequelize with session store
+var SequelizeStore = require('connect-session-sequelize')(session.Store);
+var sequelize = require('./server/models').sequelize
+// console.log(sequelize)
 // Set up the express app
 const app = express();
 const moment = require('moment');
@@ -146,11 +150,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // initialize cookie-parser to allow us access the cookies stored in the browser.
 app.use(cookieParser());
-
+var myStore = new SequelizeStore({
+    db: sequelize
+})
 // initialize express-session to allow us track the logged-in user across sessions.
 app.use(session({
     secret: 'SSSECRETKEY',
     resave: true,
+    store: myStore,
     saveUninitialized: true
 }));
 module.exports = {
@@ -185,12 +192,12 @@ module.exports = {
 
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
 // This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
-app.use((req, res, next) => {
-    if (req.cookies.user_sid && !req.session.user) {
-        res.clearCookie('user_sid');
-    }
-    next();
-});
+// app.use((req, res, next) => {
+//     if (req.cookies.user_sid && !req.session.user) {
+//         res.clearCookie('user_sid');
+//     }
+//     next();
+// });
 
 
 // middleware function to check for logged-in users

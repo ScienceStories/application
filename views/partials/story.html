@@ -9,11 +9,16 @@
   <span>↑</span>
 </button>
 {{#ifUserType user.type 'user'}}
-<button id="favoriteBtn" class="{{#if_equal storyActivity.favorite 1}} favorited{{else}}{{/if_equal}}" onclick="toggleFavorite({{row.id}})">
+<button id="favoriteBtn" class="{{#if_equal storyActivity.favorite 1}} favorited{{else}}{{/if_equal}}" onclick="toggleFavorite({{row.id}})"  title="Add/Remove Favorite">
   <span><i class="fas fa-heart"></i></span>
   <span id="favoriteLoader" style="display:hide"><i class="fas fa-spinner fa-spin"></i></span>
-
 </button>
+{{/ifUserType}}
+{{#ifUserType user.type 'author'}}
+<a href="/build?qid={{row.qid}}" title="Edit Story">
+<button id="buildBtn" class="" >
+  <span><i class="far fa-edit"></i></span>
+</button></a>
 {{/ifUserType}}
 <!-- slide types:
 
