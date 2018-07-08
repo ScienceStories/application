@@ -57,9 +57,30 @@ module.exports = {
     req.params.id = req.query.id
     // console.log(req.params.id, req.query.id )
     return wikidataController.processStory(req, res, {data: JSON.parse(req.query.data)});
+  },
+  search(req, res) {
+    return wikidataController.searchItems(req, res, req.query.search, function(results){
+      // console.log(results)
+      return Story.findAll({where: {qid:results}})
+        .then(stories => {
+          // console.log(stories)
+          qidList = []
+          for (i=0;i < stories.length; i++){
+            qidList.push(stories[i].dataValues.qid)
+          }
+          data = {}
+          wikidataController.getDetailsList(req, res, qidList, 'small', function(detailList){
+            for(var i = 0; i < detailList.length; i++){
+                for(var key in stories[i].dataValues) detailList[i][key] =stories[i].dataValues[key];
+              }
+            data['results'] = detailList
+            loadPage(res, req, 'base', {file_id:'search',  title:'Search '+req.query.search, nav:'search', data:data})
+          })
+        })
 
 
 
+    })
   },
   browse(req, res) {
     return Story

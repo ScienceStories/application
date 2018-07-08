@@ -1,0 +1,33 @@
+<div class="page-header">
+  <div class="overlayHeader">
+    {{data.results.length}}
+    {{#if_equal data.results.length 1}} Story {{else}} Stories {{/if_equal}}
+    Found
+  </div>
+</div>
+<div id="bibliography">
+  {{#if_equal data.results.length 0}}
+  <div class="no-results-message">
+    Try New Search or <a href="/browse">Browse Stories</a>.
+  </div>
+  {{/if_equal}}
+  {{#each data.results}}
+    <div class="work-item">
+      <a class="browse-story-link" target="_blank" href="/{{this.qid}}">
+        <div class="item-title">
+          {{#if this.hasImage}}
+          <div class="work-icon">
+            <img src="{{this.image}}" alt="">
+          </div>
+          {{/if}}
+          <div class="work-content">
+          {{this.label}}
+          <div class="work-description">
+            {{this.description}}
+          </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    {{/each}}
+</div>

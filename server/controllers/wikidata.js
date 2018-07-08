@@ -40,10 +40,18 @@ module.exports = {
       }
     ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'bibliography', title:'Bibliography', nav:'bibliography', works: simplifiedResults}))
 
-  })
-
-
-
+    })
+  },
+  searchItems(req, res, string, callback){
+    var search_url = `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${string}&language=en&format=json`
+    appFetch(search_url)
+      .then(content => {
+        var qidList = []
+        for (i=0; i < content.search.length; i++){
+          qidList.push(content.search[i].id)
+        }
+        return callback(qidList)
+      })
   },
   getDetailsList(req, res, qidList, detailLevel, callback){
     if (detailLevel == 'small'){
@@ -61,7 +69,7 @@ module.exports = {
             image: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
             hasImage: false
           }
-          if (record.description) newRecord.description = record.itemDescription.value
+          if (record.itemDescription) newRecord.description = record.itemDescription.value
           if (record.image && record.image.value){
             newRecord.image = record.image.value
             newRecord.hasImage = true
