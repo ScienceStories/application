@@ -13,17 +13,17 @@
   {{/if_equal}}
   {{#each data.results}}
     <div class="work-item">
-      <a class="browse-story-link" target="_blank" href="/{{this.qid}}">
+      <a class="browse-story-link"  href="/{{this.qid}}">
         <div class="item-title">
-          {{#if this.hasImage}}
+          {{#if this.image}}
           <div class="work-icon">
             <img src="{{this.image}}" alt="">
           </div>
           {{/if}}
           <div class="work-content">
-          {{this.label}}
+          {{this.itemLabel}}
           <div class="work-description">
-            {{this.description}}
+            {{this.itemDescription}}
           </div>
           </div>
         </div>

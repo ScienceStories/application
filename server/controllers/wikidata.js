@@ -53,60 +53,51 @@ module.exports = {
         return callback(qidList)
       })
   },
-  getDetailsList(req, res, qidList, detailLevel, callback){
-    if (detailLevel == 'small'){
-      // Just label, description, optional image
-      var queryUrl = sparqlController.getSmallDetailsList(qidList, 'en');
+  mergeValuesComma(){
+    // TODO:
+  },
+  mergeValuesList(){
+    // TODO:
+  },
+  mergeValuesFirst(qidList, rawData){
+    var tempQidList = qidList.slice();
+    var content = []
+    for (var i=0; i<rawData.length;i++){
+      var qid = rawData[i].item.value.replace('http://www.wikidata.org/entity/', '')
+      var index = tempQidList.indexOf(qid);
+      if (index > -1) {
+        tempQidList.splice(index, 1);
+        var record = rawData[i]
+        var newRecord = {qid: qid}
+        for(var key in record) newRecord[key] = record[key].value;
+        content.push(newRecord)
+      }
+    }
+    return content
+  },
+  processDetailList(req, res, queryFunction, qidList, callback, mergeType, defaultImage){
+      var queryUrl = queryFunction(qidList, 'en');
       appFetch(queryUrl).then(output => {
         rawData = output.results.bindings;
-        content = []
-        for (var i=0; i<rawData.length;i++){
-          var record = rawData[i]
-          var newRecord = {
-            qid: record.item.value.replace('http://www.wikidata.org/entity/', ''),
-            label: record.itemLabel.value,
-            description: ' ',
-            image: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
-            hasImage: false
+        if (!mergeType || mergeType == 'first'){
+          content = module.exports.mergeValuesFirst(qidList, rawData)
+          if (defaultImage){
+            for (var i=0; i<content.length;i++){
+              if (!content[i].image) content[i].image = defaultImage
+            }
           }
-          if (record.itemDescription) newRecord.description = record.itemDescription.value
-          if (record.image && record.image.value){
-            newRecord.image = record.image.value
-            newRecord.hasImage = true
-          }
-          content.push(newRecord)
+          return callback(content)
         }
-        callback(content);
       })
+  },
+  getDetailsList(req, res, qidList, detailLevel, mergeType=false, defaultImage=false, callback){
+    if (detailLevel == 'small'){
+      //  label, description, optional image
+      return module.exports.processDetailList(req, res, sparqlController.getSmallDetailsList, qidList, callback, mergeType, defaultImage)
     }
     else if (detailLevel == 'small_with_age'){
-      // Just label, description, optional image
-      var queryUrl = sparqlController.getSmallDetailsListWithAge(qidList, 'en');
-      appFetch(queryUrl).then(output => {
-        rawData = output.results.bindings;
-        content = []
-        for (var i=0; i<rawData.length;i++){
-          var record = rawData[i]
-          var newRecord = {
-            qid: record.item.value.replace('http://www.wikidata.org/entity/', ''),
-            label: record.itemLabel.value,
-            description: ' ',
-            image: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
-            hasImage: false,
-            birth: false,
-            death: false
-          }
-          if (record.image && record.image.value){
-            newRecord.image = record.image.value
-            newRecord.hasImage = true
-          }
-          if (record.itemDescription) newRecord.description = record.itemDescription.value
-          if (record.birth) newRecord.birth = record.birth.value
-          if (record.death) newRecord.death = record.death.value
-          content.push(newRecord)
-        }
-        callback(content);
-      })
+      // label, description, optional image
+      return module.exports.processDetailList(req, res, sparqlController.getSmallDetailsListWithAge, qidList, callback, mergeType, defaultImage)
     }
   },
   customQuery(req, res) {

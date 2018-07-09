@@ -13,13 +13,13 @@
                   <!-- <div class="card-image-container">
                     <img src="{{#if this.hasImage}}{{this.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}" alt="">
                   </div> -->
-                  {{#if this.hasImage}}
+                  {{#if this.image}}
                   <div class="card-image-container">
                     <img src="{{this.image}}" alt="">
                   </div>
                   {{/if}}
                   <div class="card-title">
-                    {{this.label}}
+                    {{this.itemLabel}}
                     {{#if this.birth}}
                       <div class="card-condition">
                         {{dateFormat this.birth 'Y'}}-{{#if this.death}}{{dateFormat this.death 'Y'}}{{/if}}
@@ -30,7 +30,7 @@
                 <div class="card-body">
 
                   <p class="card-desc">
-                    {{this.description}}
+                    {{this.itemDescription}}
                   </p>
 
                 </div>

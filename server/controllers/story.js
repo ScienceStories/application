@@ -59,15 +59,16 @@ module.exports = {
     return wikidataController.processStory(req, res, {data: JSON.parse(req.query.data)});
   },
   search(req, res) {
-    searchString = req.query.search.toLowerCase()
+    searchString = req.query.search.toLowerCase().trim()
+    if (!searchString.length) loadError(req, res, 'No Search Detected')
     return wikidataController.searchItems(req, res, searchString, function(results){
       // console.log(results)
       return Story.findAll({where: {qid:results}})
         .then(stories => {
           // console.log(stories)
-          qidList = []
+          var resultQids = []
           for (i=0;i < stories.length; i++){
-            qidList.push(stories[i].dataValues.qid)
+            resultQids.push(stories[i].dataValues.qid)
           }
           data = {}
           return Story.findAll()
@@ -76,20 +77,16 @@ module.exports = {
               for (i=0;i < allStories.length; i++){
                 allIds.push(allStories[i].dataValues.qid)
               }
-              wikidataController.getDetailsList(req, res, qidList, 'small', function(detailList){
-                wikidataController.getDetailsList(req, res, allIds, 'small', function(alldetailList){
+              wikidataController.getDetailsList(req, res, resultQids, 'small', 'first', false, function(detailList){
+                wikidataController.getDetailsList(req, res, allIds, 'small', 'first', false,  function(alldetailList){
                 for(var i = 0; i < detailList.length; i++){
                     for(var key in stories[i].dataValues) detailList[i][key] =stories[i].dataValues[key];
                   }
-
                 for(var i = 0; i < alldetailList.length; i++){
-                  var index = allIds.indexOf(alldetailList[i].qid);
-                    if (index > -1) {
-                      allIds.splice(index, 1);
-                    }
-                  var objectStr = alldetailList[i].label + alldetailList[i].description;
+                    // TODO: Function to make string
+                  var objectStr = alldetailList[i].itemLabel + alldetailList[i].itemDescription;
                   objectStr = objectStr.toLowerCase()
-                  if  ((objectStr.indexOf(searchString) > -1) && (qidList.indexOf(alldetailList[i].qid) == -1) && (index > -1)){
+                  if  ((objectStr.indexOf(searchString) > -1) && (resultQids.indexOf(alldetailList[i].qid) == -1) ){
                     var newItem = alldetailList[i]
                     for(var key in allStories[i].dataValues) newItem[key] = allStories[i].dataValues[key];
                     detailList.push(newItem)
@@ -100,7 +97,6 @@ module.exports = {
               })})
             })
             })
-
     })
   },
   browse(req, res) {
@@ -113,7 +109,7 @@ module.exports = {
           qidList.push(out[i].dataValues.qid)
         }
         data = {}
-        return wikidataController.getDetailsList(req, res, qidList, 'small_with_age',
+        return wikidataController.getDetailsList(req, res, qidList, 'small_with_age', 'first', false,
           function(qidList){
             for(var i = 0; i < story_total; i++){
               for(var key in out[i].dataValues) {

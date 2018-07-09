@@ -120,23 +120,18 @@ module.exports = {
   getActivityList(req, res, listName, filter, data, callback){
     return StoryActivity.findAll(filter)
       .then(activities => {
-        // console.log(activities)
-        // console.log(listName,'OUTPUT->', activities)
         allList = activities.dataValues
         favoriteList = []
         favQids = []
         for (i = 0; i < activities.length; i++){
-
             favoriteList.push(activities[i].dataValues)
             favQids.push(activities[i].dataValues.story.qid)
-
         }
-        wikidataController.getDetailsList(req, res, favQids, 'small', function(favList){
-
-          data[listName] = favList
-          callback(data)
-
-        })
+        wikidataController.getDetailsList(req, res, favQids, 'small',false,'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
+          function(favList){
+            data[listName] = favList
+            callback(data)
+          })
 
       })
   },
