@@ -59,7 +59,8 @@ module.exports = {
     return wikidataController.processStory(req, res, {data: JSON.parse(req.query.data)});
   },
   search(req, res) {
-    return wikidataController.searchItems(req, res, req.query.search, function(results){
+    searchString = req.query.search.toLowerCase()
+    return wikidataController.searchItems(req, res, searchString, function(results){
       // console.log(results)
       return Story.findAll({where: {qid:results}})
         .then(stories => {
@@ -69,14 +70,37 @@ module.exports = {
             qidList.push(stories[i].dataValues.qid)
           }
           data = {}
-          wikidataController.getDetailsList(req, res, qidList, 'small', function(detailList){
-            for(var i = 0; i < detailList.length; i++){
-                for(var key in stories[i].dataValues) detailList[i][key] =stories[i].dataValues[key];
+          return Story.findAll()
+            .then(allStories => {
+              allIds = []
+              for (i=0;i < allStories.length; i++){
+                allIds.push(allStories[i].dataValues.qid)
               }
-            data['results'] = detailList
-            loadPage(res, req, 'base', {file_id:'search',  title:'Search '+req.query.search, nav:'search', data:data})
-          })
-        })
+              wikidataController.getDetailsList(req, res, qidList, 'small', function(detailList){
+                wikidataController.getDetailsList(req, res, allIds, 'small', function(alldetailList){
+                for(var i = 0; i < detailList.length; i++){
+                    for(var key in stories[i].dataValues) detailList[i][key] =stories[i].dataValues[key];
+                  }
+                  console.log('TEST', alldetailList.length, allStories.length, allIds.length )
+                for(var i = 0; i < alldetailList.length; i++){
+                  var index = allIds.indexOf(alldetailList[i].qid);
+                    if (index > -1) {
+                      allIds.splice(index, 1);
+                    }
+                  var objectStr = alldetailList[i].label + alldetailList[i].description;
+                  objectStr = objectStr.toLowerCase()
+                  if  ((objectStr.indexOf(searchString) > -1) && (qidList.indexOf(alldetailList[i].qid) == -1) && (index > -1)){
+                    var newItem = alldetailList[i]
+                    for(var key in allStories[i].dataValues) newItem[key] = allStories[i].dataValues[key];
+                    detailList.push(newItem)
+                  }
+                }
+                data['results'] = detailList
+                loadPage(res, req, 'base', {file_id:'search',  title:'Search '+req.query.search, nav:'search', data:data})
+              })})
+            })
+            })
+
     })
   },
   browse(req, res) {

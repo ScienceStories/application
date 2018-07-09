@@ -50,10 +50,12 @@ nav#mainNav .active a{
 
 }
 nav#mainNav input {
-    background: #54575a;
+    background: #4f5355;
+    border-radius: 0;
     border: none;
     color: #7bfff7;
 }
+
 #navSearch button {
     float:  right;
     color: #d3d3d4;
