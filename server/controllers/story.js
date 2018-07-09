@@ -81,7 +81,7 @@ module.exports = {
                 for(var i = 0; i < detailList.length; i++){
                     for(var key in stories[i].dataValues) detailList[i][key] =stories[i].dataValues[key];
                   }
-                  console.log('TEST', alldetailList.length, allStories.length, allIds.length )
+
                 for(var i = 0; i < alldetailList.length; i++){
                   var index = allIds.indexOf(alldetailList[i].qid);
                     if (index > -1) {

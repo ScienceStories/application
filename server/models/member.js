@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
     wikidata: {
       type: DataTypes.STRING,
       allowNull: true,
-      unique: true,
     },
     image: {
       type: DataTypes.STRING,
