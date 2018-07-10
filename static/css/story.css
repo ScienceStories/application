@@ -179,6 +179,7 @@ div#conent_panel {
     background-size: auto 80%;
     background-position: 50% 0%;
     background-repeat: no-repeat;
+    transition: none;
 }
 .slide-intro, .slide-wikipedia {
         -webkit-background-size: cover;

@@ -58,4 +58,20 @@ module.exports = {
     `
     return wdk.sparqlQuery(query);
   },
+  getBibliography(lang){
+    var query = `
+    SELECT ?item ?itemLabel ?itemDescription ?instanceLabel ?authorLabel ?image
+    WHERE
+    {
+      {?item wdt:P31 wd:Q13442814}
+      UNION {?item wdt:P31 wd:Q571}.
+      ?item wdt:P921 wd:Q113616.
+      ?item wdt:P31 ?instance.
+      optional {?item wdt:P2093 ?author.}
+      optional {?item wdt:P18 ?image  .}
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+    }
+    `
+    return wdk.sparqlQuery(query);
+  }
 }

@@ -2,7 +2,8 @@
     background: #56e6d5;
 }
 div#viewer {
-    height: 90vh !important;
+    height: calc(100vh - 50px) !important;
+    transition: none;
 }
 .mirador-admin-btns button {
     background: #139292;

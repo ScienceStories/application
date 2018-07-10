@@ -11,36 +11,28 @@ iconMap =  JSON.parse(fs.readFileSync("server/controllers/iconMap.json"));
 itemTypeMap =  JSON.parse(fs.readFileSync("server/controllers/itemTypeMap.json"));
 module.exports = {
   bibliography(req, res) {
-    const sparql = `
-      SELECT ?item
-      WHERE
-      {
-        {?item wdt:P31 wd:Q13442814}
-        UNION {?item wdt:P31 wd:Q571}.
-        ?item wdt:P921 wd:Q113616.
-      }
-    `
-    const url = wdk.sparqlQuery(sparql);
-    appFetch(url).then(content => {
-      // console.log(content.results.bindings)
-      output = content.results.bindings
-      var qidString = '';
-      // TODO: HANDLE MORE THAN 50 RESULTS
-      for(var i = 0; i < output.length && i < 50; i++){
-        //Current uri for Wikidata is a url that is http://www.wikidata.org/entity/<qid>
-        qidString  += '|'+output[i].item.value.substr(31,);
-      }
-      qidString = qidString.substr(1,)
-      var browseUrl = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qidString}&languages=en&format=json`
-      return appFetch(browseUrl).then(content => {
-        // console.log(content.entities)
-        return content.entities
-        // console.log(content.results.bindings)
-        return content.results.bindings
-      }
-    ).then(simplifiedResults => loadPage(res, req, 'base', {file_id:'bibliography', title:'Bibliography', nav:'bibliography', works: simplifiedResults}))
-
-    })
+    var queryUrl = sparqlController.getBibliography('en')
+    return appFetch(queryUrl)
+      .then(output => {
+        var results = output.results.bindings;
+        works = []
+        qidsFound = []
+        for (i=0; i < results.length; i++){
+          var record = results[i]
+          var qid = record.item.value.replace('http://www.wikidata.org/entity/', '')
+          var index = qidsFound.indexOf(qid);
+          if ( index == -1){
+            qidsFound.push(qid);
+            newRecord = {qid:qid}
+            for(var key in record) newRecord[key] = record[key].value;
+            works.push(newRecord)
+          }
+          else if(works[index].authorLabel.indexOf(record.authorLabel.value) == -1){
+            works[index].authorLabel += ' | '+record.authorLabel.value
+          }
+        }
+         loadPage(res, req, 'base', {file_id:'bibliography', title:'Bibliography', nav:'bibliography', works: works})
+      })
   },
   searchItems(req, res, string, callback){
     var search_url = `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${string}&language=en&format=json`
