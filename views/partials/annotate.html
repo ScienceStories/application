@@ -41,7 +41,23 @@
       // console.log('Running with ->', obj)
       $.post("/api/iiif/save", {obj: obj})
         .done(function(data){
-          alert(JSON.stringify(data))
+          var saveMessage = ``
+          if (data == 'success'){
+          saveMessage = `<span class="save-message-success">Saved Successfully <i class="far fa-check-circle"></i></span>`
+          }
+          else{
+            saveMessage = `<span class="save-message-fail">Failed to Save <i class="far fa-times-circle"></i></span>`
+          }
+          $('#saveMessage')
+            .html(saveMessage).promise().done( function(){
+              $('#saveMessage').fadeIn('slow')
+            })
+          console.log(JSON.stringify(data))
+          setTimeout(function () {
+              $('#saveMessage').fadeOut('slow').promise().done( function(){
+                $('#saveMessage').html('')
+              })
+            }, 2000);
         })
     }
     function updateAnnotation(){
@@ -100,6 +116,10 @@
 
         $('ul.mirador-main-menu').prepend(`
           <li>
+            <div class="mirador-admin-btns pull-left" id="saveMessage" style="display:none">
+            </div>
+          </li>
+          <li>
             <div class="mirador-admin-btns pull-left">
               <a href="/home">Home</a>
             </div>
@@ -138,10 +158,7 @@
       }
     }, 10)
 
-    window.addEventListener('storage', function(e) {
- console.log('Woohoo, someone changed my localstorage va another tab/window!');
- alert('STORAGE')
-});
+
 
     </script>
     <!-- This enables live reloading of assets for improved developer experience. -->

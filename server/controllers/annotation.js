@@ -170,7 +170,7 @@ module.exports = {
           });
       }
     }
-    return res.send('Saved Successfully')
+    return res.send('success')
   },
   destroy(req, res) {
     return Annotation

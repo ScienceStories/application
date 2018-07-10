@@ -8,3 +8,9 @@ div#viewer {
 .mirador-admin-btns button {
     background: #139292;
 }
+.save-message-fail{
+    color: #c35127;
+}
+.save-message-success {
+    color: #0eb5b5;
+}
