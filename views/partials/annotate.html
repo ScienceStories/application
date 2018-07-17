@@ -37,7 +37,11 @@
       {{/each}}]
     )
     function saveAnnotations(){
-      obj = JSON.stringify(localStorage)
+      var annoId = $('[role=listitem] > .highlight').data('image-id');
+      obj = {}
+      obj[annoId] = localStorage[annoId];
+      obj = JSON.stringify(obj)
+
       // console.log('Running with ->', obj)
       $.post("/api/iiif/save", {obj: obj})
         .done(function(data){

@@ -1,7 +1,9 @@
 body{
   display: inherit;
 }
-
+div#pagepiling * {
+    transition: none;
+}
 
 button#favoriteBtn, button#favoriteBtn.favorited:hover {
     color: #ffffff9e;

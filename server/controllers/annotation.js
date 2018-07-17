@@ -161,7 +161,7 @@ module.exports = {
             uri: tempUri,
             status: 'active',
             state: content[tempUri],
-            memberId: 1
+            memberId: req.session.user.id
           })
           .then(function(result) {
             result.item;  // the model
