@@ -23,9 +23,9 @@ module.exports = {
   register(req, res) {
     return Member
       .create({
-        username: req.body.username,
+        username: req.body.username.toLowerCase(),
         name: req.body.name,
-        email: req.body.email,
+        email: req.body.email.toLowerCase(),
         password: req.body.password,
         type: 'basic',
         wikidata: req.body.wikidata,
@@ -40,8 +40,9 @@ module.exports = {
           });
   },
   login(req, res) {
+    var userinput = req.body.username.toLowerCase()
     return Member
-      .findOne({ where: { username: req.body.username } })
+      .findOne({ where:  {[sequelize.Op.or]: [{username: userinput}, {email: userinput}] }})
       .then(function (user) {
         // console.log('USER-?', user)
         if (!user) {
