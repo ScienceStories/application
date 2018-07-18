@@ -128,7 +128,9 @@ module.exports = {
       .findOrCreate({
           where: {
             qid: req.body.qid,
+
           },
+         defaults: {status: 'basic'}
         })
       .spread((found, created) =>{
         found.update({data: JSON.parse(req.body.data)})
@@ -139,7 +141,7 @@ module.exports = {
               })
           })
       })
-      .catch(error => res.status(400).send(error));
+      .catch(error => {console.log(error); res.send("Trouble Publishing This Story at This Time")});
   },
 
 
