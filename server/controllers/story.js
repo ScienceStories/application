@@ -83,8 +83,8 @@ module.exports = {
                     for(var key in stories[i].dataValues) detailList[i][key] =stories[i].dataValues[key];
                   }
                 for(var i = 0; i < alldetailList.length; i++){
-                    // TODO: Function to make string
                   var objectStr = alldetailList[i].itemLabel + alldetailList[i].itemDescription;
+                  objectStr = JSON.stringify(alldetailList[i]) + JSON.stringify(allStories[i].dataValues)
                   objectStr = objectStr.toLowerCase()
                   if  ((objectStr.indexOf(searchString) > -1) && (resultQids.indexOf(alldetailList[i].qid) == -1) ){
                     var newItem = alldetailList[i]

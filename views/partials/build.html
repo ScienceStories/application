@@ -1,10 +1,12 @@
 <div class="page-header">
-  Build a Science Story
+  <div class="overlayHeader">
+    Build a Science Story
+  </div>
 </div>
 <div id="buildStoryDiv">
   <form  onsubmit="updateStory()" id="buildStoryForm">
   <div class="buildSection" id="qidSection">
-    Wikidata Identifier: Q<input type="number" id="wdIdentifier" value="{{idVal}}"/>
+    Wikidata Identifier: <span class"qid-input-span">Q<input type="number" id="wdIdentifier" value="{{idVal}}"/></span>
   </div>
   <div class="buildSection" id="momentList">
   {{#each data.moments}}
@@ -87,8 +89,9 @@
   {{/each}}
   </div>
   <div id="actionButtons">
-    <div><button class="buildBtn" onclick="addMoment()"  type="button" id="addMomentBtn">+ Moment</button></div>
-    <div><button class="buildBtn" onclick="previewStory()"  type="button" id="previewBtn">Preview</button> <button onclick="updateStory()" class="buildBtn"type="button" id="submitBtn">Publish Story <span id="submitLoader" style="display:hide"><i class="fas fa-spinner fa-spin"></i></span></button></div>
+    <button class="buildBtn" onclick="addMoment()"  type="button" id="addMomentBtn">+ Moment</button>
+    <button class="buildBtn" onclick="previewStory()"  type="button" id="previewBtn">Preview</button>
+    <button onclick="updateStory()" class="buildBtn"type="button" id="submitBtn">Publish Story <span id="submitLoader" style="display:hide"><i class="fas fa-spinner fa-spin"></i></span></button>
   </div>
 
   </form>
