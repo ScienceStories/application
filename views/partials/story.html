@@ -40,7 +40,9 @@
     {{loadMoment this.type this}}
   {{/each}}
   {{> wikidata }}
-  {{> wikipedia }}
+  {{#if wikipedia}}
+    {{> wikipedia }}
+  {{/if}}
   {{> index }}
 </div>
 <script>
