@@ -44,6 +44,7 @@ module.exports = {
              <div class="actions">
                <a class="reply" onclick="replyToggle(this)">Reply</a>
              </div>
+             {{#if ../user.id}}
              <div class="reply-container" style="display:none">
                <a class="comment-avatar">
                  <div class="comment-image-container">
@@ -53,6 +54,17 @@ module.exports = {
                <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden" class="reply-input parent{{#if_equal depth 1}}{{comment.id}}{{else}}{{comment.parentId}}{{/if_equal}}" name="" placeholder="Leave a comment..." id="" rows="1"></textarea>
                <button class="send-reply" data-parent='{{#if_equal comment.depth 1}}{{comment.id}}{{else}}{{comment.parentId}}{{/if_equal}}' onclick="sendComment(this, {{story_id}})">Send</button>
              </div>
+             {{else}}
+             <div class="reply-container" style="display:none">
+               <a class="comment-avatar">
+                 <div class="comment-image-container">
+                   <img src="{{#if ../user.image}}{{../user.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}">
+                 </div>
+               </a>
+               <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden" class="reply-input parent{{#if_equal depth 1}}{{comment.id}}{{else}}{{comment.parentId}}{{/if_equal}}" name="" placeholder="Login to leave a comment..." id="" rows="1" disabled></textarea>
+               <button class="send-reply" data-parent='{{#if_equal comment.depth 1}}{{comment.id}}{{else}}{{comment.parentId}}{{/if_equal}}' disabled>Send</button>
+             </div>
+             {{/if}}
            </div>
          </div>
 `);
