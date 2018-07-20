@@ -32,7 +32,7 @@ app.use(logger('dev'));
 // Setting view engine
 app.engine('html', cons.handlebars)
 app.set('view engine', 'html')
-app.set('views', __dirname + '/views')
+app.set('views', __dirname + '/views/')
 app.use('/scripts', cors(), express.static(__dirname + '/node_modules/'));
 app.use('/build/mirador', cors(), express.static(__dirname + '/static/vendor/mirador/'));
 app.use('/api/iiif/manifest/local/',  cors(), express.static(__dirname + '/manifests/'));
@@ -109,6 +109,8 @@ hbs.registerHelper('itemIcon', function convert_item_fa_class(item) {
     return 'far fa-question-circle';
 });
 hbs.registerHelper('dateFormat', function dateFormat(date, format, utc) {
+    if (format == 'calendar')
+      return (utc === true) ?  moment(date).utc().calendar() :moment(date).calendar()
     return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
 });
 hbs.registerHelper('wikiDateTime', function dateFormat(date, format, utc) {

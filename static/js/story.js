@@ -63,3 +63,60 @@ $('.mirador-viewer .all-annotations .text-viewer p:not(.converted)').each(functi
 window.setInterval(function(){
   convertAnnotations()
 }, 500);
+function sendComment(elm, story_id, stay = false){
+  var parent = $(elm).data('parent')
+  var message = $(elm).prev().val()
+  console.log($(elm).prev())
+  console.log('sending-> ', message, parent, story_id)
+  return $.post('/api/comment/send', {parentId: parent, message: message, storyId:story_id}).done( function(data){
+    console.log(data)
+    if (!stay){
+      $(elm).parent().slideUp('slow')
+    }
+    $(elm).prev().val('')
+
+  })
+
+}
+function replyToggle(elm){
+  var parent = $(elm).parent().next().slideToggle('slow')
+}
+
+function loadComments(story_id){
+  $.get('/api/story/'+story_id+'/commentlist')
+  .then(data => {
+    $('.comments-list').html(data)
+  })
+}
+
+function reloadComments(story_id){
+  // console.log("CALLING")
+  $.get('/api/story/'+story_id+'/comments')
+  .then(data => {
+    var newComments = data.comments;
+    for (var i = 0; i < newComments.length; i++) {
+      var cmt = newComments[i]
+      var placeCmt = $('.comment-container[data-id='+cmt.id+']')
+      if (placeCmt.length){
+        // Existing Stays
+        // console.log('CASE 1:', cmt)
+      }
+      else if (cmt.order < $('.comment-container').length){
+
+        // console.log('CASE 2:', cmt)
+          if (cmt.parentId == $('.comment-container:nth-child('+cmt.order+')').data('id')){
+            $('.comment-container:nth-child('+cmt.order+')').after(cmt.html).hide().fadeIn()
+          }
+          else
+          $('.comment-container:nth-child('+cmt.order+')').after(cmt.html).hide().fadeIn()
+
+      }
+      else {
+        // console.log('CASE 3:', cmt)
+        $('.comments-list').append(cmt.html).hide().fadeIn()
+
+      }
+    }
+
+  })
+}

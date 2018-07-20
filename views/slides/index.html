@@ -18,10 +18,66 @@
           {{/each}}
 
         </ul>
-
       </div>
       <div id="rightIndex">
         <div class="index-header">Discussion</div>
+        <div class="comments-list">
+          <!-- {{#each comments}}
+            <div class="comment-container depth{{this.depth}}" data-id={{this.id}} data-order={{this.order}} data-parent={{this.parentId}}>
+              <a class="comment-avatar">
+                <div class="comment-image-container">
+                  <img src="{{this.image}}">
+                </div>
+
+              </a>
+              <div class="comment-content" >
+                <a class="comment-name">{{this.name}}</a>
+                <div class="comment-metadata">
+                  <span class="comment-date">{{dateFormat this.createdAt 'calendar' false}}</span>
+                </div>
+                <div class="comment-message">
+                  {{this.message}}
+                </div>
+                <div class="actions">
+                  <a class="reply" onclick="replyToggle(this)">Reply</a>
+                </div>
+                <div class="reply-container" style="display:none">
+                  <a class="comment-avatar">
+                    <div class="comment-image-container">
+                      <img src="{{#if ../user.image}}{{../user.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}">
+                    </div>
+                  </a>
+                  <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden" class="reply-input parent{{#if_equal depth 1}}{{this.id}}{{else}}{{this.parentId}}{{/if_equal}}" name="" placeholder="Leave a comment..." id="" rows="1"></textarea>
+                  <button class="send-reply" data-parent='{{#if_equal depth 1}}{{this.id}}{{else}}{{this.parentId}}{{/if_equal}}' onclick="sendComment(this)">Send</button>
+                </div>
+              </div>
+            </div>
+
+          {{/each}} -->
+
+
+</div>
+      {{#ifUserType user.type 'user'}}
+        <div class="reply-container">
+          <a class="comment-avatar">
+            <div class="comment-image-container">
+              <img src="{{#if user.image}}{{user.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}">
+            </div>
+          </a>
+          <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden" class="reply-input parent0" name="" placeholder="Leave a comment..." id="" rows="1"></textarea>
+          <button class="send-reply" data-parent=0 onclick="sendComment(this, {{row.id}}, true)">Send</button>
+        </div>
+      {{else}}
+        <div class="reply-container">
+          <a class="comment-avatar">
+            <div class="comment-image-container">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg">
+            </div>
+          </a>
+          <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden" class="reply-input" name="" placeholder="Log-in to leave a comment..." id="" cols="30" rows="1" disabled></textarea>
+          <button class="send-reply" disabled>Send</button>
+        </div>
+      {{/ifUserType}}
       </div>
     </div>
   </div>

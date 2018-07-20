@@ -4,6 +4,7 @@ const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const sparqlController = require('./sparql');
+const commentController = require('./comment');
 const StoryActivity = require('../models').storyactivity;
 const fs = require('fs');
 const moment = require('moment');
@@ -158,7 +159,7 @@ module.exports = {
                 .then(output => {
                   // console.log(output.lastViewed)
                   // console.log('OUTPUT->', output)
-                      return res.render('full', {
+                      return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
                     page: function(){ return 'story'},
                     scripts: function(){ return 'story_scripts'},
                     links: function(){ return 'story_links'},
@@ -171,25 +172,32 @@ module.exports = {
                     storyActivity: output.dataValues,
                     data: jsonData,
                     user: req.session.user,
-                    row: row
-                  })
+                    row: row,
+                    comments: comments
+                  })})
                 })
             })
             .catch(error => {loadError(req, res, 'Something went wrong.')});
           }
-          else return res.render('full', {
-        page: function(){ return 'story'},
-        scripts: function(){ return 'story_scripts'},
-        links: function(){ return 'story_links'},
-        title: name +" - Story",
-        nav: "Story",
-        content: simplifiedResults.statements,
-        wikipedia: wikipedia,
-        name: name,
-        qid: simplifiedResults.qid,
-        data: jsonData,
-        row: row
-      })
+          else return commentController.loadCommentsFromStory(row.id, function(comments){
+            res.render('full', {
+          page: function(){ return 'story'},
+          scripts: function(){ return 'story_scripts'},
+          links: function(){ return 'story_links'},
+          title: name +" - Story",
+          nav: "Story",
+          content: simplifiedResults.statements,
+          wikipedia: wikipedia,
+          name: name,
+          qid: simplifiedResults.qid,
+          data: jsonData,
+          row: row,
+          comments: comments
+        })
+          })
+
+
+
         })
 
   })

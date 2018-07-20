@@ -2,6 +2,7 @@ const membersController = require('../controllers').members;
 const storyController = require('../controllers').story;
 const wikidataController = require('../controllers').wikidata;
 const annotationController = require('../controllers').annotation;
+const commentController = require('../controllers').comment;
 const awsController = require('../controllers').aws;
 const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
@@ -27,6 +28,10 @@ module.exports = (app, sessionChecker) => {
         nav: "test",
       });
   });
+  app.post('/api/comment/send', commentController.send);
+  app.get('/api/comment/:comment_id', commentController.renderId);
+  app.get('/api/story/:story_id/commentlist', commentController.renderList);
+  app.get('/api/story/:story_id/comments', commentController.storyList);
   // route for Home-Page
   app.get('/Q:id', storyController.select);
   app.get('/preview', storyController.preview);
