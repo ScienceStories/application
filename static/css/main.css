@@ -226,3 +226,33 @@ div#errorMessage img {
     padding: 20px;
     border-radius: 25%;
 }
+ul.pagination-ul {
+    width:  80%;
+    margin:  0 auto;
+    text-align:  center;
+    list-style:  none;
+    padding:  0;
+}
+
+.pagination-ul li {
+    display:  inline-block;
+    margin:  5px;
+}
+
+.pagination-ul li a {
+    color:  black;
+    font-weight: 300;
+}
+
+.pagination-ul li a.active-page {
+    background: #46494c;
+    padding:  5px;
+    color: #58ccc4;
+    font-weight:  bold;
+    border-radius: 3px;
+}
+
+.pagination-ul li a.direction {
+    font-weight: bold;
+    color: #58ccc4;
+}

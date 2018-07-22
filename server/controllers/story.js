@@ -44,7 +44,6 @@ module.exports = {
     if (req.query.qid){
       Story.findOne({where: {qid:req.query.qid}})
         .then(story => {
-          console.log(story.data)
           return loadPage(res, req, 'base', {file_id:'build',  title:'Story Creation', nav:'build', data:{moments:story.data}, idVal:req.query.qid.substr(1)})
         })
     }
@@ -100,26 +99,34 @@ module.exports = {
     })
   },
   browse(req, res) {
-    return Story
-      .all()
+    page = (req.query.page) ? req.query.page : 1
+    stories_per_page = 50
+    offset = (page-1)*stories_per_page
+    return Story.count().then(total_stories => {
+      maxPage = Math.ceil(total_stories/stories_per_page) + 1
+      nextPage = (page == maxPage) ? 0 : page + 1
+      prevPage = (page == 1) ? 0 : page - 1
+      data = {totalStories:total_stories, page:page, maxPage: maxPage, prevPage:prevPage, nextPage:nextPage}
+      Story.findAll({ offset: offset, limit: stories_per_page })
       .then(out => {
-        story_total = out.length;
-        qidList = [];
-        for(var i = 0; i < story_total; i++){
-          qidList.push(out[i].dataValues.qid)
-        }
-        data = {}
-        return wikidataController.getDetailsList(req, res, qidList, 'small_with_age', 'first', false,
-          function(qidList){
-            for(var i = 0; i < story_total; i++){
-              for(var key in out[i].dataValues) {
-                qidList[i][key] = out[i].dataValues[key];
+          story_total = out.length;
+          qidList = [];
+          for(var i = 0; i < story_total; i++){
+            qidList.push(out[i].dataValues.qid)
+          }
+
+          return wikidataController.getDetailsList(req, res, qidList, 'small_with_age', 'first', false,
+            function(qidList){
+              for(var i = 0; i < story_total; i++){
+                for(var key in out[i].dataValues) {
+                  qidList[i][key] = out[i].dataValues[key];
+                }
               }
-            }
-            data['browseList'] = qidList
-            loadPage(res, req, 'base', {file_id:'browse',  title:'Browse Stories', nav:'browse', data:data})
-          })
-      })
+              data['browseList'] = qidList
+              loadPage(res, req, 'base', {file_id:'browse',  title:`Browse Stories (Page ${page})`, nav:'browse', data:data})
+            })
+        })
+    })
   },
   update(req, res) {
     user_id = (req.session.user) ? req.session.user.id : false;

@@ -1,6 +1,7 @@
 <div class="page-header">
   <div class="overlayHeader">
     Browse Science Stories
+    <div class="subtitle">{{data.totalStories}} Stories And Counting</div>
   </div>
 </div>
 <div id="browseStories">
@@ -47,4 +48,14 @@
     </div>
     {{/each}}
 
+
 </div>
+<ul class="pagination-ul">
+  {{#if data.prevPage}}<li><a href="/browse?page={{data.prevPage}}" class="direction"><i class="fas fa-arrow-circle-left"></i> Previous</a></li>{{/if}}
+  {{#times data.maxPage }}
+    {{#if this }}
+      <li><a href="/browse?page={{this}}" class="{{#if_equal this ../data.page}}active-page{{/if_equal}}">{{this}}</a></li>
+    {{/if}}
+  {{/times}}
+  {{#if data.nextPage}}<li><a href="/browse?page={{data.nextPage}}" class="direction">Next <i class="fas fa-arrow-circle-right"></i></a></li>{{/if}}
+</ul>

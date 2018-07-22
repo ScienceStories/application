@@ -45,6 +45,16 @@ hbs.registerHelper('if_equal', function(a, b, opts) {
         return opts.inverse(this)
     }
 })
+hbs.registerHelper( 'times', function( n, block ) {
+    var accum = '',
+        i = -1;
+
+    while( ++i < n ) {
+        accum += block.fn( i );
+    }
+
+    return accum;
+});
 hbs.registerHelper('ifCond', function (v1, operator, v2, options) {
 
     switch (operator) {
