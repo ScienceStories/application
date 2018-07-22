@@ -1,11 +1,13 @@
 const Member = require('../models').member;
 const Story = require('../models').story;
+const Comment = require('../models').comment;
 const StoryActivity = require('../models').storyactivity;
 const bcrypt = require('bcrypt');
 const wikidataController = require('./wikidata');
 const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const sequelize = require('../models').sequelize
+const LogStory = require('../models').logstory;
 module.exports = {
   create(req, res) {
     return Member
@@ -187,10 +189,39 @@ module.exports = {
 
     })
   },
-  // newFeed(req, res){
-  //   StoryActivity.findAll( order: [
-  //   ['updatedAt', 'DESC'],])
-  // },
+  feed(req, res){
+    return Member.findById(req.session.user.id)
+    .then(member => {
+      data = {user:member}
+      var max_items = 25
+      return StoryActivity.findAll( {where:{favorite:1},order: [['lastFavorited', 'DESC'], ], imit:max_items, include:[{model: Story, as :'story'}, {model: Member, as :'member'}]})
+      .then(faveItems => {
+        for (var i = 0; i < faveItems.length; i++) {
+          faveItems[i].dataValues['feed_type'] = 'favorite'
+        }
+        return Comment.findAll({order: [['createdAt', 'DESC']], limit:max_items, include:[{model: Story, as :'story'}, {model: Member, as :'member'}]})
+          .then(commentItems => {
+            for (var i = 0; i < commentItems.length; i++) {
+              commentItems[i].dataValues['feed_type'] = 'comment'
+            }
+            return LogStory.findAll({order: [['updatedAt', 'DESC']], limit:max_items, include:[{model: Story, as :'story'}, {model: Member, as :'member'}, ]})
+              .then(updateItems => {
+                for (var i = 0; i < updateItems.length; i++) {
+                  updateItems[i].dataValues['feed_type'] = 'update'
+                }
+                // Create items array
+                    masterItems = [].concat(faveItems, commentItems, updateItems)
+                    // Sort the array based on the second element
+                    masterItems.sort(function(first, second) {
+                    return second.updatedAt - first.updatedAt;
+                    });
+                // res.send(masterItems)
+                data.feed_list = masterItems
+                return loadPage(res, req, 'base', {file_id:'feed',  title:member.name + ' Story Feed', nav:'profile', data:data})
+              })
+          })
+      })})
+  },
   destroy(req, res) {
     return Member
       .find({

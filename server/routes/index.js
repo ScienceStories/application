@@ -75,6 +75,7 @@ app.get('/dashboard', (req, res) => {
 app.get('/logout', membersController.logout);
 // route for user profile
   app.get('/profile', (req, res) => membersController.accessCheck(req, res, 'user', membersController.profile));
+  app.get('/feed', (req, res) => membersController.accessCheck(req, res, 'user', membersController.feed));
 // route for Building Stories
   app.get('/build', (req, res) => membersController.accessCheck(req, res, 'author', storyController.build));
 // route for Error Page
