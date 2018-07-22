@@ -10,9 +10,12 @@ const hbs = require('handlebars');
 const path = require('path');
 const fetch = require('node-fetch');
 const cors = require('cors');
+const Sequelize = require('sequelize');
 // initalize sequelize with session store
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var sequelize = require('./server/models').sequelize
+// sequelize.queryInterface.removeColumn('storyactivities', 'lastViewed')
+// sequelize.queryInterface.addColumn('storyactivities', 'lastFavorited', Sequelize.DataTypes.DATE )
 // console.log(sequelize)
 // Set up the express app
 const app = express();

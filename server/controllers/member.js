@@ -187,6 +187,10 @@ module.exports = {
 
     })
   },
+  // newFeed(req, res){
+  //   StoryActivity.findAll( order: [
+  //   ['updatedAt', 'DESC'],])
+  // },
   destroy(req, res) {
     return Member
       .find({
@@ -213,7 +217,7 @@ module.exports = {
     StoryActivity.findOne({where: {memberId: req.session.user.id, storyId:req.body.storyId}})
       .then(activity => {
         newVal = (activity.favorite) ? 0 : 1
-        activity.update({favorite: newVal})
+        activity.update({favorite: newVal, lastFavorited: sequelize.fn('NOW')})
           .then(out => res.send(out))
       })
   },

@@ -12,11 +12,15 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
     },
     lastViewed: {
-      type: DataTypes.TIME,
+      type: DataTypes.DATE,
       allowNull: true,
       defaultValue: DataTypes.NOW,
     },
+    lastFavorited: {
+      type: DataTypes.DATE,
+      allowNull: true,
 
+    },
 
   },
 );

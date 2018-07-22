@@ -6,6 +6,7 @@ const loadError =  require('../../app').loadError;
 const sparqlController = require('./sparql');
 const commentController = require('./comment');
 const StoryActivity = require('../models').storyactivity;
+const sequelize = require('../models').sequelize;
 const fs = require('fs');
 const moment = require('moment');
 iconMap =  JSON.parse(fs.readFileSync("server/controllers/iconMap.json"));
@@ -198,10 +199,9 @@ module.exports = {
                 },
               })
             .spread((found, created) =>{
-              // console.log(moment().format("YYYY-MM-DD HH:mm:ss"))
               found.update({
               views: found.views+1,
-              lastViewed: moment().format("YYYY-MM-DD HH:mm:ss")})
+              lastViewed: sequelize.fn('NOW')})
                 .then(output => {
                   // console.log(output.lastViewed)
                   // console.log('OUTPUT->', output)

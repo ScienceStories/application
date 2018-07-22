@@ -422,6 +422,7 @@ div#leftIndex ul {
     height: 100%;
 }
 .mirador-container {
+  width: 100%;
     height: 100%;
     position: relative;
 }
