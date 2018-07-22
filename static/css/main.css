@@ -251,7 +251,12 @@ ul.pagination-ul {
     font-weight:  bold;
     border-radius: 3px;
 }
-
+.page-header .subtitle {
+    font-size: 50%;
+    text-transform: uppercase;
+    color: black;
+    font-weight: 300;
+}
 .pagination-ul li a.direction {
     font-weight: bold;
     color: #58ccc4;

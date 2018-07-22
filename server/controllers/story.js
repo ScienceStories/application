@@ -99,7 +99,7 @@ module.exports = {
     })
   },
   browse(req, res) {
-    page = (req.query.page) ? req.query.page : 1
+    page = (req.query.page) ? parseInt(req.query.page, 10) : 1
     stories_per_page = 50
     offset = (page-1)*stories_per_page
     return Story.count().then(total_stories => {
