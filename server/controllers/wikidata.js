@@ -68,21 +68,67 @@ module.exports = {
     }
     return content
   },
+  processDetailListSection(queryFunction, output, qidSet, setIndex, callback){
+    var queryUrl = queryFunction(qidSet[setIndex], 'en');
+    return appFetch(queryUrl).then(sectionOutput => {
+      sectionOutput = sectionOutput.results.bindings;
+      for (var i = 0; i < sectionOutput.length; i++) {
+        output.push(sectionOutput[i])
+      }
+      setIndex += 1;
+      if (setIndex < qidSet.length){
+        return module.exports.processDetailListSection(queryFunction, output, qidSet, setIndex, callback)
+      }
+      else{
+        return callback(output)
+      }
+    })
+  },
   processDetailList(req, res, queryFunction, qidList, callback, mergeType, defaultImage){
-      var queryUrl = queryFunction(qidList, 'en');
-      appFetch(queryUrl).then(output => {
-        rawData = output.results.bindings;
+      var qidSet = [[]]
+      var thisSet = 0
+      var maxLength = 50
+      var check = 0
+      for (var i = 0; i < qidList.length; i++) {
+        if (check == maxLength){
+          check = 0;
+          thisSet += 1;
+          qidSet.push([qidList[i]])
+        }
+        else {
+          qidSet[thisSet].push(qidList[i])
+          check += 1;
+        }
+      }
+      return module.exports.processDetailListSection(queryFunction, [], qidSet, 0, function(output){
+        // rawData = output.results.bindings;
         if (!mergeType || mergeType == 'first'){
-          content = module.exports.mergeValuesFirst(qidList, rawData)
+          content = module.exports.mergeValuesFirst(qidList, output)
           if (defaultImage){
             for (var i=0; i<content.length;i++){
               if (!content[i].image) content[i].image = defaultImage
             }
           }
-          return callback(content)
-        }
+          return callback(content)}
       })
   },
+  // processDetailList(req, res, queryFunction, qidList, callback, mergeType, defaultImage){
+  //
+  //
+  //     var queryUrl = queryFunction(qidList, 'en');
+  //     appFetch(queryUrl).then(output => {
+  //       rawData = output.results.bindings;
+  //       if (!mergeType || mergeType == 'first'){
+  //         content = module.exports.mergeValuesFirst(qidList, rawData)
+  //         if (defaultImage){
+  //           for (var i=0; i<content.length;i++){
+  //             if (!content[i].image) content[i].image = defaultImage
+  //           }
+  //         }
+  //         return callback(content)
+  //       }
+  //     })
+  // },
   getDetailsList(req, res, qidList, detailLevel, mergeType=false, defaultImage=false, callback){
     if (detailLevel == 'small'){
       //  label, description, optional image

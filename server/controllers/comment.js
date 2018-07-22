@@ -44,11 +44,11 @@ module.exports = {
              <div class="actions">
                <a class="reply" onclick="replyToggle(this)">Reply</a>
              </div>
-             {{#if ../user.id}}
+             {{#if user.id}}
              <div class="reply-container" style="display:none">
                <a class="comment-avatar">
                  <div class="comment-image-container">
-                   <img src="{{#if ../user.image}}{{../user.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}">
+                   <img src="{{#if user.image}}{{user.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}">
                  </div>
                </a>
                <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden" class="reply-input parent{{#if_equal depth 1}}{{comment.id}}{{else}}{{comment.parentId}}{{/if_equal}}" name="" placeholder="Leave a comment..." id="" rows="1"></textarea>
@@ -58,7 +58,7 @@ module.exports = {
              <div class="reply-container" style="display:none">
                <a class="comment-avatar">
                  <div class="comment-image-container">
-                   <img src="{{#if ../user.image}}{{../user.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}">
+                   <img src="{{#if user.image}}{{user.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}">
                  </div>
                </a>
                <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden" class="reply-input parent{{#if_equal depth 1}}{{comment.id}}{{else}}{{comment.parentId}}{{/if_equal}}" name="" placeholder="Login to leave a comment..." id="" rows="1" disabled></textarea>
@@ -68,7 +68,7 @@ module.exports = {
            </div>
          </div>
 `);
-        const html = template({ comment: comments[i], story_id:story_id});
+        const html = template({ comment: comments[i], story_id:story_id, user: req.session.user});
         comments[i].html = html;
   // console.log(html); // <h1>Handlebars</h1>
        }
