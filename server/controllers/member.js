@@ -198,22 +198,25 @@ module.exports = {
       .then(faveItems => {
         for (var i = 0; i < faveItems.length; i++) {
           faveItems[i].dataValues['feed_type'] = 'favorite'
+          faveItems[i].dataValues['feed_date'] = faveItems[i].dataValues.lastFavorited
         }
         return Comment.findAll({order: [['createdAt', 'DESC']], limit:max_items, include:[{model: Story, as :'story'}, {model: Member, as :'member'}]})
           .then(commentItems => {
             for (var i = 0; i < commentItems.length; i++) {
               commentItems[i].dataValues['feed_type'] = 'comment'
+              commentItems[i].dataValues['feed_date'] = commentItems[i].dataValues.updatedAt
             }
             return LogStory.findAll({order: [['updatedAt', 'DESC']], limit:max_items, include:[{model: Story, as :'story'}, {model: Member, as :'member'}, ]})
               .then(updateItems => {
                 for (var i = 0; i < updateItems.length; i++) {
                   updateItems[i].dataValues['feed_type'] = 'update'
+                  updateItems[i].dataValues['feed_date'] = updateItems[i].dataValues.updatedAt
                 }
                 // Create items array
                     masterItems = [].concat(faveItems, commentItems, updateItems)
                     // Sort the array based on the second element
                     masterItems.sort(function(first, second) {
-                    return second.updatedAt - first.updatedAt;
+                    return second.dataValues.feed_date - first.dataValues.feed_date;
                     });
                 // res.send(masterItems)
                 data.feed_list = masterItems
