@@ -70,7 +70,6 @@ module.exports = {
 `);
         const html = template({ comment: comments[i], story_id:story_id, user: req.session.user});
         comments[i].html = html;
-  // console.log(html); // <h1>Handlebars</h1>
        }
        return res.send({comments: comments, user: req.session.user})
      })
@@ -108,6 +107,7 @@ module.exports = {
      })
   },
   loadCommentsFromStory(story_id, callback){
+    if (!story_id) story_id = 0
     sequelize.query(`WITH RECURSIVE cte (id, message, path, "parentId", depth, "createdAt", "updatedAt", "memberId")  AS (
             SELECT  id,
         	message,
@@ -139,9 +139,11 @@ module.exports = {
             join members on members.id = "memberId"
         ORDER BY path;
 `, { type: sequelize.QueryTypes.SELECT}).then(comments => {
+
   for (var i = 0; i < comments.length; i++) {
     comments[i].order = i
   }
+
   callback(comments);
   })
 },
@@ -155,7 +157,6 @@ send(req, res){
       status: 0
     })
     .then(out => {
-      console.log('SUCCESS', out)
       res.send('success')
     })
     .catch(error => {

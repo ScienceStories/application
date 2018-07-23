@@ -5,7 +5,7 @@ const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
 const wikidataController = require('./wikidata');
 const loadError =  require('../../app').loadError;
-
+const sequelize = require('../models').sequelize;
 module.exports = {
   create(req, res) {
     qid = 'Q' + req.body.qid
