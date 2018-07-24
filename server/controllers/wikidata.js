@@ -186,7 +186,7 @@ module.exports = {
         .then(labels => {
           name = labels.entities[qid].labels.en.value
           meta = {}
-          meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, and more.`
+          meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, and more.`
           wikipedia = ''
           if (labels.entities[qid].sitelinks.enwiki){
             wikipedia = labels.entities[qid].sitelinks.enwiki.title

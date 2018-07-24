@@ -60,13 +60,17 @@
   lastSlide = data.length;
   tooltips = [];
   colors = [];
+  anchors = [];
   for (x=0; x < lastSlide; x++){
     tooltips.push(data[x].tooltip);
     colors.push(data[x].color);
+    anchors.push(x)
   }
   lastSlide += 3;
-  tooltips = tooltips.concat(['Wikidata Statements', 'Wikipedia Article', 'Learn More About {{name}}']);
-  colors = colors.concat([ '#EC008C', '#1dc7ce', 'rgb(255, 185, 125)']);
+  tooltips = tooltips.concat(['Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
+  colors = colors.concat([ '#EC008C', {{#if wikipedia}}'#1dc7ce',{{/if}} 'rgb(255, 185, 125)']);
+  anchors = anchors.concat([lastSlide, lastSlide+1,{{#if wikipedia}}lastSlide+2{{/if}}])
+
   $('#pagepiling').pagepiling({
     setMouseWheelScrolling: false,
     verticalCentered: false,
@@ -78,7 +82,13 @@
       'position': 'right',
       'tooltips': tooltips
     },
+    anchors:[1, 2,3,4,5,6,7,8,9,10],
     onLeave: function (index, nextIndex, direction) {
+      $('.sidebar-tooltip').removeClass('active')
+
+      // indx = $(elm).getIndex()+1;
+
+  $('.sidebar-tooltip:nth-child('+nextIndex+')').addClass('active')
       //fading out the txt of the leaving section
       $('.section').eq(index - 1).find('h1, p').fadeOut(700, 'easeInQuart');
       //fading in the text of the destination (in case it was fadedOut)
@@ -126,10 +136,12 @@ $('#favoriteLoader').fadeOut('slow');
     return $p.index(this);
 }
   function sidebarNavigate(elm){
-    $('.sidebar-tooltip').removeClass('active')
-    indx = $(elm).getIndex()+1;
+    var thisindx= $(elm).getIndex() + 1
+    $('#pp-nav li:nth-child('+thisindx+') a').click()
 
-    $('#pp-nav li:nth-child('+indx+') a').click()
-    $(elm).addClass('active')
   }
+  $(document).ready(function(){
+    indx= $('.section.pp-section.active').getIndex() + 1
+    $('.sidebar-tooltip:nth-child('+indx+')').addClass('active')
+  })
 </script>
