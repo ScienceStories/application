@@ -185,6 +185,8 @@ module.exports = {
         appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
         .then(labels => {
           name = labels.entities[qid].labels.en.value
+          meta = {}
+          meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, and more.`
           wikipedia = ''
           if (labels.entities[qid].sitelinks.enwiki){
             wikipedia = labels.entities[qid].sitelinks.enwiki.title
@@ -216,7 +218,8 @@ module.exports = {
                     data: jsonData,
                     user: req.session.user,
                     row: row,
-                    comments: comments
+                    comments: comments,
+                    meta: meta
                   })})
                 })
             })
@@ -235,7 +238,8 @@ module.exports = {
           qid: simplifiedResults.qid,
           data: jsonData,
           row: row,
-          comments: comments
+          comments: comments,
+          meta: meta
         })
           })
 
