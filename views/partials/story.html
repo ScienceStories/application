@@ -69,7 +69,7 @@
   lastSlide += 3;
   tooltips = tooltips.concat(['Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
   colors = colors.concat([ '#EC008C', {{#if wikipedia}}'#1dc7ce',{{/if}} 'rgb(255, 185, 125)']);
-  anchors = anchors.concat([lastSlide, lastSlide+1,{{#if wikipedia}}lastSlide+2{{/if}}])
+  anchors = anchors.concat(['wikidata', {{#if wikipedia}}'wikipedia',{{/if}} 'index'])
 
   $('#pagepiling').pagepiling({
     setMouseWheelScrolling: false,

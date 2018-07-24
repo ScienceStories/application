@@ -641,5 +641,5 @@ div#pagepiling {
     cursor:  pointer;
 }
 div#pp-nav {
-    display: none;
+    display: none !important;
 }
