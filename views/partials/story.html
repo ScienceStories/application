@@ -35,6 +35,16 @@
 <script type="text/javascript">
   var wikititle = '{{wikipedia}}'.replace(" ", "_")
 </script>
+<div class="story-sidebar">
+  {{#each data}}
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">{{this.tooltip}}</div>
+  {{/each}}
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">Wikidata Statements</div>
+  {{#if wikipedia}}
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">Wikipedia Article</div>
+  {{/if}}
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">Learn More</div>
+</div>
 <div id="pagepiling">
   {{#each data}}
     {{loadMoment this.type this}}
@@ -109,5 +119,17 @@ $('#favoriteLoader').fadeOut('slow');
         if (data.favorite) $('#favoriteBtn').addClass('favorited')
         else $('#favoriteBtn').removeClass('favorited')
       })
+  }
+
+  $.fn.getIndex = function(){
+	  var $p=$(this).parent().children();
+    return $p.index(this);
+}
+  function sidebarNavigate(elm){
+    $('.sidebar-tooltip').removeClass('active')
+    indx = $(elm).getIndex()+1;
+
+    $('#pp-nav li:nth-child('+indx+') a').click()
+    $(elm).addClass('active')
   }
 </script>

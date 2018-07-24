@@ -597,3 +597,49 @@ button.send-reply:hover {
 .reply-container .comment-image-container {
     opacity: .7;
 }
+
+
+
+
+/* SIDEBAR REDESIGN */
+div#pagepiling {
+    width: calc(100% - 180px);
+    margin: 0 auto;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.story-sidebar {
+    z-index: 60000000;
+    background: #525252;
+    color:  white;
+    height:  100%;
+    width: 180px;
+    padding:  5px;
+    padding-top:  100px;
+    font-weight: 200;
+    position:  absolute;
+    overflow-y:  scroll;
+}
+
+.sidebar-tooltip {
+    margin: 10px 0px;
+    padding: 5px 0px;
+    padding-left: 10px;
+}
+
+
+.sidebar-tooltip.active, .sidebar-tooltip.active:hover {
+    background: #00ffe7b8;
+    color: #525252;
+    font-weight: 500;
+}
+
+.sidebar-tooltip:hover {
+    background: #404040;
+    cursor:  pointer;
+}
+div#pp-nav {
+    display: none;
+}
