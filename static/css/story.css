@@ -626,7 +626,9 @@ div#pagepiling {
 .sidebar-tooltip {
     margin: 10px 0px;
     padding: 5px 0px;
-    padding-left: 10px;
+    padding-left: 3rem;
+    text-indent: -1rem;
+    margin-left: 1rem;
 }
 
 
@@ -642,4 +644,18 @@ div#pagepiling {
 }
 div#pp-nav {
     display: none !important;
+}
+.sidebar-tooltip img {
+    height: 2rem;
+    margin-left: -1rem !important;
+    /* position: absolute; */
+    /* left: 1rem; */
+    width: 2rem;
+    /* padding: 0 !important; */
+}
+.sidebar-tooltip *:nth-child(1) {
+    border-right: 1px solid;
+    padding-right: 5px;
+    margin-right: 5px;
+    opacity: .6;
 }

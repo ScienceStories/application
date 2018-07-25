@@ -37,13 +37,36 @@
 </script>
 <div class="story-sidebar">
   {{#each data}}
-    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">{{this.tooltip}}</div>
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">
+      {{#if_equal this.type 'intro'}}
+        <i class="far fa-bookmark"></i>
+      {{else if_equal this.type 'mirador'}}
+        {{#if_equal this.config.data.0.viewType "BookView"}}
+          <i class="fas fa-book-open"></i>
+        {{else }}
+          <i class="far fa-image"></i>
+        {{/if_equal}}
+
+      {{else if_equal this.type 'youtube'}}
+        <i class="fab fa-youtube"></i>
+      {{else}}
+        <i class="fas fa-info-circle"></i>
+      {{/if_equal}}
+
+      {{#if this.tooltip}}
+        {{this.tooltip}}
+      {{else if this.title}}
+        {{this.title}}
+      {{else}}
+        {{this.description}}
+      {{/if}}
+    </div>
   {{/each}}
-    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">Wikidata Statements</div>
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo"> Wikidata Statements</div>
   {{#if wikipedia}}
-    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">Wikipedia Article</div>
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikidata Logo"> Wikipedia Article</div>
   {{/if}}
-    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">Learn More</div>
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"> <i class="far fa-comments"></i> Learn More</div>
 </div>
 <div id="pagepiling">
   {{#each data}}
@@ -62,7 +85,8 @@
   colors = [];
   anchors = [];
   for (x=0; x < lastSlide; x++){
-    tooltips.push(data[x].tooltip);
+    console.log((data[x].tooltip) ? data[x].tooltip : (data[x].title) ? data[x].title : data[x].description)
+    tooltips.push((data[x].tooltip) ? data[x].tooltip : (data[x].title) ? data[x].title : data[x].description);
     colors.push(data[x].color);
     anchors.push(x)
   }
