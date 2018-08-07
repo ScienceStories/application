@@ -658,3 +658,31 @@ div#pp-nav {
     margin-right: 5px;
     opacity: .6;
 }
+.prev-box{
+  box-shadow: 1px 2px 7px #0000006b;
+  width: calc(100% - 100px);
+  margin: 50px;
+  margin-top: 10px;
+}
+.prev-header {
+    background: #ffe3cb;
+    padding: 5px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+iframe.index-preview {
+    border: none;
+    margin: 0 auto;
+    text-align: center;
+
+    background: white;
+
+}
+.prop-desc {
+    font-size: 75%;
+    font-weight: 400;
+    text-align: left;
+    padding: 0 10%;
+    text-align: center;
+    padding-bottom: 25px;
+}

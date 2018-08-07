@@ -154,7 +154,7 @@ module.exports = {
     const jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
-    SELECT ?ps ?wdLabel ?datatype ?ps_Label ?ps_ ?wdpqLabel ?pq_Label ?url {
+    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel ?pq_Label ?url {
       VALUES (?company) {(wd:${qid})}
       ?company ?p ?statement .
       ?statement ?ps ?ps_ .

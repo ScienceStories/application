@@ -120,3 +120,25 @@ function reloadComments(story_id){
 
   })
 }
+
+
+$(document).ready(function(){
+   $('.slide-index').scroll(function(){lazyload(".index-preview")});
+   lazyload(".index-preview");
+});
+
+function lazyload(selector){
+   var wt = $(window).scrollTop();    //* top of the window
+   var wb = wt + $(window).height();  //* bottom of the window
+
+   $(selector).each(function(){
+      var ot = $(this).offset().top;  //* top of object (i.e. advertising div)
+      var ob = ot + $(this).height(); //* bottom of object
+
+      if(!$(this).attr("loaded") && wt<=ob && wb >= ot){
+        $(this).attr("src", $(this).data('src'));
+         // $(this).html("here goes the iframe definition");
+         $(this).attr("loaded",true);
+      }
+   });
+}
