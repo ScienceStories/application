@@ -261,3 +261,10 @@ ul.pagination-ul {
     font-weight: bold;
     color: #58ccc4;
 }
+.fontsize50{
+  font-size: 50%;
+}
+.spacer {
+    height: 100px;
+    width: 100%;
+}
