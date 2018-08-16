@@ -30,14 +30,15 @@ $("#uploadForm").submit(function(event) {
   setTimeout(function(data){
     console.log(data)
     filetype = $('#fileType').val()
+    fileName = $('#fileName').val().trim().replace(' ','_')
     if(filetype == 'general'){
-      responseUrl = '/upload/'+$('#submitBtn').data('username') +'/'+$('#fileName').val()+'.'+$('#file').val().split('.').pop();
+      responseUrl = '/upload/'+$('#submitBtn').data('username') +'/'+fileName+'.'+$('#file').val().split('.').pop();
     }
     else if (filetype == 'avatar'){
-      responseUrl = '/upload/avatar/'+$('#submitBtn').data('username') +'/'+$('#fileName').val()+'.'+$('#file').val().split('.').pop();
+      responseUrl = '/upload/avatar/'+$('#submitBtn').data('username') +'/'+fileName+'.'+$('#file').val().split('.').pop();
     }
     else {
-      responseUrl = '/api/iiif/manifest/'+$('#fileName').val()+'.json';
+      responseUrl = '/api/iiif/manifest/'+fileName+'.json';
     }
     $('#uploadResponse').html(`Upload Success! <a href="${responseUrl}" target="_blank">www.sciencetories.io${responseUrl}</a>`)
   })

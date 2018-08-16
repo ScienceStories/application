@@ -35,7 +35,7 @@ var upload = multer({
         // console.log('found=>', member.username, req.body)
         fileprefix = UPLOAD_FILE_PREFIX[req.body.filetype]
         // console.log(fileprefix+member.username+'/'+req.body.filename + path.extname(file.originalname))
-        callback(null, fileprefix+member.username+'/'+req.body.filename + path.extname(file.originalname));
+        callback(null, fileprefix+member.username+'/'+req.body.filename.trim().replace(' ','_') + path.extname(file.originalname));
       })
     },
   })
