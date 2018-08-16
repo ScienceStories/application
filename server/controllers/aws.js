@@ -3,7 +3,12 @@ const appFetch = require('../../app').appFetch;
 const loadPage = require('../../app').loadPage;
 const loadError = require('../../app').loadError;
 const fs = require('fs');
+const Member = require('../models').member;
 
+const multer  = require('multer')
+const crypto = require('crypto')
+const path = require('path');
+const multerS3 = require('multer-s3')
 // Load the SDK for JavaScript
 var AWS = require('aws-sdk');
 // Set the region
@@ -11,11 +16,32 @@ AWS.config.update({region: 'us-east-2'});
 
 // Create S3 service object
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
+UPLOAD_FILE_PREFIX = {
+  'avatar': 'upload/avatar/',
+  'general': 'upload/',
+  'manifest': 'manifests/'
 
+}
+var upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'sciencestories',
+    metadata: function (req, file, cb) {
+      cb(null, {fieldName: file.fieldname});
+    },
+    key: function (req, file, callback) {
+      return Member.findById(req.session.user.id)
+      .then(member => {
+        // console.log('found=>', member.username, req.body)
+        fileprefix = UPLOAD_FILE_PREFIX[req.body.filetype]
+        // console.log(fileprefix+member.username+'/'+req.body.filename + path.extname(file.originalname))
+        callback(null, fileprefix+member.username+'/'+req.body.filename + path.extname(file.originalname));
+      })
+    },
+  })
+})
 
-
-
-
+fileUpload = upload.single('webform')
 
 module.exports = {
   listBuckets(){
@@ -93,6 +119,36 @@ module.exports = {
          else loadError(req, res, 'Could Not Find Manifest')
 
      });
+  },
+  loadFile(req, res, thiskey){
+    console.log(thiskey)
+    var params = {
+      Bucket: "sciencestories",
+      Key:req.url.substring(1),
+     };
+     var filestream = s3.getObject(params).createReadStream();
+     filestream.pipe(res);
+  },
+  sendUploaded(req, res) {
+    key = 'upload/'+req.params.username+'/'+req.params.filename
+    return module.exports.loadFile(req, res, key )
+  },
+  upload(req, res){
+    return Member.findById(req.session.user.id)
+    .then(member => {
+      data = {user:member}
+      return loadPage(res, req, 'base', {file_id:'upload',  title:'File Upload', nav:'upload', data:data})
+
+      })
+  },
+
+  saveUpload(req, res){
+    fileUpload(req, res, function(err) {
+        console.log(req.body) // form fields
+        console.log(req.files) // form files
+        res.status(204).send(req.body.filename).end()
+    });
+
   },
 
 };

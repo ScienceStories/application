@@ -8,7 +8,6 @@ const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const fetch = require('node-fetch');
 const fs = require('fs');
-
 module.exports = (app, sessionChecker) => {
 
 // app.get('/browse', sessionChecker, (req, res) => loadPage(res, req, 'base', {file_id:'browse', nav:'browse'}));
@@ -76,6 +75,11 @@ app.get('/logout', membersController.logout);
 // route for user profile
   app.get('/profile', (req, res) => membersController.accessCheck(req, res, 'user', membersController.profile));
   app.get('/feed', (req, res) => membersController.accessCheck(req, res, 'user', membersController.feed));
+  // route for Uploading pictures
+app.get('/upload', (req, res) => membersController.accessCheck(req, res, 'user', awsController.upload));
+// app.post('/upload', (req, res) => membersController.accessCheck(req, res, 'user', membersController.sendUpload));
+
+app.post('/upload', (req, res) => membersController.accessCheck(req, res, 'user', awsController.saveUpload));
 // route for Building Stories
   app.get('/build', (req, res) => membersController.accessCheck(req, res, 'author', storyController.build));
 // route for Error Page
@@ -91,6 +95,9 @@ app.get('/logout', membersController.logout);
     message: 'Welcome to the Science Stories API!',
   }));
   // route for sign-up
+  app.get('/upload/avatar/:username/:filename', awsController.sendUploaded);
+app.get('/upload/:username/:filename', awsController.sendUploaded);
+
 app.get('/api/iiif/manifest/:filename', awsController.sendManifest);
 app.post('/api/member/register', membersController.register);
 app.post('/api/dump/stories', (req, res) => {

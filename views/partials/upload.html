@@ -1,0 +1,47 @@
+<div class="page-header">
+  <div class="overlayHeader">
+    Upload Media
+  </div>
+</div>
+<div id="uploadFormDiv">
+  <form id="uploadForm" method="POST" enctype="multipart/form-data" action="/upload">
+    <select name="filetype" id="fileType" required>
+      <option value="general">General Content</option>
+      <option value="manifest">Manifest (.json only)</option>
+      <option value="avatar">User Avatar</option>
+    </select>
+
+     <input type="text" name="filename" id="fileName"  placeholder="Name of File" maxlength="30" required><br />
+     <input type="file" name="webform" id="file"><br />
+     <input type="submit" id="submitBtn" data-username="{{data.user.username}}">
+  </form>
+
+  <div id="uploadResponse">
+
+  </div>
+</div>
+<script type='text/javascript'>
+/* attach a submit handler to the form */
+$("#uploadForm").submit(function(event) {
+
+  /* stop form from submitting normally */
+  event.preventDefault();
+  this.submit()
+  setTimeout(function(data){
+    console.log(data)
+    filetype = $('#fileType').val()
+    if(filetype == 'general'){
+      responseUrl = '/upload/'+$('#submitBtn').data('username') +'/'+$('#fileName').val()+'.'+$('#file').val().split('.').pop();
+    }
+    else if (filetype == 'avatar'){
+      responseUrl = '/upload/avatar/'+$('#submitBtn').data('username') +'/'+$('#fileName').val()+'.'+$('#file').val().split('.').pop();
+    }
+    else {
+      responseUrl = '/api/iiif/manifest/'+$('#fileName').val()+'.json';
+    }
+    $('#uploadResponse').html(`Upload Success! <a href="${responseUrl}" target="_blank">www.sciencetories.io${responseUrl}</a>`)
+  })
+
+});
+
+</script>

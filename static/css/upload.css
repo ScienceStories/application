@@ -1,0 +1,34 @@
+.page-header {
+  background-image: url(https://images.unsplash.com/photo-1484781663516-4c4ca4b04a13?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=e51c123d09e3118eb6369acbbd9bda5d&auto=format&fit=crop&w=1935&q=80);
+}
+
+div#uploadFormDiv {
+    text-align:  center;
+    width:  100%;
+    padding:  75px 10%;
+    font-size: 200%;
+    font-weight:  300;
+}
+
+div#uploadFormDiv * {
+    width: 80%;
+    padding: 20px;
+    margin:  10px 10%;
+    text-align:  center;
+}
+
+div#uploadFormDiv select {
+    border:  none;
+    border-radius:  0;
+    background: #e6e6e6;
+}
+
+div#uploadFormDiv input[type=submit] {
+    background: #56e6d5;
+    padding: 19px 0;
+}
+
+div#uploadFormDiv input[type=submit]:hover {
+    background:  black;
+    color: #56e6d5;
+}

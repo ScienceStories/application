@@ -3,6 +3,7 @@ const Story = require('../models').story;
 const Comment = require('../models').comment;
 const StoryActivity = require('../models').storyactivity;
 const bcrypt = require('bcrypt');
+const multer  = require('multer')
 const wikidataController = require('./wikidata');
 const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
