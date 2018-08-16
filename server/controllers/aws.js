@@ -32,10 +32,10 @@ var upload = multer({
     key: function (req, file, callback) {
       return Member.findById(req.session.user.id)
       .then(member => {
-        // console.log('found=>', member.username, req.body)
-        fileprefix = UPLOAD_FILE_PREFIX[req.body.filetype]
-        // console.log(fileprefix+member.username+'/'+req.body.filename + path.extname(file.originalname))
-        callback(null, fileprefix+member.username+'/'+req.body.filename.trim().replace(' ','_') + path.extname(file.originalname));
+        newFilename = UPLOAD_FILE_PREFIX[req.body.filetype]
+        if (req.body.filetype != 'manifest') newFilename += member.username+'/'
+        newFilename += req.body.filename.trim().replace(' ','_') + path.extname(file.originalname)
+        callback(null, newFilename);
       })
     },
   })
@@ -116,8 +116,9 @@ module.exports = {
      s3.getObject(params, function(err, data)
      {
          if (!err) res.status(200).send(JSON.parse(data.Body.toString()))
-         else loadError(req, res, 'Could Not Find Manifest')
-
+     }).on('error', error => {
+     // Catching NoSuchKey & StreamContentLengthMismatch
+     return loadError(req, res, 'Could Not Find Manifest')
      });
   },
   loadFile(req, res){
@@ -150,8 +151,8 @@ module.exports = {
 
   saveUpload(req, res){
     fileUpload(req, res, function(err) {
-        console.log(req.body) // form fields
-        console.log(req.files) // form files
+        // console.log(req.body) // form fields
+        // console.log(req.files) // form files
         res.status(204).send(req.body.filename).end()
     });
 
