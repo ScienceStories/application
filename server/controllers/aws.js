@@ -120,18 +120,24 @@ module.exports = {
 
      });
   },
-  loadFile(req, res, thiskey){
-    console.log(thiskey)
+  loadFile(req, res){
     var params = {
       Bucket: "sciencestories",
       Key:req.url.substring(1),
      };
-     var filestream = s3.getObject(params).createReadStream();
-     filestream.pipe(res);
-  },
-  sendUploaded(req, res) {
-    key = 'upload/'+req.params.username+'/'+req.params.filename
-    return module.exports.loadFile(req, res, key )
+     errorFound = false
+    var filestream = s3.getObject(params).createReadStream().on('error', error => {
+    // Catching NoSuchKey & StreamContentLengthMismatch
+    loadError(req, res, 'Could Not Find File')
+    errorFound = true
+    });
+    if(errorFound){
+      return false
+    }
+    else{
+      return filestream.pipe(res);
+    }
+
   },
   upload(req, res){
     return Member.findById(req.session.user.id)

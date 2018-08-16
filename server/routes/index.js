@@ -95,8 +95,8 @@ app.post('/upload', (req, res) => membersController.accessCheck(req, res, 'user'
     message: 'Welcome to the Science Stories API!',
   }));
   // route for sign-up
-  app.get('/upload/avatar/:username/:filename', awsController.sendUploaded);
-app.get('/upload/:username/:filename', awsController.sendUploaded);
+  app.get('/upload/avatar/:username/:filename', awsController.loadFile);
+app.get('/upload/:username/:filename', awsController.loadFile);
 
 app.get('/api/iiif/manifest/:filename', awsController.sendManifest);
 app.post('/api/member/register', membersController.register);
