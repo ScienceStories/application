@@ -3,6 +3,7 @@ const storyController = require('../controllers').story;
 const wikidataController = require('../controllers').wikidata;
 const annotationController = require('../controllers').annotation;
 const commentController = require('../controllers').comment;
+const sitemapController = require('../controllers').sitemap;
 const awsController = require('../controllers').aws;
 const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
@@ -27,6 +28,7 @@ module.exports = (app, sessionChecker) => {
         nav: "test",
       });
   });
+  app.get('/sitemap', sitemapController.generate);
   app.post('/api/comment/send', commentController.send);
   app.get('/api/comment/:comment_id', commentController.renderId);
   app.get('/api/story/:story_id/commentlist', commentController.renderList);

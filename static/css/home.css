@@ -189,3 +189,6 @@ section#footer {
 section#footer a {
     color: white !important;
 }
+section#footer a:hover {
+    color: black !important;
+}
