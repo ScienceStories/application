@@ -107,7 +107,7 @@ module.exports = {
       nextPage = (page == maxPage) ? 0 : page + 1
       prevPage = (page == 1) ? 0 : page - 1
       data = {totalStories:total_stories, page:page, maxPage: maxPage, prevPage:prevPage, nextPage:nextPage}
-      Story.findAll({ offset: offset, limit: stories_per_page })
+      Story.findAll({ order: [['updatedAt', 'DESC']], offset: offset, limit: stories_per_page })
       .then(out => {
           story_total = out.length;
           qidList = [];
