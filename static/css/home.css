@@ -114,6 +114,7 @@ h2.section-header {
     font-weight:  300;
     color:  gray;
     text-align:  center;
+    margin-top: 0;
 }
 .section-subheader {
     color: #676767;
@@ -191,4 +192,11 @@ section#footer a {
 }
 section#footer a:hover {
     color: black !important;
+}
+.feature-icon {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 7em;
+    color: #71ded49c;
 }

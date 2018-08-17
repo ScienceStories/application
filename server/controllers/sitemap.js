@@ -32,6 +32,12 @@ module.exports = {
     }).then(result => {
 
         // Add Browse pages
+        urlset.push({
+          loc: '/browse',
+          lastmod: lastmod,
+          changefreq: 'daily',
+          priority: .5
+        })
         maxPage = Math.ceil(result.count/50) + 1;
         for (var i = 1; i < maxPage; i++) {
           urlset.push({
