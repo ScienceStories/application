@@ -686,3 +686,10 @@ iframe.index-preview {
     text-align: center;
     padding-bottom: 25px;
 }
+iframe#wikiframe {
+    border:  none;
+    height: 100%;
+    overflow-y: visible;
+    height: 100vh;
+    width: 100%;
+}
