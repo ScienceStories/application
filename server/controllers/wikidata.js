@@ -154,7 +154,7 @@ module.exports = {
     const jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
-    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel ?pq_Label ?url {
+    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img {
       VALUES (?company) {(wd:${qid})}
       ?company ?p ?statement .
       ?statement ?ps ?ps_ .
@@ -168,6 +168,9 @@ module.exports = {
       OPTIONAL {
         ?wd wdt:P1630 ?url  .
         }
+        OPTIONAL{
+   ?ps_ wdt:P18|wdt:P117 ?img .
+   }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
     } ORDER BY ?wd ?statement ?ps_
     `
@@ -182,6 +185,7 @@ module.exports = {
       ).then(simplifiedResults =>
       {
 
+
         appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
         .then(labels => {
           name = labels.entities[qid].labels.en.value
@@ -191,57 +195,64 @@ module.exports = {
           if (labels.entities[qid].sitelinks.enwiki){
             wikipedia = labels.entities[qid].sitelinks.enwiki.title
           }
-          if (req.session.user && (req.url.indexOf('/preview') == -1)) {
-            StoryActivity.findOrCreate({
-                where: {
-                  memberId: req.session.user.id,
-                  storyId: row.id
-                },
-              })
-            .spread((found, created) =>{
-              found.update({
-              views: found.views+1,
-              lastViewed: sequelize.fn('NOW')})
-                .then(output => {
-                      return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
-
-                    page: function(){ return 'story'},
-                    scripts: function(){ return 'story_scripts'},
-                    links: function(){ return 'story_links'},
-                    title: name +" - Story",
-                    nav: "Story",
-                    content: simplifiedResults.statements,
-                    wikipedia: wikipedia,
-                    name: name,
-                    qid: simplifiedResults.qid,
-                    storyActivity: output.dataValues,
-                    data: jsonData,
-                    user: req.session.user,
-                    row: row,
-                    comments: comments,
-                    meta: meta
-                  })})
+          // ADDED Here
+          return module.exports.getTimelineData(name, simplifiedResults.statements, function(timelineData){
+            // FINAL CALL
+            if (req.session.user && (req.url.indexOf('/preview') == -1)) {
+              StoryActivity.findOrCreate({
+                  where: {
+                    memberId: req.session.user.id,
+                    storyId: row.id
+                  },
                 })
+              .spread((found, created) =>{
+                found.update({
+                views: found.views+1,
+                lastViewed: sequelize.fn('NOW')})
+                  .then(output => {
+                        return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
+
+                      page: function(){ return 'story'},
+                      scripts: function(){ return 'story_scripts'},
+                      links: function(){ return 'story_links'},
+                      title: name +" - Story",
+                      nav: "Story",
+                      content: simplifiedResults.statements,
+                      wikipedia: wikipedia,
+                      name: name,
+                      qid: simplifiedResults.qid,
+                      storyActivity: output.dataValues,
+                      data: jsonData,
+                      user: req.session.user,
+                      row: row,
+                      comments: comments,
+                      meta: meta,
+                      timeline: timelineData
+                    })})
+                  })
+              })
+              .catch(error => {loadError(req, res, 'Something went wrong.')});
+            }
+            else return commentController.loadCommentsFromStory(row.id, function(comments){
+
+              res.render('full', {
+                page: function(){ return 'story'},
+                scripts: function(){ return 'story_scripts'},
+                links: function(){ return 'story_links'},
+                title: name +" - Story",
+                nav: "Story",
+                content: simplifiedResults.statements,
+                wikipedia: wikipedia,
+                name: name,
+                qid: simplifiedResults.qid,
+                data: jsonData,
+                row: row,
+                comments: comments,
+                meta: meta
+              })
             })
-            .catch(error => {loadError(req, res, 'Something went wrong.')});
-          }
-          else return commentController.loadCommentsFromStory(row.id, function(comments){
-            res.render('full', {
-          page: function(){ return 'story'},
-          scripts: function(){ return 'story_scripts'},
-          links: function(){ return 'story_links'},
-          title: name +" - Story",
-          nav: "Story",
-          content: simplifiedResults.statements,
-          wikipedia: wikipedia,
-          name: name,
-          qid: simplifiedResults.qid,
-          data: jsonData,
-          row: row,
-          comments: comments,
-          meta: meta
-        })
           })
+
 
 
 
@@ -328,7 +339,78 @@ module.exports = {
       })
 
   },
-
+  getTimelineData(name, wdData, callback){
+    // {
+    //   date: ,
+    //   title: ,
+    //   qid: ,
+    //   pid: ,
+    //
+    // }
+    timelineOutput = []
+    for (var s=0; s < wdData.length; s++){
+      var tempTLitem = module.exports.checkTimelineStatement(name, wdData[s])
+      if (tempTLitem) timelineOutput.push(tempTLitem)
+    }
+    // timelineOutput = {'new': timelineOutput, 'wd':wdData }
+    return callback(timelineOutput)
+  },
+  checkTimelineStatement(name, statement){
+    var tempval = {
+      qid : false,
+      pid : statement.ps.value,
+      date: false,
+      title: false,
+      image: false
+    }
+    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
+      tempval.qid = statement.ps_.value
+    }
+    if(statement.img && statement.img.value){
+      tempval.image = statement.img.value
+    }
+    // Check if birth date
+    if (statement.ps.value == "http://www.wikidata.org/prop/statement/P569"){
+      tempval.title = name+" is Born"
+      tempval.date = statement.ps_.value
+      return tempval
+    }
+    // Check if death date
+    else if (statement.ps.value == "http://www.wikidata.org/prop/statement/P570"){
+      tempval.title = name+" Passes"
+      tempval.date = statement.ps_.value
+      return tempval
+    }
+    // Start Time
+    else if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P580")){
+      tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Begins"
+      tempval.date = statement.pq_Label.value
+      // console.log(statement)
+      return tempval
+    }
+    // End Time
+    else if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P582")){
+      tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Ends"
+      tempval.date = statement.pq_Label.value
+      // console.log(statement)
+      return tempval
+    }
+    // Check if point in time
+    else if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P585")){
+      tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
+      tempval.date = statement.pq_Label.value
+      // console.log(statement)
+      return tempval
+    }
+    // If datetime value of statement
+    else if ((statement.datatype.value == "http://wikiba.se/ontology#Time")
+      || (statement.ps_.datatype ==  "http://www.w3.org/2001/XMLSchema#dateTime")){
+      tempval.title = statement.wdLabel.value
+      tempval.date = statement.ps_Label.value
+      return tempval
+    }
+    return false
+  }
 };
 
 // SELECT ?story ?storyLabel ?birth ?death

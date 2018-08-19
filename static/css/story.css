@@ -693,3 +693,65 @@ iframe#wikiframe {
     height: 100vh;
     width: 100%;
 }
+.window {
+    color: #777777;
+}
+div#timeline * {
+    transition: all 1.4s ease;
+}
+
+
+.jqTimespaceDisplay .jqTimespaceDisplayTime {
+    margin:  0 auto;
+    display: inline-flex;
+    font-size: 3vw;
+    font-weight: 300;
+}
+
+article.jqTimespaceDisplay {
+    text-align: center;
+}
+
+.jqTimespaceDisplay * {
+    text-align: center !important;
+}
+
+.jqTimespaceDisplay section {
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    margin-right: 0;
+    display: unset;
+}
+
+.jqTimespaceDisplay section img {
+    margin:  0 auto;
+}
+
+.jqTimespaceDisplay .jqTimespaceTimeframe {
+    color: #1fc7ce;
+}
+
+.jqTimespaceDisplay .jqTimespaceDisplayLeft, .jqTimespaceDisplay .jqTimespaceDisplayRight {
+    background: #797878;
+}
+
+.jqTimespaceDisplay h1 {
+    font-weight: 300;
+}
+.jqTimespaceDisplay section .tl-desc-div img {
+    max-width: 100%;
+}
+
+.tl-desc-div {
+    width: 90%;
+    margin:  0 auto;
+    text-align:  center;
+}
+
+div#timeline .jqTimespaceTableContainer:not(.jqTimespaceAnimated) * {
+    transition: none !important;
+}
+div#timeline {
+    text-transform: capitalize;
+}
