@@ -161,7 +161,7 @@ module.exports = {
    ?ps_ wdt:P18 ?img .
    }
    OPTIONAL{
-     ?ps_ wdt:P276 ?objLocationEntity .
+     ?ps_ wdt:P276|wdt:P159 ?objLocationEntity .
      ?objLocationEntity wdt:P625 ?objLocation.
      OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
    }
