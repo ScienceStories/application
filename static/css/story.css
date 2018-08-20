@@ -755,3 +755,71 @@ div#timeline .jqTimespaceTableContainer:not(.jqTimespaceAnimated) * {
 div#timeline {
     text-transform: capitalize;
 }
+#mapid {
+  height: 80vh;
+}
+
+.map-popup-image img {
+    width: 80%;
+}
+
+.map-popup-image {
+    width:  100%;
+}
+
+.map-popup-item > div {
+    width:  100%;
+    margin-bottom: 10px;
+}
+
+.map-popup-title {
+    font-size: 180%;
+    border-bottom:  1px solid;
+    font-weight:  200;
+    text-transform:  uppercase;
+}
+
+.map-popup-item {
+    text-align:  center;
+    background: #e3eff3;
+    padding: 10px 25px;
+    margin-bottom: 20px;
+    margin-left:  5px;
+    margin-right: 5px;
+    box-shadow: 2px 2px 5px #d0d0d0;
+}
+
+.leaflet-popup-content {
+    width: 20vw !important;
+    max-height: 35vh;
+    overflow-y:  scroll;
+}
+.map-legend {
+    width:  150px;
+    padding-right: 10px;
+    display:  inline-block;
+    height:  80vh;
+    overflow-y:  scroll;
+}
+
+div#mapid {
+    width: calc(100% - 155px);
+    display:  inline-block;
+}
+
+.map-legend-item {
+    margin-bottom: 15px;
+    background: #f3f3f3;
+    box-shadow: 1px 2px 1px #00000005;
+    text-align:  center;
+    padding:  15px;
+    cursor:  pointer;
+}
+
+.map-legend-item:hover {
+    box-shadow: 0 0 4px #0000008c;
+    background: #1ec7ce;
+}
+
+.map-legend * {
+}

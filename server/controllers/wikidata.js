@@ -113,23 +113,12 @@ module.exports = {
           return callback(content)}
       })
   },
-  // processDetailList(req, res, queryFunction, qidList, callback, mergeType, defaultImage){
-  //
-  //
-  //     var queryUrl = queryFunction(qidList, 'en');
-  //     appFetch(queryUrl).then(output => {
-  //       rawData = output.results.bindings;
-  //       if (!mergeType || mergeType == 'first'){
-  //         content = module.exports.mergeValuesFirst(qidList, rawData)
-  //         if (defaultImage){
-  //           for (var i=0; i<content.length;i++){
-  //             if (!content[i].image) content[i].image = defaultImage
-  //           }
-  //         }
-  //         return callback(content)
-  //       }
-  //     })
-  // },
+  simplifySparqlFetch(content){
+    return content.results.bindings.map(function(x){
+      if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value)
+      return x
+    })
+  },
   getDetailsList(req, res, qidList, detailLevel, mergeType=false, defaultImage=false, callback){
     if (detailLevel == 'small'){
       //  label, description, optional image
@@ -154,7 +143,7 @@ module.exports = {
     const jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
-    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img {
+    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage{
       VALUES (?company) {(wd:${qid})}
       ?company ?p ?statement .
       ?statement ?ps ?ps_ .
@@ -169,94 +158,107 @@ module.exports = {
         ?wd wdt:P1630 ?url  .
         }
         OPTIONAL{
-   ?ps_ wdt:P18|wdt:P117 ?img .
+   ?ps_ wdt:P18 ?img .
+   }
+   OPTIONAL{
+     ?ps_ wdt:P276 ?objLocationEntity .
+     ?objLocationEntity wdt:P625 ?objLocation.
+     OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
+   }
+   OPTIONAL{
+   ?ps_ wdt:P625 ?location .
    }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
     } ORDER BY ?wd ?statement ?ps_
     `
     const url = wdk.sparqlQuery(sparql);
     appFetch(url).then(content => {
-      output = content.results.bindings.map(function(x){
-        if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value)
-        return x
-      })
+      output = module.exports.simplifySparqlFetch(content)
       return {qid:qid, statements: output}
     }
-      ).then(simplifiedResults =>
-      {
-
-
-        appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
-        .then(labels => {
-          name = labels.entities[qid].labels.en.value
-          meta = {}
-          meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, and more.`
-          wikipedia = ''
-          if (labels.entities[qid].sitelinks.enwiki){
-            wikipedia = labels.entities[qid].sitelinks.enwiki.title
-          }
-          // ADDED Here
-          return module.exports.getTimelineData(name, simplifiedResults.statements, function(timelineData){
-            // FINAL CALL
-            if (req.session.user && (req.url.indexOf('/preview') == -1)) {
-              StoryActivity.findOrCreate({
-                  where: {
-                    memberId: req.session.user.id,
-                    storyId: row.id
-                  },
-                })
-              .spread((found, created) =>{
-                found.update({
-                views: found.views+1,
-                lastViewed: sequelize.fn('NOW')})
-                  .then(output => {
-                        return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
-
-                      page: function(){ return 'story'},
-                      scripts: function(){ return 'story_scripts'},
-                      links: function(){ return 'story_links'},
-                      title: name +" - Story",
-                      nav: "Story",
-                      content: simplifiedResults.statements,
-                      wikipedia: wikipedia,
-                      name: name,
-                      qid: simplifiedResults.qid,
-                      storyActivity: output.dataValues,
-                      data: jsonData,
-                      user: req.session.user,
-                      row: row,
-                      comments: comments,
-                      meta: meta,
-                      timeline: timelineData
-                    })})
-                  })
-              })
-              .catch(error => {loadError(req, res, 'Something went wrong.')});
+      ).then(simplifiedResults => {
+        var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
+        appFetch(inverseUrl).then(inverseClaimsOutput => {
+          inverseStatements = module.exports.simplifySparqlFetch(inverseClaimsOutput)
+          appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
+          .then(labels => {
+            name = labels.entities[qid].labels.en.value
+            meta = {}
+            meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, and more.`
+            wikipedia = ''
+            if (labels.entities[qid].sitelinks.enwiki){
+              wikipedia = labels.entities[qid].sitelinks.enwiki.title
             }
-            else return commentController.loadCommentsFromStory(row.id, function(comments){
+            return module.exports.getMapData(name, simplifiedResults.statements, inverseStatements, function(mapData){
+              // return res.send(mapData)
+              // ADDED Here
+              return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
+                // FINAL CALL
+                if (req.session.user && (req.url.indexOf('/preview') == -1)) {
+                  StoryActivity.findOrCreate({
+                      where: {
+                        memberId: req.session.user.id,
+                        storyId: row.id
+                      },
+                    })
+                  .spread((found, created) =>{
+                    found.update({
+                    views: found.views+1,
+                    lastViewed: sequelize.fn('NOW')})
+                      .then(output => {
+                            return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
 
-              res.render('full', {
-                page: function(){ return 'story'},
-                scripts: function(){ return 'story_scripts'},
-                links: function(){ return 'story_links'},
-                title: name +" - Story",
-                nav: "Story",
-                content: simplifiedResults.statements,
-                wikipedia: wikipedia,
-                name: name,
-                qid: simplifiedResults.qid,
-                data: jsonData,
-                row: row,
-                comments: comments,
-                meta: meta
+                          page: function(){ return 'story'},
+                          scripts: function(){ return 'story_scripts'},
+                          links: function(){ return 'story_links'},
+                          title: name +" - Story",
+                          nav: "Story",
+                          content: simplifiedResults.statements,
+                          wikipedia: wikipedia,
+                          name: name,
+                          qid: simplifiedResults.qid,
+                          storyActivity: output.dataValues,
+                          data: jsonData,
+                          user: req.session.user,
+                          row: row,
+                          comments: comments,
+                          meta: meta,
+                          map: mapData,
+                          timeline: timelineData
+                        })})
+                      })
+                  })
+                  .catch(error => {loadError(req, res, 'Something went wrong.')});
+                }
+                else return commentController.loadCommentsFromStory(row.id, function(comments){
+
+                  res.render('full', {
+                    page: function(){ return 'story'},
+                    scripts: function(){ return 'story_scripts'},
+                    links: function(){ return 'story_links'},
+                    title: name +" - Story",
+                    nav: "Story",
+                    content: simplifiedResults.statements,
+                    wikipedia: wikipedia,
+                    name: name,
+                    qid: simplifiedResults.qid,
+                    data: jsonData,
+                    row: row,
+                    comments: comments,
+                    meta: meta,
+                    map: mapData,
+                    timeline: timelineData
+                  })
+                })
               })
+
             })
+
+
           })
-
-
-
-
         })
+
+
 
   })
 
@@ -339,23 +341,114 @@ module.exports = {
       })
 
   },
-  getTimelineData(name, wdData, callback){
-    // {
-    //   date: ,
-    //   title: ,
-    //   qid: ,
-    //   pid: ,
-    //
-    // }
-    timelineOutput = []
-    for (var s=0; s < wdData.length; s++){
-      var tempTLitem = module.exports.checkTimelineStatement(name, wdData[s])
+  processMapData(input, inverse=false){
+    for (var s=0; s < input.length; s++){
+    var tempMapitem = module.exports.checkMapStatement(name, input[s], inverse)
+    if (tempMapitem){
+      if(mapOutput[tempMapitem.coordinates]) {
+        var tempList = mapOutput[tempMapitem.coordinates]
+        var foundmap = false
+        for (var i = 0; i < mapOutput[tempMapitem.coordinates].length; i++) {
+
+          if (mapOutput[tempMapitem.coordinates][i].title == tempMapitem.title) {
+            // console.log("checking ", mapOutput[tempMapitem.coordinates][i].title, '-->', tempMapitem.title)
+            foundmap = true
+            i = mapOutput[tempMapitem.coordinates].length
+          }
+        }
+        if (!foundmap) mapOutput[tempMapitem.coordinates].push(tempMapitem)
+      }
+      else mapOutput[tempMapitem.coordinates] = [ tempMapitem ]
+    }}
+  },
+  getMapData(name, wdData, inverseData, callback){
+    mapOutput = {}
+    module.exports.processMapData(wdData)
+    module.exports.processMapData(inverseData, true)
+
+    // mapOutput = {'new': mapOutput, 'wd':wdData }
+    return callback(mapOutput)
+  },
+  processTimelineData(input, inverse=false){
+    for (var s=0; s < input.length; s++){
+      var tempTLitem = module.exports.checkTimelineStatement(name, input[s], inverse)
       if (tempTLitem) timelineOutput.push(tempTLitem)
     }
+  },
+  getTimelineData(name, wdData, inverseData, callback){
+    timelineOutput = []
+
+    module.exports.processTimelineData(wdData)
+    module.exports.processTimelineData(inverseData, true)
     // timelineOutput = {'new': timelineOutput, 'wd':wdData }
     return callback(timelineOutput)
   },
-  checkTimelineStatement(name, statement){
+  wdCoordinatesToArray(point){
+    // Example: Point(-77.070795 38.876806)"
+    var temp =  JSON.parse( point.substr(5).replace(' ', ',').replace(/\(/g, "[").replace(/\)/g, "]"));
+    return [temp[1], temp[0]]
+  },
+  checkMapStatement(name, statement, inverse = false){
+    var tempval = {
+      qid : false,
+      pid : statement.ps.value,
+      title: false,
+      image: false,
+      locationImage: false,
+      coordinates: false,
+      location: false,
+    }
+    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
+      tempval.qid = statement.ps_.value
+    }
+    if(statement.img && statement.img.value){
+      tempval.image = statement.img.value
+    }
+    if(statement.locationImage && statement.locationImage.value){
+      tempval.locationImage = statement.locationImage.value
+    }
+    if (statement.locationLabel && statement.locationLabel.value) {
+      tempval.location = statement.locationLabel.value
+    }
+    if (statement.ps_Label && statement.ps_Label.value) {
+      tempval.location = statement.ps_Label.value
+    }
+
+    if (statement.location){
+      // Check if birth place
+      if (statement.ps.value == "http://www.wikidata.org/prop/statement/P19"){
+        tempval.title = name+" was born"
+        if (statement.ps_Label.value) {
+          tempval.title += " in " +statement.ps_Label.value
+        }
+        tempval.coordinates = module.exports.wdCoordinatesToArray(statement.location.value)
+        return tempval
+      }
+      // Check if death place
+      if (statement.ps.value == "http://www.wikidata.org/prop/statement/P20"){
+        tempval.title = name+" died"
+        if (statement.ps_Label.value) {
+          tempval.title += " in " +statement.ps_Label.value
+        }
+        tempval.coordinates = module.exports.wdCoordinatesToArray(statement.location.value)
+        return tempval
+      }
+      else{
+        tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
+        if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
+        tempval.coordinates = module.exports.wdCoordinatesToArray(statement.location.value)
+        return tempval
+      }
+    }
+    else if (statement.objLocation){
+      tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
+      if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
+      tempval.coordinates = module.exports.wdCoordinatesToArray(statement.objLocation.value)
+      return tempval
+    }
+    return false
+  },
+  checkTimelineStatement(name, statement, inverse=false){
     var tempval = {
       qid : false,
       pid : statement.ps.value,
@@ -384,6 +477,7 @@ module.exports = {
     // Start Time
     else if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P580")){
       tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Begins"
+      if (inverse) tempval.title = statement.ps_Label.value + "- Begins ("+ statement.wdLabel.value + ": "+name+")"
       tempval.date = statement.pq_Label.value
       // console.log(statement)
       return tempval
@@ -391,6 +485,7 @@ module.exports = {
     // End Time
     else if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P582")){
       tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Ends"
+      if (inverse) tempval.title = statement.ps_Label.value + "- Ends ("+ statement.wdLabel.value + ": "+name+")"
       tempval.date = statement.pq_Label.value
       // console.log(statement)
       return tempval
@@ -398,6 +493,7 @@ module.exports = {
     // Check if point in time
     else if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P585")){
       tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
+      if (inverse) tempval.title = statement.ps_Label.value + " ("+ statement.wdLabel.value + ": "+name+")"
       tempval.date = statement.pq_Label.value
       // console.log(statement)
       return tempval
@@ -406,25 +502,29 @@ module.exports = {
     else if ((statement.datatype.value == "http://wikiba.se/ontology#Time")
       || (statement.ps_.datatype ==  "http://www.w3.org/2001/XMLSchema#dateTime")){
       tempval.title = statement.wdLabel.value
+      if (inverse) tempval.title = statement.ps_Label.value + " ("+ statement.wdLabel.value + ": "+name+")"
       tempval.date = statement.ps_Label.value
+      return tempval
+    }
+    // If datetime value of statement
+    else if (statement.objDate){
+      tempval.title = statement.wdLabel.value
+      if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
+      tempval.date = statement.objDate.value
+      return tempval
+    }
+    else if (statement.objBirth){
+      tempval.title = statement.wdLabel.value
+      if (inverse) tempval.title = statement.ps_Label.value + " is Born ("+  statement.wdLabel.value + ": "+name+")"
+      tempval.date = statement.objBirth.value
+      return tempval
+    }
+    else if (statement.objDeath){
+      tempval.title = statement.wdLabel.value
+      if (inverse) tempval.title = statement.ps_Label.value + " is Passes ("+  statement.wdLabel.value + ": "+name+")"
+      tempval.date = statement.objBirth.value
       return tempval
     }
     return false
   }
 };
-
-// SELECT ?story ?storyLabel ?birth ?death
-// WHERE
-// {
-//   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE]". }
-//     VALUES ?story { wd:Q11641  wd:Q7309 wd:Q6376201 }.
-//     OPTIONAL{
-//     ?story wdt:P569 ?birth.
-//       }
-//   OPTIONAL{
-//     ?story wdt:P570 ?death.
-//       }
-//   OPTIONAL{
-//     ?story wdt:P13 ?image.
-//       }
-// }

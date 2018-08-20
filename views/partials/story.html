@@ -31,6 +31,7 @@
   * 7. Wikipedia
   * 8. Wikidata
     9. Conclusion (Wikidata, all other resources)
+    10. Map
  -->
 <script type="text/javascript">
   var wikititle = '{{wikipedia}}'.replace(" ", "_")
@@ -65,6 +66,9 @@
   {{#if timeline}}
     <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="far fa-calendar-alt"></i> Timeline of {{name}}</div>
   {{/if}}
+  {{#if map}}
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-map-marked-alt"></i> Map of {{name}}</div>
+  {{/if}}
     <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo"> Wikidata Statements</div>
   {{#if wikipedia}}
     <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikidata Logo"> Wikipedia Article</div>
@@ -77,6 +81,9 @@
   {{/each}}
   {{#if timeline}}
     {{> timeline }}
+  {{/if}}
+  {{#if map}}
+    {{> map }}
   {{/if}}
   {{> wikidata }}
   {{#if wikipedia}}
@@ -91,16 +98,15 @@
   colors = [];
   anchors = [];
   for (x=0; x < lastSlide; x++){
-    console.log((data[x].tooltip) ? data[x].tooltip : (data[x].title) ? data[x].title : data[x].description)
     tooltips.push((data[x].tooltip) ? data[x].tooltip : (data[x].title) ? data[x].title : data[x].description);
     colors.push(data[x].color);
+  }
+  tooltips = tooltips.concat([{{#if map}}'Map',{{/if}} {{#if timeline}}'Timeline',{{/if}} 'Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
+  colors = colors.concat([{{#if map}}'#1dc7ce',{{/if}} {{#if timeline}}'#1dc7ce',{{/if}}  '#EC008C', {{#if wikipedia}}'#1dc7ce',{{/if}} 'rgb(255, 185, 125)']);
+  lastSlide = tooltips.length;
+  for (x=1; x <= lastSlide; x++){
     anchors.push(x)
   }
-  lastSlide += 4;
-  tooltips = tooltips.concat([{{#if timeline}}'Timeline',{{/if}} 'Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
-  colors = colors.concat([{{#if timeline}}'#1dc7ce',{{/if}}  '#EC008C', {{#if wikipedia}}'#1dc7ce',{{/if}} 'rgb(255, 185, 125)']);
-  anchors = anchors.concat([{{#if timeline}}'timeline',{{/if}} 'wikidata', {{#if wikipedia}}'wikipedia',{{/if}} 'index'])
-
   $('#pagepiling').pagepiling({
     setMouseWheelScrolling: false,
     verticalCentered: false,
@@ -112,7 +118,7 @@
       'position': 'right',
       'tooltips': tooltips
     },
-    anchors:[1, 2,3,4,5,6,7,8,9,10, 11],
+    anchors:anchors,
     onLeave: function (index, nextIndex, direction) {
       $('.sidebar-tooltip').removeClass('active')
 
