@@ -48,6 +48,14 @@ hbs.registerHelper('if_equal', function(a, b, opts) {
         return opts.inverse(this)
     }
 })
+hbs.registerHelper('size', function(obj) {
+	if( typeof obj != "object" ) return;
+	var size = 0, key;
+	for (key in obj) {
+		if (obj.hasOwnProperty(key)) size++;
+	}
+	return size;
+});
 hbs.registerHelper( 'times', function( n, block ) {
     var accum = '',
         i = -1;

@@ -101,8 +101,8 @@
     tooltips.push((data[x].tooltip) ? data[x].tooltip : (data[x].title) ? data[x].title : data[x].description);
     colors.push(data[x].color);
   }
-  tooltips = tooltips.concat([{{#if map}}'Map',{{/if}} {{#if timeline}}'Timeline',{{/if}} 'Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
-  colors = colors.concat([{{#if map}}'#1dc7ce',{{/if}} {{#if timeline}}'#1dc7ce',{{/if}}  '#EC008C', {{#if wikipedia}}'#1dc7ce',{{/if}} 'rgb(255, 185, 125)']);
+  tooltips = tooltips.concat([{{#if timeline}}'Timeline',{{/if}} {{#if map}}'Map',{{/if}}  'Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
+  colors = colors.concat([{{#if timeline}}'#1dc7ce',{{/if}} {{#if map}}'rgb(29, 206, 173)',{{/if}}   'rgb(255, 131, 148)', {{#if wikipedia}} 'rgb(129, 130, 160)',{{/if}} 'rgb(255, 185, 125)']);
   lastSlide = tooltips.length;
   for (x=1; x <= lastSlide; x++){
     anchors.push(x)
