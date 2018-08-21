@@ -11,6 +11,8 @@ const path = require('path');
 const fetch = require('node-fetch');
 const cors = require('cors');
 const Sequelize = require('sequelize');
+const randomColor = require('randomcolor');
+
 // initalize sequelize with session store
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var sequelize = require('./server/models').sequelize
@@ -65,6 +67,44 @@ hbs.registerHelper( 'times', function( n, block ) {
     }
 
     return accum;
+});
+hbs.registerHelper('randomColor',function(alpha = '1', luminosity=false){
+  return randomColor({
+    alpha: parseFloat(alpha),
+    format: 'rgba',
+    luminosity: luminosity
+    }); // a hex code for an attractive color
+});
+hbs.registerHelper( 'truncate', function(chars, opts ) {
+  // chars MUST be greater than 3
+  var string = opts.fn(this).trim().replace(/\s\s+/g, ' ');
+  var size = string.length
+  if (size <= chars) return string
+  return  string.substr(0, chars - 3) + '...'
+});
+hbs.registerHelper( 'arrayToString', function(array, type='comma') {
+    var arraySize = array.length;
+    if (arraySize == 0) return ''
+    else if (arraySize == 1) return array[0]
+    var output = ''
+
+    for (var i = 0; i < arraySize; i++) {
+      if (type == 'comma') {
+        if (i == 0){
+          output += array[i]
+        }
+        else if (i != arraySize - 1) output += ', ' +  array[i]
+        else output += ' and ' + array[i]
+      }
+      if (type == 'pipe'){
+        if (i == 0){
+          output += array[i]
+        }
+        else output += ' | ' +  array[i]
+      }
+
+    }
+    return output
 });
 hbs.registerHelper( 'contrastColor', function( hex, bw ) {
   if (!hex) return '#000000';

@@ -189,70 +189,76 @@ module.exports = {
             if (labels.entities[qid].sitelinks.enwiki){
               wikipedia = labels.entities[qid].sitelinks.enwiki.title
             }
-            return module.exports.getMapData(name, simplifiedResults.statements, inverseStatements, function(mapData){
-              // return res.send(mapData)
-              // ADDED Here
-              return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
-                // FINAL CALL
-                if (req.session.user && (req.url.indexOf('/preview') == -1)) {
-                  StoryActivity.findOrCreate({
-                      where: {
-                        memberId: req.session.user.id,
-                        storyId: row.id
-                      },
-                    })
-                  .spread((found, created) =>{
-                    found.update({
-                    views: found.views+1,
-                    lastViewed: sequelize.fn('NOW')})
-                      .then(output => {
-                            return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
-
-                          page: function(){ return 'story'},
-                          scripts: function(){ return 'story_scripts'},
-                          links: function(){ return 'story_links'},
-                          title: name +" - Story",
-                          nav: "Story",
-                          content: simplifiedResults.statements,
-                          wikipedia: wikipedia,
-                          name: name,
-                          qid: simplifiedResults.qid,
-                          storyActivity: output.dataValues,
-                          data: jsonData,
-                          user: req.session.user,
-                          row: row,
-                          comments: comments,
-                          meta: meta,
-                          map: mapData,
-                          timeline: timelineData
-                        })})
+            return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
+              // return res.send(libraryData)
+              return module.exports.getMapData(name, simplifiedResults.statements, inverseStatements, function(mapData){
+                // return res.send(mapData)
+                // ADDED Here
+                return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
+                  // FINAL CALL
+                  if (req.session.user && (req.url.indexOf('/preview') == -1)) {
+                    StoryActivity.findOrCreate({
+                        where: {
+                          memberId: req.session.user.id,
+                          storyId: row.id
+                        },
                       })
-                  })
-                  .catch(error => {loadError(req, res, 'Something went wrong.')});
-                }
-                else return commentController.loadCommentsFromStory(row.id, function(comments){
+                    .spread((found, created) =>{
+                      found.update({
+                      views: found.views+1,
+                      lastViewed: sequelize.fn('NOW')})
+                        .then(output => {
+                              return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
 
-                  res.render('full', {
-                    page: function(){ return 'story'},
-                    scripts: function(){ return 'story_scripts'},
-                    links: function(){ return 'story_links'},
-                    title: name +" - Story",
-                    nav: "Story",
-                    content: simplifiedResults.statements,
-                    wikipedia: wikipedia,
-                    name: name,
-                    qid: simplifiedResults.qid,
-                    data: jsonData,
-                    row: row,
-                    comments: comments,
-                    meta: meta,
-                    map: mapData,
-                    timeline: timelineData
+                            page: function(){ return 'story'},
+                            scripts: function(){ return 'story_scripts'},
+                            links: function(){ return 'story_links'},
+                            title: name +" - Story",
+                            nav: "Story",
+                            content: simplifiedResults.statements,
+                            wikipedia: wikipedia,
+                            name: name,
+                            qid: simplifiedResults.qid,
+                            storyActivity: output.dataValues,
+                            data: jsonData,
+                            user: req.session.user,
+                            row: row,
+                            comments: comments,
+                            meta: meta,
+                            map: mapData,
+                            library: libraryData,
+                            timeline: timelineData
+                          })})
+                        })
+                    })
+                    .catch(error => {loadError(req, res, 'Something went wrong.')});
+                  }
+                  else return commentController.loadCommentsFromStory(row.id, function(comments){
+
+                    res.render('full', {
+                      page: function(){ return 'story'},
+                      scripts: function(){ return 'story_scripts'},
+                      links: function(){ return 'story_links'},
+                      title: name +" - Story",
+                      nav: "Story",
+                      content: simplifiedResults.statements,
+                      wikipedia: wikipedia,
+                      name: name,
+                      qid: simplifiedResults.qid,
+                      data: jsonData,
+                      row: row,
+                      comments: comments,
+                      meta: meta,
+                      map: mapData,
+                      library: libraryData,
+                      timeline: timelineData
+                    })
                   })
                 })
-              })
 
+              })
             })
+
 
 
           })
@@ -372,16 +378,66 @@ module.exports = {
   processTimelineData(input, inverse=false){
     for (var s=0; s < input.length; s++){
       var tempTLitem = module.exports.checkTimelineStatement(name, input[s], inverse)
-      if (tempTLitem) timelineOutput.push(tempTLitem)
+      if (tempTLitem && (module.exports.checkDuplicateDataItem(timelineOutput, tempTLitem, ['title', 'date']) == -1)) timelineOutput.push(tempTLitem)
     }
+  },
+  processLibraryData(input){
+    for (var s=0; s < input.length; s++){
+      var tempTLitem = module.exports.checkLibraryStatement(name, input[s])
+      if (tempTLitem){
+        var foundLib = false
+        for (var i = 0; i < libraryOutput[tempTLitem.type].length && !foundLib; i++) {
+          var checkOutput = libraryOutput[tempTLitem.type][i]
+          if (tempTLitem.qid == checkOutput.qid){
+            foundLib = true
+            // take lowest date
+            if (tempTLitem.date < checkOutput.date) checkOutput.date = tempTLitem.date
+            // loop through contribution
+            if (!checkOutput.contribution.includes(tempTLitem.contribution[0])){
+              // console.log('added contrib to ', tempTLitem.qid)
+              checkOutput.contribution.push(tempTLitem.contribution[0])
+            }
+            // loop through instance
+            if (!checkOutput.instance.includes(tempTLitem.instance[0])){
+              // console.log('added contrib to ', tempTLitem.qid)
+              checkOutput.instance.push(tempTLitem.instance[0])
+            }
+          }
+        }
+        if (!foundLib) libraryOutput[tempTLitem.type].push(tempTLitem)
+      }
+    }
+  },
+  checkDuplicateDataItem(list, item, props=false){
+    for (var i = 0; i < list.length; i++) {
+      var checkItem = list[i]
+      if(props){
+        var allSame = true
+        for (var k = 0; k < props.length && allSame; k++) {
+          if (checkItem[props[k]] != item[props[k]]) allSame = false
+        }
+        if (allSame) return i
+      }
+      else if (item == checkItem) return i;
+    }
+    return -1
   },
   getTimelineData(name, wdData, inverseData, callback){
     timelineOutput = []
-
     module.exports.processTimelineData(wdData)
     module.exports.processTimelineData(inverseData, true)
     // timelineOutput = {'new': timelineOutput, 'wd':wdData }
     return callback(timelineOutput)
+  },
+  getLibraryData(name, inverseData, callback){
+    libraryOutput = {'book': [], 'article': [], 'other': []}
+    module.exports.processLibraryData(inverseData)
+    // libraryOutput = {'new': libraryOutput, 'wd':inverseData }
+    for (var val in libraryOutput) {
+      if (libraryOutput[val].length) return callback(libraryOutput)
+    }
+    libraryOutput = false
+    return callback(false)
   },
   wdCoordinatesToArray(point){
     // Example: Point(-77.070795 38.876806)"
@@ -524,6 +580,65 @@ module.exports = {
       if (inverse) tempval.title = statement.ps_Label.value + " is Passes ("+  statement.wdLabel.value + ": "+name+")"
       tempval.date = statement.objBirth.value
       return tempval
+    }
+    return false
+  },
+  checkLibraryStatement(name, statement){
+    var tempval = {
+      qid : false,
+      pid : statement.ps.value,
+      contribution: [],
+      date: false,
+      title: false,
+      type: 'other',
+      instance: [],
+    }
+    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
+      tempval.qid = statement.ps_.value
+    }
+    if (statement.objDate){
+      tempval.date =  parseInt(statement.objDate.value.substring(0,4), 10)
+    }
+    if (statement.objInstanceLabel){
+      tempval.instance = [statement.objInstanceLabel.value]
+    }
+    if (statement.wdLabel){
+      tempval.contribution = [statement.wdLabel.value]
+    }
+    if (statement.ps_Label){
+      tempval.title = statement.ps_Label.value
+    }
+
+    if (statement.objInstance){
+      // Check if Scholarly article, conference paper, article
+      if ((statement.objInstance.value == "http://www.wikidata.org/entity/Q13442814")
+      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q23927052")
+      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q191067")){
+        tempval.type = 'article'
+        return tempval
+      }
+      // Check if book, novel, textbook
+      else if ((statement.objInstance.value == "http://www.wikidata.org/entity/Q571")
+      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q8261")
+      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q83790")){
+      tempval.type = 'book'
+      return tempval
+      }
+      // Check if property is "author","editor", "illustrator", "designed by", "developer", "copyright owner", "founder", "creator", "attributed to", "inventor"
+      else if ((tempval.pid == "http://www.wikidata.org/prop/statement/P50")
+      || (tempval.pid == "http://www.wikidata.org/prop/statement/P98")
+      || (tempval.pid == "http://www.wikidata.org/prop/statement/P110")
+      || (tempval.pid == "http://www.wikidata.org/prop/statement/P287")
+      || (tempval.pid == "http://www.wikidata.org/prop/statement/P178")
+      || (tempval.pid == "http://www.wikidata.org/prop/statement/P3931")
+      || (tempval.pid == "http://www.wikidata.org/prop/statement/P112")
+      || (tempval.pid == "http://www.wikidata.org/prop/statement/P170")
+      || (tempval.pid == "http://www.wikidata.org/prop/statement/P1773")
+      || (tempval.pid == "http://www.wikidata.org/prop/statement/P61")
+      ){
+        tempval.type = 'other'
+        return tempval
+      }
     }
     return false
   }

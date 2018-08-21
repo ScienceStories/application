@@ -46,6 +46,7 @@
     "npm": "^6.4.0",
     "pg": "^7.4.1",
     "pg-hstore": "^2.3.2",
+    "randomcolor": "^0.5.3",
     "sequelize": "^4.37.6",
     "sequelize-cli": "^4.0.0",
     "tabula-rasa": "^1.0.9",

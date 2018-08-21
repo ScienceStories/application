@@ -26,7 +26,7 @@ module.exports = {
   },
   getInverseClaims(qid, lang){
     var query = `SELECT   ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage ?objDate ?objProp
-?objBirth ?objDeath{
+?objBirth ?objDeath ?objInstance ?objInstanceLabel{
       VALUES (?oldps_) {(wd:${qid})}
       ?ps_ ?p ?statement .
       ?statement ?ps ?oldps_ .
@@ -60,8 +60,12 @@ module.exports = {
   OPTIONAL{
      ?ps_ wdt:P570 ?objDeath .
    }
+  OPTIONAL{
+     ?ps_ wdt:P31 ?objInstance .
+   }
+
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
-    } ORDER BY ?wd ?statement ?oldps_`
+    } ORDER BY ?wd ?statement ?ps_`
     return wdk.sparqlQuery(query);
   },
   getSmallDetailsList(qidList, lang){
