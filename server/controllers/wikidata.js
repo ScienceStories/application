@@ -441,7 +441,7 @@ module.exports = {
   },
   wdCoordinatesToArray(point){
     // Example: Point(-77.070795 38.876806)"
-    var temp =  JSON.parse( point.substr(5).replace(' ', ',').replace(/\(/g, "[").replace(/\)/g, "]"));
+    var temp =  JSON.parse( point.substr(point.indexOf('Point'), point.length).substr(5).replace(' ', ',').replace(/\(/g, "[").replace(/\)/g, "]"));
     return [temp[1], temp[0]]
   },
   checkMapStatement(name, statement, inverse = false){
