@@ -9,8 +9,10 @@ const StoryActivity = require('../models').storyactivity;
 const sequelize = require('../models').sequelize;
 const fs = require('fs');
 const moment = require('moment');
+const randomColor = require('randomcolor');
 iconMap =  JSON.parse(fs.readFileSync("server/controllers/iconMap.json"));
 itemTypeMap =  JSON.parse(fs.readFileSync("server/controllers/itemTypeMap.json"));
+wikidataMap =  JSON.parse(fs.readFileSync("server/controllers/wikidataMap.json"));
 module.exports = {
   bibliography(req, res) {
     var queryUrl = sparqlController.getBibliography('en')
@@ -143,7 +145,7 @@ module.exports = {
     const jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
-    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage{
+    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage ?objInstance ?objInstanceLabel ?conferred ?conferredLabel{
       VALUES (?company) {(wd:${qid})}
       ?company ?p ?statement .
       ?statement ?ps ?ps_ .
@@ -154,6 +156,9 @@ module.exports = {
       ?statement ?pq ?pq_ .
       ?wdpq wikibase:qualifier ?pq .
       }
+  OPTIONAL{
+     ?ps_ wdt:P31 ?objInstance .
+   }
       OPTIONAL {
         ?wd wdt:P1630 ?url  .
         }
@@ -165,6 +170,9 @@ module.exports = {
      ?objLocationEntity wdt:P625 ?objLocation.
      OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
    }
+   OPTIONAL{
+     ?ps_ wdt:P1027 ?conferred.
+     }
    OPTIONAL{
    ?ps_ wdt:P625 ?location .
    }
@@ -189,75 +197,81 @@ module.exports = {
             if (labels.entities[qid].sitelinks.enwiki){
               wikipedia = labels.entities[qid].sitelinks.enwiki.title
             }
-            return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
-              // return res.send(libraryData)
-              return module.exports.getMapData(name, simplifiedResults.statements, inverseStatements, function(mapData){
-                // return res.send(mapData)
-                // ADDED Here
-                return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
-                  // FINAL CALL
-                  if (req.session.user && (req.url.indexOf('/preview') == -1)) {
-                    StoryActivity.findOrCreate({
-                        where: {
-                          memberId: req.session.user.id,
-                          storyId: row.id
-                        },
-                      })
-                    .spread((found, created) =>{
-                      found.update({
-                      views: found.views+1,
-                      lastViewed: sequelize.fn('NOW')})
-                        .then(output => {
-                              return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
-
-                            page: function(){ return 'story'},
-                            scripts: function(){ return 'story_scripts'},
-                            links: function(){ return 'story_links'},
-                            title: name +" - Story",
-                            nav: "Story",
-                            content: simplifiedResults.statements,
-                            wikipedia: wikipedia,
-                            name: name,
-                            qid: simplifiedResults.qid,
-                            storyActivity: output.dataValues,
-                            data: jsonData,
-                            user: req.session.user,
-                            row: row,
-                            comments: comments,
-                            meta: meta,
-                            map: mapData,
-                            library: libraryData,
-                            timeline: timelineData
-                          })})
+            return module.exports.getAwardData(name, simplifiedResults.statements, function(awardData){
+              // return res.send(awardData)
+              return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
+                // return res.send(libraryData)
+                return module.exports.getMapData(name, simplifiedResults.statements, inverseStatements, function(mapData){
+                  // return res.send(mapData)
+                  // ADDED Here
+                  return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
+                    // FINAL CALL
+                    if (req.session.user && (req.url.indexOf('/preview') == -1)) {
+                      StoryActivity.findOrCreate({
+                          where: {
+                            memberId: req.session.user.id,
+                            storyId: row.id
+                          },
                         })
-                    })
-                    .catch(error => {loadError(req, res, 'Something went wrong.')});
-                  }
-                  else return commentController.loadCommentsFromStory(row.id, function(comments){
+                      .spread((found, created) =>{
+                        found.update({
+                        views: found.views+1,
+                        lastViewed: sequelize.fn('NOW')})
+                          .then(output => {
+                                return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
 
-                    res.render('full', {
-                      page: function(){ return 'story'},
-                      scripts: function(){ return 'story_scripts'},
-                      links: function(){ return 'story_links'},
-                      title: name +" - Story",
-                      nav: "Story",
-                      content: simplifiedResults.statements,
-                      wikipedia: wikipedia,
-                      name: name,
-                      qid: simplifiedResults.qid,
-                      data: jsonData,
-                      row: row,
-                      comments: comments,
-                      meta: meta,
-                      map: mapData,
-                      library: libraryData,
-                      timeline: timelineData
+                              page: function(){ return 'story'},
+                              scripts: function(){ return 'story_scripts'},
+                              links: function(){ return 'story_links'},
+                              title: name +" - Story",
+                              nav: "Story",
+                              content: simplifiedResults.statements,
+                              wikipedia: wikipedia,
+                              name: name,
+                              qid: simplifiedResults.qid,
+                              storyActivity: output.dataValues,
+                              data: jsonData,
+                              user: req.session.user,
+                              row: row,
+                              comments: comments,
+                              meta: meta,
+                              map: mapData,
+                              library: libraryData,
+                              timeline: timelineData,
+                              award: awardData
+                            })})
+                          })
+                      })
+                      .catch(error => {loadError(req, res, 'Something went wrong.')});
+                    }
+                    else return commentController.loadCommentsFromStory(row.id, function(comments){
+
+                      res.render('full', {
+                        page: function(){ return 'story'},
+                        scripts: function(){ return 'story_scripts'},
+                        links: function(){ return 'story_links'},
+                        title: name +" - Story",
+                        nav: "Story",
+                        content: simplifiedResults.statements,
+                        wikipedia: wikipedia,
+                        name: name,
+                        qid: simplifiedResults.qid,
+                        data: jsonData,
+                        row: row,
+                        comments: comments,
+                        meta: meta,
+                        map: mapData,
+                        library: libraryData,
+                        timeline: timelineData,
+                        award: awardData
+                      })
                     })
                   })
-                })
 
+                })
               })
-            })
+            } )
+
 
 
 
@@ -408,6 +422,35 @@ module.exports = {
       }
     }
   },
+  processAwardData(input){
+    for (var s=0; s < input.length; s++){
+      var tempTLitem = module.exports.checkAwardStatement(name, input[s])
+      if (tempTLitem){
+        var foundLib = false
+        for (var i = 0; i < awardOutput.length && !foundLib; i++) {
+          var checkOutput = awardOutput[i]
+          if (tempTLitem.qid == checkOutput.qid && tempTLitem.date == checkOutput.date ){
+            foundLib = true
+
+            // loop through conferredn
+            if (tempTLitem.conferred.length && !checkOutput.conferred.includes(tempTLitem.conferred[0])){
+              // console.log('added contrib to ', tempTLitem.qid)
+              checkOutput.conferred.push(tempTLitem.conferred[0])
+            }
+            // Change type if the current is otherContent
+            if (tempTLitem.type != checkOutput.type && checkOutput.type == 'other' ){
+              checkOutput.type = tempTLitem.type
+            }
+          }
+        }
+        if (!foundLib) {
+          tempTLitem.color_light = randomColor({luminosity: 'light'})
+          tempTLitem.color_dark = randomColor({luminosity: 'dark', hue: tempTLitem.color_light})
+          awardOutput.push(tempTLitem)
+        }
+      }
+    }
+  },
   checkDuplicateDataItem(list, item, props=false){
     for (var i = 0; i < list.length; i++) {
       var checkItem = list[i]
@@ -439,6 +482,14 @@ module.exports = {
     libraryOutput = false
     return callback(false)
   },
+  getAwardData(name, wdData, callback){
+    awardOutput = []
+    module.exports.processAwardData(wdData)
+    // awardOutput = {'new': awardOutput, 'wd':wdData }
+
+    return callback(awardOutput)
+  },
+
   wdCoordinatesToArray(point){
     // Example: Point(-77.070795 38.876806)"
     var temp =  JSON.parse( point.substr(point.indexOf('Point'), point.length).substr(5).replace(' ', ',').replace(/\(/g, "[").replace(/\)/g, "]"));
@@ -639,6 +690,69 @@ module.exports = {
         tempval.type = 'other'
         return tempval
       }
+    }
+    return false
+  },
+  checkAwardStatement(name, statement){
+    var tempval = {
+      qid : false,
+      pid : statement.ps.value,
+      conferred: [],
+      date: false,
+      title: false,
+      type: 'other',
+      description: false,
+      instance: false,
+      action: false
+    }
+    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
+      tempval.qid = statement.ps_.value
+    }
+    if (statement.objInstanceLabel){
+      tempval.instance = statement.objInstanceLabel.value
+    }
+    // Check if point in time
+    if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P585")){
+      tempval.date =  parseInt(statement.pq_Label.value.substring(0,4), 10)
+    }
+    if (statement.ps_Label){
+      tempval.title = statement.ps_Label.value.toLowerCase()
+    }
+    if (statement.conferredLabel){
+      tempval.conferred = [statement.conferredLabel.value]
+    }
+    if (statement.ps_Description){
+      tempval.description = statement.ps_Description.value
+    }
+    //If a property related to winning an award
+    if (wikidataMap.properties.awards.includes(tempval.pid.substr(39))){
+      tempval.action = statement.wdLabel.value
+      // Check if medal
+      if ( (tempval.title.includes('medal')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q131647"){
+        tempval.type = 'medal'
+      }
+      // Check if Certificate
+      else if ((tempval.title.includes('certificate')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q196756"){
+        tempval.type = 'certificate'
+      }
+      // Check if Trophy
+      else if ((tempval.title.includes('trophy')) ||statement.objInstance.value == "http://www.wikidata.org/entity/Q381165"){
+        tempval.type = 'trophy'
+      }
+      else if ((tempval.title.includes('hall of fame')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q1046088"){
+        tempval.type = 'hall'
+      }
+      else if (((tempval.title.includes('honor') || tempval.title.includes('honour'))&& tempval.title.includes('docto'))
+      || statement.objInstance.value == "http://www.wikidata.org/entity/Q11415564"){
+        tempval.type = 'edu'
+      }
+      // Check if award
+      else if ((tempval.title.includes('award')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q618779"){
+        tempval.type = 'award'
+      }
+
+
+      return tempval
     }
     return false
   }
