@@ -1,109 +1,52 @@
-<div id="sideBar">
-  <div class="user-image" style="background-image: url('{{#if data.user.image}}{{data.user.image}}{{else}}https://images.unsplash.com/photo-1499428665502-503f6c608263?ixlib=rb-0.3.5&s=65ad43b134b770fa3b0f784b58c76dbb&auto=format&fit=crop&w=1950&q=80{{/if}}')">
-    <div class="user-image-overlay"></div>
-  </div>
-  <div class="user-details">
-    <div class="user-username">@{{data.user.username}}</div>
-    {{#if data.user.wikidata}}
-      <div class="user-wikidata">Wikidata: <a href="https://www.wikidata.org/wiki/User:{{data.user.wikidata}}">{{data.user.wikidata}}</a></div>
-    {{/if}}
-  </div>
-  <div class="sidebar-nav-btns">
-    <div class="sidebar-nav-btn " onclick="window.location='/profile';">
-      Overview
-    </div>
-    <div class="sidebar-nav-btn active" >
-      Story Feed
-    </div>
-    <div class="sidebar-nav-btn"  onclick="window.location='/feed';">
-      Analytics
-    </div>
-    {{#ifUserType data.user.type 'author'}}
-    <div class="sidebar-nav-btn" title="Coming Soon">
-      Contributions
-    </div>
-    {{/ifUserType}}
-  </div>
-</div>
-<div id="mainContent">
-  <div class="page-header"><div class="overlayHeader">
-    <div class="smallText">WELCOME BACK</div>  {{data.user.name}}
-    <div class="smallText" id="lastLogin">
-      <div id="accountTypeIcons">
-        {{#ifUserType data.user.type 'user'}}
-          <span class="accountIcon"><i class="far fa-user"></i></span>
-        {{/ifUserType}}
-        {{#ifUserType data.user.type 'author'}}
-          <span class="accountIcon"><i class="fas fa-feather-alt"></i></span>
-        {{/ifUserType}}
-        {{#ifUserType data.user.type 'admin'}}
-          <span class="accountIcon"><i class="fas fa-wrench"></i></span>
-        {{/ifUserType}}
-      </div>
-      MEMBER SINCE: {{dateFormat data.user.createdAt 'll' false}}
-    </div>
-  </div></div>
-  <div id="profileBody">
-    <div class="profile-header">Science Stories Feed</div>
-    <div class="profile-feed-container">
-      {{#each data.feed_list}}
-
-        <div class="profile-feed-item">
-          <a href="/{{this.story.qid}}">
-          <div class="feed-item-user">
-            <div class="user-image-container">
-              <img src="{{#if this.member.image}}{{this.member.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}" alt="">
-            </div>
-            <div class="user-details-container">
-              <div class="user-name">{{this.member.name}}</div>
-                <div class="user-activity-desc">
-                  {{#if_equal this.dataValues.feed_type 'update'}}
-                    updated a story <i class="fas fa-signature"></i>
-                  {{else if_equal this.dataValues.feed_type 'favorite'}}
-                    favorited a story <i class="far fa-heart"></i>
-                  {{else if_equal this.dataValues.feed_type 'comment'}}
-                    commented on a story <i class="far fa-comments"></i>
-                  {{/if_equal}}
-              </div>
-              <div class="user-activity-date">
-                {{dateFormat this.dataValues.feed_date 'calendar' true}}
-              </div>
-            </div>
+<div id="profileBody">
+  <div class="profile-header">Science Stories Feed</div>
+  <div class="profile-feed-container">
+    {{#each data.feed_list}}
+      <div class="profile-feed-item">
+        <a href="/{{this.story.qid}}">
+        <div class="feed-item-user">
+          <div class="user-image-container">
+            <img src="{{#if this.member.image}}{{this.member.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}" alt="">
           </div>
-          <div class="feed-story-container">
-            {{#if_equal this.dataValues.feed_type 'comment' }}
-            <div class="feed-story-comment"><i class="fas fa-quote-left"></i>{{this.message}}<i class="fas fa-quote-right"></i></div>
-            {{/if_equal}}
-            <div class="feed-story-preview" style="background-color: {{this.story.data.0.color}}">
-              <div class="feed-image" >
-                {{#if_equal this.story.data.0.type 'intro'}}
-                  <img src="{{this.story.data.0.image}}" alt="">
+          <div class="user-details-container">
+            <div class="user-name">{{this.member.name}}</div>
+              <div class="user-activity-desc">
+                {{#if_equal this.dataValues.feed_type 'update'}}
+                  updated a story <i class="fas fa-signature"></i>
+                {{else if_equal this.dataValues.feed_type 'favorite'}}
+                  favorited a story <i class="far fa-heart"></i>
+                {{else if_equal this.dataValues.feed_type 'comment'}}
+                  commented on a story <i class="far fa-comments"></i>
                 {{/if_equal}}
-              </div>
-              <div class="feed-title" style="color:{{contrastColor this.story.data.0.color true}};">
-                {{this.story.data.0.title}}
-              </div>
-              <div class="feed-description" style="color:{{contrastColor this.story.data.0.color true}};" >
-                {{this.story.data.0.description}}
-              </div>
             </div>
-
-
+            <div class="user-activity-date">
+              {{dateFormat this.dataValues.feed_date 'calendar' true}}
+            </div>
           </div>
-          </a>
         </div>
+        <div class="feed-story-container">
+          {{#if_equal this.dataValues.feed_type 'comment' }}
+          <div class="feed-story-comment"><i class="fas fa-quote-left"></i>{{this.message}}<i class="fas fa-quote-right"></i></div>
+          {{/if_equal}}
+          <div class="feed-story-preview" style="background-color: {{this.story.data.0.color}}">
+            <div class="feed-image" >
+              {{#if_equal this.story.data.0.type 'intro'}}
+                <img src="{{this.story.data.0.image}}" alt="">
+              {{/if_equal}}
+            </div>
+            <div class="feed-title" style="color:{{contrastColor this.story.data.0.color true}};">
+              {{this.story.data.0.title}}
+            </div>
+            <div class="feed-description" style="color:{{contrastColor this.story.data.0.color true}};" >
+              {{this.story.data.0.description}}
+            </div>
+          </div>
 
-      {{/each}}
-    </div>
+
+        </div>
+        </a>
+      </div>
+
+    {{/each}}
   </div>
 </div>
-<script>
-  $( function() {
-    // $( document ).tooltip({
-    //   track: true
-    // });
-    $(document ).tooltip({
-  position: { my: "left+15 center", at: "right center" }
-});
-  } );
-  </script>

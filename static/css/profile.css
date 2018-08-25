@@ -199,7 +199,7 @@ div.profile-list-content > a.profile-list-end-action {
 }
 .sidebar-nav-btns {
     /* vertical-align: bottom; */
-    /* height:  100%; */
+    min-height: 25pc;
     width:  100%;
     font-size:  85%;
     text-align:  center;
@@ -223,6 +223,7 @@ div.profile-list-content > a.profile-list-end-action {
 
 div#profileBody {
     background: #f1f1f1;
+    height: 100%;
 }
 
 .profile-feed-item {
@@ -327,4 +328,32 @@ div.feed-image img {
 .profile-feed-container a {
     color: inherit;
     text-decoration: inherit;
+}
+.admin-stat-list {
+    width: 80%;
+    margin: 40px auto;
+}
+.admin-stat-container {
+    background:  white;
+    box-shadow: 0 0 3px #00000063;
+    margin:  5px;
+    display:  inline-block;
+    font-size:  150%;
+    padding:  25px 10px;
+}
+
+.stat-width-3 {
+    width: calc(33% - 15px);
+}
+
+.admin-stat-value {
+    font-size:  300%;
+}
+
+.admin-stat-container.stat-width-2 {
+    width: calc(50% - 25px);
+}
+.admin-stat-value i {
+    font-size: 50%;
+    opacity: .5;
 }

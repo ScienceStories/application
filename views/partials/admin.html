@@ -1,0 +1,103 @@
+<div id="profileBody">
+  <div class="admin-section">
+    <div class="profile-header">Member Stats</div>
+    <div class="admin-stat-list">
+      <div class="admin-stat-container stat-width-3">
+        <div class="admin-stat-value">
+          {{data.counts.members.basic}}
+          <i class="far fa-user"></i>
+        </div>
+        <div class="admin-stat-desc">
+          Basic Members
+        </div>
+      </div>
+
+      <div class="admin-stat-container stat-width-3">
+        <div class="admin-stat-value">
+          {{data.counts.members.author}}
+          <i class="fas fa-feather-alt"></i>
+        </div>
+        <div class="admin-stat-desc">
+          Authors
+        </div>
+      </div>
+
+      <div class="admin-stat-container stat-width-3">
+        <div class="admin-stat-value">
+          {{data.counts.members.admin}}
+          <i class="fas fa-wrench"></i>
+        </div>
+        <div class="admin-stat-desc">
+          Admins
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="admin-section">
+    <div class="profile-header">Story Stats</div>
+    <div class="admin-stat-list">
+      <div class="admin-stat-container stat-width-2">
+        <div class="admin-stat-value">
+          {{data.counts.stories}}
+          <i class="fas fa-book"></i>
+        </div>
+        <div class="admin-stat-desc">
+          Stories
+        </div>
+      </div>
+
+      <div class="admin-stat-container stat-width-2">
+        <div class="admin-stat-value">
+          {{data.counts.edits}}
+          <i class="fas fa-edit"></i>
+        </div>
+        <div class="admin-stat-desc">
+          Story Edits
+        </div>
+      </div>
+
+      <div class="admin-stat-container stat-width-2">
+        <div class="admin-stat-value">
+          {{data.counts.empty}}
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <div class="admin-stat-desc">
+          Empty Stories
+        </div>
+      </div>
+
+      <div class="admin-stat-container stat-width-2">
+        <div class="admin-stat-value">
+          {{data.counts.favorites}}
+          <i class="fas fa-heart"></i>
+        </div>
+        <div class="admin-stat-desc">
+          Favorites
+        </div>
+      </div>
+
+      <div class="admin-stat-container stat-width-2">
+        <div class="admin-stat-value">
+          {{data.counts.comments}}
+          <i class="far fa-comments"></i>
+        </div>
+        <div class="admin-stat-desc">
+          Comments
+        </div>
+      </div>
+
+    <div class="admin-stat-container stat-width-2">
+      <div class="admin-stat-value">
+        {{data.counts.annotations}}
+        <i class="fas fa-pencil-ruler"></i>
+      </div>
+      <div class="admin-stat-desc">
+        Annotations
+      </div>
+    </div>
+  </div>
+  </div>
+
+</div>

@@ -77,6 +77,7 @@ app.get('/logout', membersController.logout);
 // route for user profile
   app.get('/profile', (req, res) => membersController.accessCheck(req, res, 'user', membersController.profile));
   app.get('/feed', (req, res) => membersController.accessCheck(req, res, 'user', membersController.feed));
+  app.get('/admin', (req, res) => membersController.accessCheck(req, res, 'admin', membersController.admin));
   // route for Uploading pictures
 app.get('/upload', (req, res) => membersController.accessCheck(req, res, 'user', awsController.upload));
 // app.post('/upload', (req, res) => membersController.accessCheck(req, res, 'user', membersController.sendUpload));

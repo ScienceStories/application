@@ -1,5 +1,6 @@
 const Member = require('../models').member;
 const Story = require('../models').story;
+const Annotation = require('../models').annotation;
 const Comment = require('../models').comment;
 const StoryActivity = require('../models').storyactivity;
 const bcrypt = require('bcrypt');
@@ -182,7 +183,7 @@ module.exports = {
       module.exports.getActivityList(req, res, 'favorites', favFilter, data, function(favoriteActivity){
         module.exports.getActivityList(req, res, 'mostViews', topFilter, data, function(favoriteActivity){
           module.exports.getActivityList(req, res, 'trending', trendFilter, data, function(favoriteActivity){
-            return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Profile', nav:'profile', data:data})
+            return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Profile', nav:'profile', profile_nav:function(){ return "overview"}, subtitle: "WELCOME BACK", data:data})
           })
         })
 
@@ -220,11 +221,48 @@ module.exports = {
                     return second.dataValues.feed_date - first.dataValues.feed_date;
                     });
                 // res.send(masterItems)
-                data.feed_list = masterItems
-                return loadPage(res, req, 'base', {file_id:'feed',  title:member.name + ' Story Feed', nav:'profile', data:data})
+                data.feed_list = masterItems.slice(0,25)
+                return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Story Feed', nav:'profile', profile_nav:function(){ return "feed"}, subtitle: "NEWS FEED", data:data})
               })
           })
       })})
+  },
+  admin(req, res){
+    return Member.findById(req.session.user.id)
+    .then(member => {
+      data = {user:member}
+      return Member.findAll({group: ['type'], attributes: ['type', [sequelize.fn('COUNT', 'type'), 'MemberCount']],})
+      .then(membersRaw =>{
+        memberCount = {}
+        for (var i = 0; i < membersRaw.length; i++) {
+          memberCount[membersRaw[i].dataValues.type] = membersRaw[i].dataValues.MemberCount
+        }
+        return Story.count()
+        .then(storyCount => {
+          return sequelize.query("select count(id) from stories where stories.data::text <> '{}'::text;", { model: Story })
+          .then(emptyCount => {
+            emptyCount = emptyCount[0].dataValues.count
+            return Annotation.count()
+            .then(annotationCount => {
+              return StoryActivity.count({where: {favorite:1}})
+              .then(faveCount => {
+                return Comment.count()
+                  .then(commentCount => {
+                    return LogStory.count()
+                      .then(editCount => {
+                        data.counts = {members: memberCount, stories: storyCount, favorites: faveCount, empty: emptyCount, edits: editCount, comments: commentCount, annotations: annotationCount}
+                        return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Admin Panel', nav:'profile', profile_nav:function(){ return "admin"}, subtitle: "ADMIN PANEL", data:data})
+                      })
+                  })
+              })})
+            })
+            })
+
+
+        })
+        })
+
+
   },
   destroy(req, res) {
     return Member
