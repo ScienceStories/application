@@ -345,7 +345,9 @@ div.feed-image img {
 .stat-width-3 {
     width: calc(33% - 15px);
 }
-
+.stat-width-4 {
+    width: calc(25% - 15px);
+}
 .admin-stat-value {
     font-size:  300%;
 }

@@ -6,6 +6,7 @@ const StoryActivity = require('../models').storyactivity;
 const bcrypt = require('bcrypt');
 const multer  = require('multer')
 const wikidataController = require('./wikidata');
+const googleController = require('./google');
 const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const sequelize = require('../models').sequelize
@@ -250,8 +251,11 @@ module.exports = {
                   .then(commentCount => {
                     return LogStory.count()
                       .then(editCount => {
-                        data.counts = {members: memberCount, stories: storyCount, favorites: faveCount, empty: emptyCount, edits: editCount, comments: commentCount, annotations: annotationCount}
-                        return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Admin Panel', nav:'profile', profile_nav:function(){ return "admin"}, subtitle: "ADMIN PANEL", data:data})
+                        return googleController.getAdminStats(googleStats => {
+                          data.counts = {members: memberCount, stories: storyCount, favorites: faveCount, empty: emptyCount, edits: editCount, comments: commentCount, annotations: annotationCount, google: googleStats}
+                          return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Admin Panel', nav:'profile', profile_nav:function(){ return "admin"}, subtitle: "ADMIN PANEL", data:data})
+                        })
+
                       })
                   })
               })})
