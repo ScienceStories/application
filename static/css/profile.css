@@ -224,6 +224,7 @@ div.profile-list-content > a.profile-list-end-action {
 div#profileBody {
     background: #f1f1f1;
     height: 100%;
+    padding: 30px 0;
 }
 
 .profile-feed-item {
@@ -358,4 +359,64 @@ div.feed-image img {
 .admin-stat-value i {
     font-size: 50%;
     opacity: .5;
+}
+
+
+.featured-story-item a {
+    color:  inherit !important;
+    text-decoration:  inherit !important;
+    outline: inherit !important;
+}
+.featured-story-item {
+    margin: 50px 25px;
+    opacity: .3;
+}
+.featured-story-item img {
+    width: 100%;
+    height: 50vh;
+    object-fit: cover;
+    object-position: top;
+    filter: grayscale(100%);
+}
+.featured-story-item .carousel-item-header {
+    font-size: 1.3vw;
+    padding-top: 15px;
+}
+
+.featured-story-item.slick-active{
+    opacity : .5;
+}
+.featured-story-item.slick-current{
+    opacity : .8;
+    color: #449894;
+}
+.featured-story-item:hover{
+    opacity : 1;
+    color: #734498;
+}
+span.career-title {
+    font-size: 140%;
+    font-weight: 300;
+}
+
+.carousel-item-details {
+    font-weight: 300;
+    font-size: 115%;
+}
+section#featured {
+  padding: 50px 0;
+}
+
+h2.section-header {
+    font-size:  4vw;
+    font-weight:  300;
+    color:  gray;
+    text-align:  center;
+    margin-top: 0;
+}
+.section-subheader {
+    color: #676767;
+    text-align: center;
+    font-weight: 300;
+    font-size: 150%;
 }

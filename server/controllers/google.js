@@ -5,7 +5,7 @@ const GOOGLE_VIEW_ID = process.env.GOOGLE_VIEW_ID
 const googlejwt = new google.auth.JWT(process.env.GOOGLE_CLIENT_EMAIL, null,  GOOGLE_PRIVATE_KEY, GOOGLE_SCOPE)
 const GOOGLE_OLDEST_DATE = '2018-06-16'
 const analyticsreporting = google.analyticsreporting({version: 'v4', auth: googlejwt});
-
+// Help making api queries https://ga-dev-tools.appspot.com/query-explorer/
 module.exports = {
   async getData(metrics, dateRanges, callback){
     var checkedDates = module.exports.processDateRange(dateRanges)
@@ -26,6 +26,17 @@ module.exports = {
   }
    )
   },
+  async getDataByResource(obj, callback){
+    const authorizeJWT = await googlejwt.authorize()
+    return analyticsreporting.reports.batchGet({
+      resource: { reportRequests: obj}}, (err, res) => {
+     if (err) {
+      throw err;
+    }
+    return callback(res.data.reports[0].data);
+  }
+   )
+  },
   getUsers(dateRanges, callback){
     // example: getUsers(['today'], callback)
     module.exports.getData(['ga:users'], dateRanges, function(result){
@@ -36,6 +47,40 @@ module.exports = {
     module.exports.getData(['ga:sessions'], dateRanges, function(result){
       return callback(result)
     })
+  },
+  getPopularStories(dateRanges, maxPages, callback){
+    var resources = [{
+      viewId: GOOGLE_VIEW_ID,
+      dateRanges: module.exports.processDateRange(dateRanges),
+      metrics: [
+        {"expression": "ga:pageviews"}
+      ],
+      "pageSize": maxPages,
+      "dimensions": [{"name": "ga:pagePath"}],
+      "dimensionFilterClauses": [
+        {
+          "filters": [
+            {
+              "dimensionName": "ga:pagePath",
+              "operator": "REGEXP",
+              "expressions": ["^/Q[0-9]+"]
+            }
+          ]
+        }],
+        "orderBys": [
+
+      {
+  "fieldName": 'ga:pageviews',
+  "sortOrder": 'DESCENDING',
+}
+
+  ],
+
+    }]
+    module.exports.getDataByResource(resources, function(result){
+      return callback(result)
+    })
+
   },
   getAdminStats(callback){
     // Total Sessions, Today Sessions
@@ -60,6 +105,7 @@ module.exports = {
       })
     })
   },
+
   processDateRange(dateRanges){
     for (var i = 0; i < dateRanges.length; i++) {
       if (dateRanges[i] == 'total'){

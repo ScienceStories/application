@@ -170,22 +170,23 @@ module.exports = {
         include: [
           { model: Story, required: true, as:'story'}
         ],}
-      trendFilter =  {
-        group: ['story.id', ],
-        attributes: ['story.id', [sequelize.fn('SUM', sequelize.col('views')), 'totalViews']],
-          order: [
-              [sequelize.fn('SUM', sequelize.col('views')), 'DESC'],
-          ],
-          limit: 10,
-          include: [
-            { model: Story, required: true, as:'story'}
-          ],}
       data = {user:member}
       module.exports.getActivityList(req, res, 'favorites', favFilter, data, function(favoriteActivity){
         module.exports.getActivityList(req, res, 'mostViews', topFilter, data, function(favoriteActivity){
-          module.exports.getActivityList(req, res, 'trending', trendFilter, data, function(favoriteActivity){
-            return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Profile', nav:'profile', profile_nav:function(){ return "overview"}, subtitle: "WELCOME BACK", data:data})
-          })
+            return googleController.getPopularStories(['week'], 10,  function(out){
+              var rows = out.rows
+              trendList = []
+              for (var i = 0; i < rows.length; i++) {
+                trendList.push(rows[i].dimensions[0].substr(1))
+              }
+              return wikidataController.getDetailsList(req, res, trendList, 'small',false,'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
+                function(trendData){
+                  data['trending'] = trendData
+                  return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Profile', nav:'profile', profile_nav:function(){ return "overview"}, subtitle: "WELCOME BACK", data:data})
+                })
+
+            })
+
         })
 
       } )
