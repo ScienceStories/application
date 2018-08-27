@@ -9,7 +9,7 @@
     {{/if}}
   </div>
   <div class="sidebar-nav-btns">
-    <div class="sidebar-nav-btn" title="Coming Soon">
+    <div class="sidebar-nav-btn {{#if_equal (profile_nav) "account"}}active{{/if_equal}}" onclick="window.location='/account';">
       Account
     </div>
     <div class="sidebar-nav-btn {{#if_equal (profile_nav) "overview"}}active{{/if_equal}}" onclick="window.location='/profile';">

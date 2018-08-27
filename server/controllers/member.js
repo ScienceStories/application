@@ -11,6 +11,7 @@ const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const sequelize = require('../models').sequelize
 const LogStory = require('../models').logstory;
+MEMBER_UPDATABLE_FIELDS = ['name', 'image','bio', 'email', 'wikidata', 'password']
 module.exports = {
   create(req, res) {
     return Member
@@ -92,6 +93,7 @@ module.exports = {
         Member.findById(user.id)
         .then(member => {
           type = member.type
+          req.session.user = member;
           if (accessType[level].indexOf(type) >= 0) {
             return next(req, res);
           }
@@ -102,26 +104,38 @@ module.exports = {
     }
   },
   update(req, res) {
-    return Member
-      .find({
-          where: {
-            id: req.params.MemberId,
-            bracketId: req.params.bracketId,
-          },
-        })
-      .then(out => {
-        if (!out) {
-          return res.status(404).send({
-            message: 'Member Not Found',
-          });
+    var field = req.params.field
+    if (MEMBER_UPDATABLE_FIELDS.includes(field)){
+      return Member.findById(req.session.user.id)
+      .then(member => {
+        if (!member) {
+          return res.status(404).send('Member Not Found');
+        }
+        var updateObj = {}
+        if(field == 'password'){
+          // Check old
+          if (! bcrypt.compareSync(req.body.old, member.password)){
+            return res.send('invalid_old')
+          }
+          const salt = bcrypt.genSaltSync();
+          updateObj.password = bcrypt.hashSync(req.body.new, salt);
+        }
+        else{
+          updateObj[field] = req.body.value
         }
 
-        return out
-          .update(req.body, { fields: Object.keys(req.body) })
-          .then(updatedMember => res.status(200).send(updatedMember))
-          .catch(error => res.status(400).send(error));
+        return member
+          .update(updateObj)
+          .then(updatedMember => {
+            req.session.user = member;
+            res.status(200).send('success')
+          })
+          .catch(error => res.status(400).send('error'));
       })
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(400).send('error'));
+
+    }
+    else return res.status(400).send('Not proper field')
   },
   getActivityList(req, res, listName, filter, data, callback){
     return StoryActivity.findAll(filter)
@@ -197,6 +211,7 @@ module.exports = {
     return Member.findById(req.session.user.id)
     .then(member => {
       data = {user:member}
+      req.session.user = member;
       var max_items = 25
       return StoryActivity.findAll( {where:{favorite:1},order: [['lastFavorited', 'DESC'], ], imit:max_items, include:[{model: Story, as :'story'}, {model: Member, as :'member'}]})
       .then(faveItems => {
@@ -229,10 +244,19 @@ module.exports = {
           })
       })})
   },
+  account(req, res){
+    return Member.findById(req.session.user.id)
+    .then(member => {
+      req.session.user = member;
+      data = {user:member}
+      return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Account Settings', nav:'account', profile_nav:function(){ return "account"}, subtitle: "ACCOUNT SETTINGS", data:data})
+        })
+  },
   admin(req, res){
     return Member.findById(req.session.user.id)
     .then(member => {
       data = {user:member}
+      req.session.user = member;
       return Member.findAll({group: ['type'], attributes: ['type', [sequelize.fn('COUNT', 'type'), 'MemberCount']],})
       .then(membersRaw =>{
         memberCount = {}

@@ -225,6 +225,7 @@ div#profileBody {
     background: #f1f1f1;
     height: 100%;
     padding: 30px 0;
+    min-height: calc(100vh - 230px);
 }
 
 .profile-feed-item {
@@ -419,4 +420,97 @@ h2.section-header {
     text-align: center;
     font-weight: 300;
     font-size: 150%;
+}
+/*  ACCOUNT */
+.account-section * {
+    transition: none;
+}
+
+.account-section {
+    font-weight: 300;
+    font-size:  20px;
+    text-align:  left;
+    margin:  25px 10vw;
+    border-bottom: 2px solid #d4d4d4;
+    padding-bottom:  30px;
+}
+
+h2.account-header {
+    text-align:  left;
+    margin:  15px 9vw;
+    font-weight: 300;
+    font-size: 39px;
+    opacity: .7;
+    padding-bottom: 15px;
+    border-bottom:  1px solid black;
+}
+
+.account-section-header {
+    font-weight: 600;
+    color: #696969;
+    font-size: 25px;
+    cursor: pointer;
+}
+.account-section-header:hover {
+    color: #272727;
+}
+.account-section-subtitle {
+    font-weight: 300;
+    font-size:  20px;
+}
+
+.account-section-content {
+    margin-left:  3vw;
+    margin-top: 15px;
+    font-size:  25px;
+}
+.account-section-input {
+    width: calc(100% - 100px);
+    border: none;
+    background:  none;
+    text-align:  left;
+    resize: vertical;
+}
+
+button.account-btn-update {
+    width:  75px;
+    font-size:  20px;
+    color:  white;
+    background: #696969;
+    border:  none;
+    transition: all .4s ease;
+    vertical-align:  bottom;
+}
+
+button.account-btn-update:hover {
+    background: #39bfaf;
+}
+.account-response {
+    font-size: 50%;
+    color: #39bfaf;
+}
+.error {
+    color: #bf3838;
+}
+button.profile-picture-upload-btn {
+    background: white;
+    border: none;
+    color: #39bfaf;
+}
+.account-section-content .image_picker_image {
+    width: 10vw;
+    height: 10vw;
+    object-fit: cover;
+    object-position: top;
+}
+.account-section-content ul.thumbnails.image_picker_selector li .thumbnail.selected {
+    background: #39bfaf;
+    color: white;
+}
+button.account-btn-update.full-width {
+    width: 100%;
+    padding: 10px;
+}
+input.account-section-input.upload-picture-url {
+    background: #eaeaea;
 }
