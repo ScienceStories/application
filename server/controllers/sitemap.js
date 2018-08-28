@@ -1,4 +1,5 @@
 const Story = require('../models').story;
+const Member = require('../models').member;
 const appFetch = require('../../app').appFetch;
 const loadPage = require('../../app').loadPage;
 const loadError = require('../../app').loadError;
@@ -27,38 +28,52 @@ module.exports = {
       priority: .3
     })
 
-    Story.findAndCountAll({
-      attributes: ['qid']
-    }).then(result => {
-
-        // Add Browse pages
+    // Add Member Pages
+    Member.findAll({attributes:['username']}).then(members => {
+      for (var i = 0; i < members.length; i++) {
         urlset.push({
-          loc: '/browse',
+          loc: '/member:'+members[i].dataValues.username,
           lastmod: lastmod,
           changefreq: 'daily',
-          priority: .5
+          priority: .3
         })
-        maxPage = Math.ceil(result.count/50) + 1;
-        for (var i = 1; i < maxPage; i++) {
+      }
+
+      Story.findAndCountAll({
+        attributes: ['qid']
+      }).then(result => {
+
+          // Add Browse pages
           urlset.push({
-            loc: '/browse?page='+i,
+            loc: '/browse',
             lastmod: lastmod,
             changefreq: 'daily',
             priority: .5
           })
-        }
+          maxPage = Math.ceil(result.count/50) + 1;
+          for (var i = 1; i < maxPage; i++) {
+            urlset.push({
+              loc: '/browse?page='+i,
+              lastmod: lastmod,
+              changefreq: 'daily',
+              priority: .5
+            })
+          }
 
-        // Add stories
-        for (var i = 0; i < result.count; i++) {
-          urlset.push({
-            loc: '/'+result.rows[i].qid,
-            lastmod: lastmod,
-            changefreq: 'daily',
-            priority: .8
-          })
-        }
-        res.render('sitemap', {urlset:urlset})
-    });
+          // Add stories
+          for (var i = 0; i < result.count; i++) {
+            urlset.push({
+              loc: '/'+result.rows[i].qid,
+              lastmod: lastmod,
+              changefreq: 'daily',
+              priority: .8
+            })
+          }
+          res.render('sitemap', {urlset:urlset})
+      });
+    })
+
+
   },
 
 };
