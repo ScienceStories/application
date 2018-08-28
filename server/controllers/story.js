@@ -1,4 +1,5 @@
 const Story = require('../models').story;
+const Member = require('../models').member;
 const LogStory = require('../models').logstory;
 const wdk = require('wikidata-sdk');
 const appFetch =  require('../../app').appFetch;
@@ -33,12 +34,39 @@ module.exports = {
         if (!out) {
           return loadError(req, res, 'This story has not yet been curated.');
         }
-        return wikidataController.processStory(req, res, out);
+        return module.exports.getContributors(out.id, function(contributors){
+          out.contributors = contributors
+          // return res.send(contributors)
+          return wikidataController.processStory(req, res, out);
+        })
+
       })
       .catch(error => loadError(req, res, 'Trouble Loading this Story'));
   },
   getData(qid, next){
     return Story.findOne({where: {qid:qid}})
+  },
+  getContributors(id, callback){
+    var filter = {where: {storyId: id}, attributes: ['memberId'], order: [
+        ['updatedAt', 'DESC'],
+    ],
+    include: [
+      { model: Member, required: true, as:'member',
+      attributes: ['username', 'name', 'image']
+    }
+    ],}
+    return LogStory.findAll(filter).then(contributorData => {
+      var contribs = []
+      var contribsMap = {}
+      for (var i = 0; i < contributorData.length; i++) {
+        var tempItem = contributorData[i].dataValues.memberId
+        if(!contribsMap[tempItem]){
+          contribs.push(contributorData[i])
+          contribsMap[tempItem] = true
+        }
+      }
+      return callback(contribs)
+    })
   },
   build(req, res){
     if (req.query.qid){

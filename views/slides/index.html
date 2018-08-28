@@ -28,6 +28,22 @@
         </ul>
       </div>
       <div id="rightIndex">
+        <div class="index-header">Curators</div>
+        <div class="curator-list">
+          {{#each row.contributors}}
+          <a class="comment-avatar" href="/member:{{this.member.username}}">
+            <div class="curator-item">
+                <div class="comment-image-container">
+                  <img src="{{#if this.member.image}}{{this.member.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}">
+                </div>
+                <div class="curator-name">
+                  {{this.member.name}}
+                </div>
+            </div>
+          </a>
+          {{/each}}
+
+        </div>
         <div class="index-header">Discussion</div>
         <div class="comments-list">
           <!-- {{#each comments}}
