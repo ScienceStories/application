@@ -1,6 +1,8 @@
 <div id="sideBar">
   <div class="user-image" style="background-image: url('{{#if data.user.image}}{{data.user.image}}{{else}}https://images.unsplash.com/photo-1499428665502-503f6c608263?ixlib=rb-0.3.5&s=65ad43b134b770fa3b0f784b58c76dbb&auto=format&fit=crop&w=1950&q=80{{/if}}')">
+    <a href="/member:{{data.user.username}}">
     <div class="user-image-overlay"></div>
+    </a>
   </div>
   <div class="user-details">
     <div class="user-username">@{{data.user.username}}</div>

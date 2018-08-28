@@ -11,7 +11,7 @@ const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const sequelize = require('../models').sequelize
 const LogStory = require('../models').logstory;
-MEMBER_UPDATABLE_FIELDS = ['name', 'image','bio', 'email', 'wikidata', 'password']
+MEMBER_UPDATABLE_FIELDS = ['name', 'image','bio', 'email', 'wikidata', 'linkedin', 'password']
 module.exports = {
   create(req, res) {
     return Member
@@ -34,11 +34,9 @@ module.exports = {
         email: req.body.email.toLowerCase(),
         password: req.body.password,
         type: 'basic',
-        wikidata: req.body.wikidata,
-        image: req.body.image
       }).then(user => {
               req.session.user = user.dataValues;
-              res.redirect('/profile');
+              res.redirect('/account');
           })
           .catch(error => {
             console.log(error)
@@ -207,42 +205,121 @@ module.exports = {
 
     })
   },
+  memberPage(req, res) {
+
+    return Member.find({where: {username:req.params.username.toLowerCase()}})
+    .then(member => {
+      if (!member) return loadError(req, res, 'There is no user with the username: '+req.params.username)
+
+      // return res.send(member)
+      //find Favorites
+      favFilter = {where: {memberId: member.id, favorite: 1},
+        order: [
+            ['updatedAt', 'DESC'],
+        ],
+        include: [
+          { model: Story, required: true, as:'story'}
+        ],}
+      data = {member:member}
+      module.exports.getActivityList(req, res, 'favorites', favFilter, data, function(favoriteActivity){
+        module.exports.getMemberActivity([member.id], 25, function(feed_list){
+          data.feed_list = feed_list
+          LogStory.findAll({where: {memberId:member.id}, attributes:[], group: ['storyId'] })
+          .then(total_contributed_stories => {
+            data.contributed_total = total_contributed_stories.length
+            return loadPage(res, req, 'base', {file_id:'member',  title:member.name + ' Member Page', nav:'member', data:data})
+          })
+        })
+      } )
+    })
+  },
+  getContributionGallery(req, res){
+    memberName = req.params.member
+    pageNumber = req.params.pageNumber
+    return Member.find({where:{username:memberName}}).then(member => {
+      return LogStory.findAll({where: {memberId:member.id}, attributes:['storyId','updatedAt'], order: [['updatedAt', 'DESC']], include:[{model: Story, as :'story', attributes:['id','qid']} ]})
+      .then(contributedStories => {
+        var qidsContributed = []
+        var qidsContributedMap = {}
+
+        for (var i = 0; i < contributedStories.length; i++) {
+          var tempQid = contributedStories[i].dataValues.story.qid
+          if(!qidsContributedMap[tempQid]){
+            qidsContributed.push(tempQid)
+            qidsContributedMap[tempQid] = true
+          }
+        }
+
+        var stories_per_page = 25
+        var total_stories = qidsContributed.length
+        maxPage = Math.ceil(total_stories/stories_per_page) + 1
+        nextPage = (pageNumber == maxPage) ? 0 : pageNumber + 1
+        prevPage = (pageNumber == 1) ? 0 : pageNumber - 1
+        offset = (pageNumber-1)*stories_per_page
+        qidsContributed = qidsContributed.slice(offset, offset+stories_per_page)
+        if (!qidsContributed.length) return res.status(404).send('No more stories.')
+        data = {totalStories:total_stories, page:pageNumber, maxPage: maxPage, prevPage:prevPage, nextPage:nextPage}
+        // return res.send(qidsContributed)
+        return wikidataController.getDetailsList(req, res, qidsContributed, 'small_with_age', 'first', false,
+          function(qidList){
+            data['list'] = qidList
+            data.page = function(){ return 'story_gallery'}
+            return res.render('blank', data)
+
+
+          })
+
+      })
+    })
+
+  },
+  getMemberActivity(members, max_size, callback){
+
+    faveWhere = (members != false) ? {favorite:1, memberId:members} : {favorite:1}
+    return StoryActivity.findAll( {where:faveWhere, order: [['lastFavorited', 'DESC'], ], imit:max_size, include:[{model: Story, as :'story'}, {model: Member, as :'member'}]})
+    .then(faveItems => {
+      for (var i = 0; i < faveItems.length; i++) {
+        faveItems[i].dataValues['feed_type'] = 'favorite'
+        faveItems[i].dataValues['feed_date'] = faveItems[i].dataValues.lastFavorited
+      }
+      commentWhere = (members != false) ? {memberId:members} : {}
+      return Comment.findAll({where: commentWhere, order: [['createdAt', 'DESC']], limit:max_size, include:[{model: Story, as :'story'}, {model: Member, as :'member'}]})
+        .then(commentItems => {
+          for (var i = 0; i < commentItems.length; i++) {
+            commentItems[i].dataValues['feed_type'] = 'comment'
+            commentItems[i].dataValues['feed_date'] = commentItems[i].dataValues.updatedAt
+          }
+          logWhere = (members != false) ? {memberId:members} : {}
+          return LogStory.findAll({where: logWhere, order: [['updatedAt', 'DESC']], limit:max_size, include:[{model: Story, as :'story'}, {model: Member, as :'member'}, ]})
+            .then(updateItems => {
+              for (var i = 0; i < updateItems.length; i++) {
+                updateItems[i].dataValues['feed_type'] = 'update'
+                updateItems[i].dataValues['feed_date'] = updateItems[i].dataValues.updatedAt
+              }
+              // Create items array
+                  masterItems = [].concat(faveItems, commentItems, updateItems)
+                  // Sort the array based on the second element
+                  masterItems.sort(function(first, second) {
+                  return second.dataValues.feed_date - first.dataValues.feed_date;
+                  });
+              // res.send(masterItems)
+              return callback(masterItems.slice(0,max_size))
+
+            })
+        })
+    })
+  },
   feed(req, res){
     return Member.findById(req.session.user.id)
     .then(member => {
       data = {user:member}
       req.session.user = member;
-      var max_items = 25
-      return StoryActivity.findAll( {where:{favorite:1},order: [['lastFavorited', 'DESC'], ], imit:max_items, include:[{model: Story, as :'story'}, {model: Member, as :'member'}]})
-      .then(faveItems => {
-        for (var i = 0; i < faveItems.length; i++) {
-          faveItems[i].dataValues['feed_type'] = 'favorite'
-          faveItems[i].dataValues['feed_date'] = faveItems[i].dataValues.lastFavorited
-        }
-        return Comment.findAll({order: [['createdAt', 'DESC']], limit:max_items, include:[{model: Story, as :'story'}, {model: Member, as :'member'}]})
-          .then(commentItems => {
-            for (var i = 0; i < commentItems.length; i++) {
-              commentItems[i].dataValues['feed_type'] = 'comment'
-              commentItems[i].dataValues['feed_date'] = commentItems[i].dataValues.updatedAt
-            }
-            return LogStory.findAll({order: [['updatedAt', 'DESC']], limit:max_items, include:[{model: Story, as :'story'}, {model: Member, as :'member'}, ]})
-              .then(updateItems => {
-                for (var i = 0; i < updateItems.length; i++) {
-                  updateItems[i].dataValues['feed_type'] = 'update'
-                  updateItems[i].dataValues['feed_date'] = updateItems[i].dataValues.updatedAt
-                }
-                // Create items array
-                    masterItems = [].concat(faveItems, commentItems, updateItems)
-                    // Sort the array based on the second element
-                    masterItems.sort(function(first, second) {
-                    return second.dataValues.feed_date - first.dataValues.feed_date;
-                    });
-                // res.send(masterItems)
-                data.feed_list = masterItems.slice(0,25)
-                return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Story Feed', nav:'profile', profile_nav:function(){ return "feed"}, subtitle: "NEWS FEED", data:data})
-              })
-          })
-      })})
+      module.exports.getMemberActivity(false, 25, function(feed_list){
+        data.feed_list = feed_list
+        return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Story Feed', nav:'profile', profile_nav:function(){ return "feed"}, subtitle: "NEWS FEED", data:data})
+
+      })
+      })
   },
   account(req, res){
     return Member.findById(req.session.user.id)

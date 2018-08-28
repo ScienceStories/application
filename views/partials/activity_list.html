@@ -1,0 +1,54 @@
+<div class="profile-feed-container">
+{{#each list}}
+  <div class="profile-feed-item">
+
+    <div class="feed-item-user">
+      <div class="user-image-container">
+        <a href="/member:{{this.member.username}}">
+        <img src="{{#if this.member.image}}{{this.member.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}" alt="">
+      </a>
+      </div>
+      <div class="user-details-container">
+        <a href="/member:{{this.member.username}}">
+        <div class="user-name">{{this.member.name}}</div>
+          <div class="user-activity-desc">
+            {{#if_equal this.dataValues.feed_type 'update'}}
+              updated a story <i class="fas fa-signature"></i>
+            {{else if_equal this.dataValues.feed_type 'favorite'}}
+              favorited a story <i class="far fa-heart"></i>
+            {{else if_equal this.dataValues.feed_type 'comment'}}
+              commented on a story <i class="far fa-comments"></i>
+            {{/if_equal}}
+        </div>
+        <div class="user-activity-date">
+          {{dateFormat this.dataValues.feed_date 'calendar' true}}
+        </div>
+        </a>
+      </div>
+    </div>
+    <div class="feed-story-container">
+      <a href="/{{this.story.qid}}">
+      {{#if_equal this.dataValues.feed_type 'comment' }}
+      <div class="feed-story-comment"><i class="fas fa-quote-left"></i>{{this.message}}<i class="fas fa-quote-right"></i></div>
+      {{/if_equal}}
+      <div class="feed-story-preview" style="background-color: {{this.story.data.0.color}}">
+        <div class="feed-image" >
+          {{#if_equal this.story.data.0.type 'intro'}}
+            <img src="{{this.story.data.0.image}}" alt="">
+          {{/if_equal}}
+        </div>
+        <div class="feed-title" style="color:{{contrastColor this.story.data.0.color true}};">
+          {{this.story.data.0.title}}
+        </div>
+        <div class="feed-description" style="color:{{contrastColor this.story.data.0.color true}};" >
+          {{this.story.data.0.description}}
+        </div>
+      </div>
+
+</a>
+    </div>
+
+  </div>
+
+{{/each}}
+</div>

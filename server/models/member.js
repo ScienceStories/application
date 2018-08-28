@@ -42,7 +42,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     bio: {
-      type: DataTypes.TEXT
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    linkedin: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
 
   },

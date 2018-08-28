@@ -514,3 +514,7 @@ button.account-btn-update.full-width {
 input.account-section-input.upload-picture-url {
     background: #eaeaea;
 }
+span.account-field-pretext {
+    opacity:  .5;
+    font-size:  19px;
+}

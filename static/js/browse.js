@@ -12,13 +12,21 @@
 //   $grid.masonry('layout');
 // });
 //
+$(window).load(function(){
 
-var $grid = $('#browseStories').imagesLoaded( function() {
-  // init Masonry after all images have loaded
-  $grid.masonry({
+var repeatedLoad = setInterval(loadGridGallery ,1000);
+setTimeout(function( ) { clearInterval( repeatedLoad ); }, 10000);
+
+})
+function loadGridGallery(){
+  $('.browse-gallery').masonry({
+    visibleStyle: { transform: 'translateY(0)', opacity: 1 },
+  hiddenStyle: { transform: 'translateY(100px)', opacity: 0 },
     // options...
     itemSelector: '.grid-item',
     columnWidth: '.grid-item',
     percentPosition: true
   });
-});
+
+
+}

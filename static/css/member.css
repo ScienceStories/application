@@ -1,0 +1,193 @@
+.overlayHeader {
+    text-align: left;
+}
+.profile-image-container img {
+    width:  100%;
+    object-fit:  cover;
+    object-position:  top;
+    height:  100%;
+}
+
+.profile-image-container {
+    width: 200px;
+    display: inline-block;
+    height: 200px;
+    vertical-align: bottom;
+    box-shadow: 0 0 7px #0000007a;
+}
+.profile-member-details {
+    display:  inline-block;
+}
+div#tabs {
+    border: none;
+}
+.favorite-item {
+    margin:  20px;
+    padding:  20px;
+    border-bottom: 2px solid #dadada;
+}
+
+.favorite-item:hover {
+    background: #2a7b71;
+    color:  white;
+}
+
+.favorite-title > div {
+    display: inline-block;
+}
+
+.favorite-image {
+    width:  300px;
+    height: 150px;
+}
+
+.favorite-image img {
+    width:  100%;
+    height:  100%;
+    object-fit:  cover;
+    object-position:  center 30%;
+}
+
+.favorite-content {
+    font-weight: 300;
+    font-size:  46px;
+    font-family:  'Lato';
+    vertical-align: bottom;
+    margin-left: 18px;
+}
+
+.favorite-description {
+    font-size: 20px;
+}
+
+#tabs {
+    font-family:  'Lato';
+}
+
+li.ui-tabs-tab.ui-corner-top.ui-state-default.ui-tab.ui-tabs-active.ui-state-active {
+    background: #39bfaf;
+    border-color:  #39bfaf;
+    outline: none !important;
+}
+
+li.ui-tabs-tab.ui-corner-top.ui-state-default.ui-tab.ui-tabs-active.ui-state-active * {
+    outline: none;
+}
+.ui-tabs .ui-tabs-nav li {
+    border-radius: 0;
+}
+.user-activity-desc i {
+    font-size: 300%;
+    position: relative;
+    right: 0;
+    opacity: .5;
+    float: right;
+}
+.page-header{
+  background-image: url(https://images.unsplash.com/photo-1516474642997-b86ccf7065a4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a4d26ae5d225d25cd1a013a886fe523c&auto=format&fit=crop&w=2134&q=80)
+}
+.tab-header {
+    margin: 20px;
+    font-size: 30px;
+    text-align: center;
+    opacity: .3;
+    font-weight: 300;
+    text-shadow: 0px 0px 4px #000000b8;
+}
+
+
+
+
+
+
+
+
+
+.loader-ellips {
+  font-size: 20px; /* change size here */
+  position: relative;
+  width: 4em;
+  height: 1em;
+  margin: 10px auto;
+}
+
+.loader-ellips__dot {
+  display: block;
+  width: 1em;
+  height: 1em;
+  border-radius: 0.5em;
+  background: #555; /* change color here */
+  position: absolute;
+  animation-duration: 0.5s;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+}
+
+.loader-ellips__dot:nth-child(1),
+.loader-ellips__dot:nth-child(2) {
+  left: 0;
+}
+.loader-ellips__dot:nth-child(3) { left: 1.5em; }
+.loader-ellips__dot:nth-child(4) { left: 3em; }
+
+@keyframes reveal {
+  from { transform: scale(0.001); }
+  to { transform: scale(1); }
+}
+
+@keyframes slide {
+  to { transform: translateX(1.5em) }
+}
+
+.loader-ellips__dot:nth-child(1) {
+  animation-name: reveal;
+}
+
+.loader-ellips__dot:nth-child(2),
+.loader-ellips__dot:nth-child(3) {
+  animation-name: slide;
+}
+
+.loader-ellips__dot:nth-child(4) {
+  animation-name: reveal;
+  animation-direction: reverse;
+}
+
+
+
+
+/* reveal grid after images loaded */
+.grid.are-images-unloaded {
+  opacity: 0;
+}
+
+
+
+.page-load-status {
+  display: none; /* hidden by default */
+  padding-top: 20px;
+  border-top: 1px solid #DDD;
+  text-align: center;
+  color: #777;
+}
+
+/* loader ellips in separate pen CSS */
+.social-icon-container {
+    height: 35px;
+    margin-top:  20px;
+    margin-right:  10px;
+    display:  inline-block;
+}
+
+.social-icon-container .member-social-icon {
+    height: 100%;
+    filter: grayscale(100%);
+    opacity:  .8;
+}
+.member-social-icon:hover {
+    filter: none;
+    opacity:  1;
+}
+.accountBio {
+    margin-bottom: 5px;
+}

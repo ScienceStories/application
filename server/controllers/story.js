@@ -101,13 +101,16 @@ module.exports = {
   browse(req, res) {
     page = (req.query.page) ? parseInt(req.query.page, 10) : 1
     stories_per_page = 50
-    offset = (page-1)*stories_per_page
+    return module.exports.getGallery(req, res, false, page, stories_per_page)
+  },
+  getGallery(req, res, members, pageNumber, stories_per_page, callback){
+    offset = (pageNumber-1)*stories_per_page
     return Story.count().then(total_stories => {
       maxPage = Math.ceil(total_stories/stories_per_page) + 1
-      nextPage = (page == maxPage) ? 0 : page + 1
-      prevPage = (page == 1) ? 0 : page - 1
-      data = {totalStories:total_stories, page:page, maxPage: maxPage, prevPage:prevPage, nextPage:nextPage}
-      Story.findAll({ order: [['updatedAt', 'DESC']], offset: offset, limit: stories_per_page })
+      nextPage = (pageNumber == maxPage) ? 0 : pageNumber + 1
+      prevPage = (pageNumber == 1) ? 0 : pageNumber - 1
+      data = {totalStories:total_stories, page:pageNumber, maxPage: maxPage, prevPage:prevPage, nextPage:nextPage}
+      Story.findAll({ attributes:['qid'], order: [['updatedAt', 'DESC']], offset: offset, limit: stories_per_page })
       .then(out => {
           story_total = out.length;
           qidList = [];
@@ -117,13 +120,13 @@ module.exports = {
 
           return wikidataController.getDetailsList(req, res, qidList, 'small_with_age', 'first', false,
             function(qidList){
-              for(var i = 0; i < story_total; i++){
-                for(var key in out[i].dataValues) {
-                  qidList[i][key] = out[i].dataValues[key];
-                }
-              }
+              // for(var i = 0; i < story_total; i++){
+              //   for(var key in out[i].dataValues) {
+              //     qidList[i][key] = out[i].dataValues[key];
+              //   }
+              // }
               data['browseList'] = qidList
-              loadPage(res, req, 'base', {file_id:'browse',  title:`Browse Stories (Page ${page})`, nav:'browse', data:data})
+              loadPage(res, req, 'base', {file_id:'browse',  title:`Browse Stories (Page ${pageNumber})`, nav:'browse', data:data})
             })
         })
     })

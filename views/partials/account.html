@@ -121,9 +121,25 @@
       </div>
     </div>
     <div class="account-section-content" style="display:none">
-      <input class="account-section-input" type="text" name="account-wikidata" value="{{data.user.wikidata}}">
+    <span class="account-field-pretext">https://www.wikidata.org/wiki/User:</span>
+    <input class="account-section-input" type="text" name="account-wikidata" value="{{data.user.wikidata}}" style="width: calc(100% - 394px);">
       <button class="account-btn-update" onclick="updateMember('wikidata')">update</button>
       <div class="account-response" id="wikidataresponse" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="account-section">
+    <div class="account-section-header">
+      LinkedIn Account
+      <div class="account-section-subtitle">
+        Add or update the LinkedIn url that is associated with my account.
+      </div>
+    </div>
+    <div class="account-section-content" style="display:none">
+    <span class="account-field-pretext">https://www.linkedin.com/in/</span>
+    <input class="account-section-input" type="text" name="account-linkedin" placeholder="profile" value="{{data.user.linkedin}}" style="width: calc(100% - 394px);">
+      <button class="account-btn-update" onclick="updateMember('linkedin')">update</button>
+      <div class="account-response" id="linkedinresponse" style="display:none"></div>
     </div>
   </div>
 
