@@ -17,7 +17,7 @@ const randomColor = require('randomcolor');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var sequelize = require('./server/models').sequelize
 // sequelize.queryInterface.removeColumn('storyactivities', 'lastViewed')
-// sequelize.queryInterface.addColumn('members', 'linkedin', Sequelize.DataTypes.STRING )
+// sequelize.queryInterface.addColumn('members', 'github', Sequelize.DataTypes.STRING )
 // console.log(sequelize)
 // Set up the express app
 const app = express();

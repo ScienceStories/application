@@ -11,7 +11,7 @@ const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const sequelize = require('../models').sequelize
 const LogStory = require('../models').logstory;
-MEMBER_UPDATABLE_FIELDS = ['name', 'image','bio', 'email', 'wikidata', 'linkedin', 'password']
+MEMBER_UPDATABLE_FIELDS = ['name', 'image','bio', 'email', 'wikidata', 'linkedin','twitter', 'facebook','instagram', 'github','tumblr' ,'website', 'password']
 module.exports = {
   create(req, res) {
     return Member

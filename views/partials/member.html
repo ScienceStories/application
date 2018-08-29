@@ -26,21 +26,72 @@
       </div>
       MEMBER SINCE: {{dateFormat data.member.createdAt 'll' false}}
     </div>
-    <div class="smallText accountBio">
-      {{#if data.member.wikidata}}
+    <div class="smallText accountBio social-icon-list">
+      {{#if data.member.website}}
+      <div class="social-icon-container square">
+        <a href="{{data.member.website}}" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/32/Line-style-icons-desktop.svg" alt="" class="member-social-icon">
+        </a>
+      </div>
+      {{/if}}
+
+      {{#if data.member.linkedin}}
       <div class="social-icon-container">
+        <a href="https://www.linkedin.com/in/{{data.member.linkedin}}" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Line-style-icons-linkedin.svg" alt="" class="member-social-icon">
+        </a>
+      </div>
+      {{/if}}
+
+      {{#if data.member.twitter}}
+      <div class="social-icon-container">
+        <a href="https://twitter.com/{{data.member.twitter}}" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Line-style-icons-twitter.svg" alt="" class="member-social-icon">
+        </a>
+      </div>
+      {{/if}}
+
+      {{#if data.member.facebook}}
+      <div class="social-icon-container">
+        <a href="https://www.facebook.com/{{data.member.facebook}}" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/85/Line-style-icons-facebook.svg" alt="" class="member-social-icon">
+        </a>
+      </div>
+      {{/if}}
+
+      {{#if data.member.tumblr}}
+      <div class="social-icon-container">
+        <a href="https://{{data.member.tumblr}}.tumblr.com" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Line-style-icons-tumblr.svg" alt="" class="member-social-icon">
+        </a>
+      </div>
+      {{/if}}
+
+      {{#if data.member.github}}
+      <div class="social-icon-container">
+        <a href="https://github.com/{{data.member.github}}" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="" class="member-social-icon">
+        </a>
+      </div>
+      {{/if}}
+
+      {{#if data.member.instagram}}
+      <div class="social-icon-container">
+        <a href="https://www.instagram.com/{{data.member.instagram}}" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/CIS-A2K_Instagram_Icon_%28Black%29.svg" alt="" class="member-social-icon">
+        </a>
+      </div>
+      {{/if}}
+
+
+      {{#if data.member.wikidata}}
+      <div class="social-icon-container square">
         <a href="https://www.wikidata.org/wiki/User:{{data.member.wikidata}}" target="_blank">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="" class="member-social-icon">
         </a>
       </div>
        {{/if}}
-       {{#if data.member.linkedin}}
-       <div class="social-icon-container">
-         <a href="https://www.linkedin.com/in/{{data.member.linkedin}}" target="_blank">
-         <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="" class="member-social-icon">
-         </a>
-       </div>
-        {{/if}}
+
     </div>
   </div></div>
   </div>

@@ -143,5 +143,93 @@
     </div>
   </div>
 
+  <div class="account-section">
+    <div class="account-section-header">
+      GitHub Account
+      <div class="account-section-subtitle">
+        Add or update the GitHub url that is associated with my account.
+      </div>
+    </div>
+    <div class="account-section-content" style="display:none">
+    <span class="account-field-pretext">https://github.com/</span>
+    <input class="account-section-input" type="text" name="account-github" placeholder="profile" value="{{data.user.github}}" style="width: calc(100% - 394px);">
+      <button class="account-btn-update" onclick="updateMember('github')">update</button>
+      <div class="account-response" id="githubresponse" style="display:none"></div>
+    </div>
+  </div>
 
+<div class="account-section">
+  <div class="account-section-header">
+    Instagram Account
+    <div class="account-section-subtitle">
+      Add or update the Instagram url that is associated with my account.
+    </div>
+  </div>
+  <div class="account-section-content" style="display:none">
+  <span class="account-field-pretext">https://www.instagram.com/</span>
+  <input class="account-section-input" type="text" name="account-instagram" placeholder="profile" value="{{data.user.instagram}}" style="width: calc(100% - 394px);">
+    <button class="account-btn-update" onclick="updateMember('instagram')">update</button>
+    <div class="account-response" id="instagramresponse" style="display:none"></div>
+  </div>
+</div>
+
+<div class="account-section">
+  <div class="account-section-header">
+    Twitter Account
+    <div class="account-section-subtitle">
+      Add or update the Twitter url that is associated with my account.
+    </div>
+  </div>
+  <div class="account-section-content" style="display:none">
+  <span class="account-field-pretext">https://twitter.com/</span>
+  <input class="account-section-input" type="text" name="account-twitter" placeholder="profile" value="{{data.user.twitter}}" style="width: calc(100% - 394px);">
+    <button class="account-btn-update" onclick="updateMember('twitter')">update</button>
+    <div class="account-response" id="twitterresponse" style="display:none"></div>
+  </div>
+</div>
+
+<div class="account-section">
+  <div class="account-section-header">
+    Facebook Account
+    <div class="account-section-subtitle">
+      Add or update the Facebook url that is associated with my account.
+    </div>
+  </div>
+  <div class="account-section-content" style="display:none">
+  <span class="account-field-pretext">https://www.facebook.com/</span>
+  <input class="account-section-input" type="text" name="account-facebook" placeholder="profile" value="{{data.user.facebook}}" style="width: calc(100% - 394px);">
+    <button class="account-btn-update" onclick="updateMember('facebook')">update</button>
+    <div class="account-response" id="facebookresponse" style="display:none"></div>
+  </div>
+</div>
+
+<div class="account-section">
+  <div class="account-section-header">
+    Tumblr Blog
+    <div class="account-section-subtitle">
+      Add or update the Tumblr url that is associated with my account.
+    </div>
+  </div>
+  <div class="account-section-content" style="display:none">
+  <span class="account-field-pretext">https://</span>
+  <input class="account-section-input" type="text" name="account-tumblr" placeholder="profile" value="{{data.user.tumblr}}" style="width: calc(100% - 394px);">
+  <span class="account-field-pretext">.tumblr.com</span>
+    <button class="account-btn-update" onclick="updateMember('tumblr')">update</button>
+    <div class="account-response" id="tumblrresponse" style="display:none"></div>
+  </div>
+</div>
+
+<div class="account-section">
+  <div class="account-section-header">
+    Personal Website
+    <div class="account-section-subtitle">
+      Add or update the personal website url that is associated with my account.
+    </div>
+  </div>
+  <div class="account-section-content" style="display:none">
+  <input class="account-section-input" type="url" name="account-website" placeholder="https://mywebsite.com" value="{{data.user.website}}">
+    <button class="account-btn-update" onclick="updateMember('website')">update</button>
+    <div class="account-response" id="websiteresponse" style="display:none"></div>
+  </div>
+</div>
 </div>
