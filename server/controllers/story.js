@@ -123,7 +123,9 @@ module.exports = {
                   }
                 }
                 data['results'] = detailList
+                data.story_total = detailList.length
                 return Member.findAll({attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }}).then(members => {
+                  var member_total = 0
                   for (var i = 0; i < members.length; i++) {
                     if (JSON.stringify(members[i].dataValues).toLowerCase().indexOf(searchString) > -1) {
                       detailList.push({
@@ -132,8 +134,10 @@ module.exports = {
                         itemLabel: "Member: "+members[i].dataValues.name,
                         itemDescription: members[i].dataValues.bio
                       })
+                      member_total++;
                     }
                   }
+                  data.member_total = member_total
                   return loadPage(res, req, 'base', {file_id:'search',  title:'Search '+req.query.search, nav:'search', data:data})
                 })
 
