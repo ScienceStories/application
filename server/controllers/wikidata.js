@@ -197,80 +197,85 @@ module.exports = {
             if (labels.entities[qid].sitelinks.enwiki){
               wikipedia = labels.entities[qid].sitelinks.enwiki.title
             }
-            return module.exports.getAwardData(name, simplifiedResults.statements, function(awardData){
-              // return res.send(awardData)
-              return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
-                // return res.send(libraryData)
-                return module.exports.getMapData(name, simplifiedResults.statements, inverseStatements, function(mapData){
-                  // return res.send(mapData)
-                  // ADDED Here
-                  return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
-                    // FINAL CALL
-                    if (req.session.user && (req.url.indexOf('/preview') == -1)) {
-                      StoryActivity.findOrCreate({
-                          where: {
-                            memberId: req.session.user.id,
-                            storyId: row.id
-                          },
-                        })
-                      .spread((found, created) =>{
-                        found.update({
-                        views: found.views+1,
-                        lastViewed: sequelize.fn('NOW')})
-                          .then(output => {
-                                return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
-
-                              page: function(){ return 'story'},
-                              scripts: function(){ return 'story_scripts'},
-                              links: function(){ return 'story_links'},
-                              title: name +" - Story",
-                              nav: "Story",
-                              content: simplifiedResults.statements,
-                              wikipedia: wikipedia,
-                              name: name,
-                              qid: simplifiedResults.qid,
-                              storyActivity: output.dataValues,
-                              data: jsonData,
-                              user: req.session.user,
-                              row: row,
-                              comments: comments,
-                              meta: meta,
-                              map: mapData,
-                              library: libraryData,
-                              timeline: timelineData,
-                              award: awardData
-                            })})
+            return module.exports.getMainStoryImage(row.data, simplifiedResults.statements, function(storyImage){
+              return module.exports.getAwardData(name, simplifiedResults.statements, function(awardData){
+                // return res.send(awardData)
+                return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
+                  // return res.send(libraryData)
+                  return module.exports.getMapData(name, simplifiedResults.statements, inverseStatements, function(mapData){
+                    // return res.send(mapData)
+                    // ADDED Here
+                    return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
+                      // FINAL CALL
+                      if (req.session.user && (req.url.indexOf('/preview') == -1)) {
+                        StoryActivity.findOrCreate({
+                            where: {
+                              memberId: req.session.user.id,
+                              storyId: row.id
+                            },
                           })
-                      })
-                      .catch(error => {loadError(req, res, 'Something went wrong.')});
-                    }
-                    else return commentController.loadCommentsFromStory(row.id, function(comments){
+                        .spread((found, created) =>{
+                          found.update({
+                          views: found.views+1,
+                          lastViewed: sequelize.fn('NOW')})
+                            .then(output => {
+                                  return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
 
-                      res.render('full', {
-                        page: function(){ return 'story'},
-                        scripts: function(){ return 'story_scripts'},
-                        links: function(){ return 'story_links'},
-                        title: name +" - Story",
-                        nav: "Story",
-                        content: simplifiedResults.statements,
-                        wikipedia: wikipedia,
-                        name: name,
-                        qid: simplifiedResults.qid,
-                        data: jsonData,
-                        row: row,
-                        comments: comments,
-                        meta: meta,
-                        map: mapData,
-                        library: libraryData,
-                        timeline: timelineData,
-                        award: awardData
+                                page: function(){ return 'story'},
+                                scripts: function(){ return 'story_scripts'},
+                                links: function(){ return 'story_links'},
+                                title: name +" - Story",
+                                nav: "Story",
+                                content: simplifiedResults.statements,
+                                wikipedia: wikipedia,
+                                name: name,
+                                qid: simplifiedResults.qid,
+                                storyActivity: output.dataValues,
+                                data: jsonData,
+                                image: storyImage,
+                                user: req.session.user,
+                                row: row,
+                                comments: comments,
+                                meta: meta,
+                                map: mapData,
+                                library: libraryData,
+                                timeline: timelineData,
+                                award: awardData
+                              })})
+                            })
+                        })
+                        .catch(error => {loadError(req, res, 'Something went wrong.')});
+                      }
+                      else return commentController.loadCommentsFromStory(row.id, function(comments){
+
+                        res.render('full', {
+                          page: function(){ return 'story'},
+                          scripts: function(){ return 'story_scripts'},
+                          links: function(){ return 'story_links'},
+                          title: name +" - Story",
+                          nav: "Story",
+                          content: simplifiedResults.statements,
+                          wikipedia: wikipedia,
+                          name: name,
+                          image: storyImage,
+                          qid: simplifiedResults.qid,
+                          data: jsonData,
+                          row: row,
+                          comments: comments,
+                          meta: meta,
+                          map: mapData,
+                          library: libraryData,
+                          timeline: timelineData,
+                          award: awardData
+                        })
                       })
                     })
-                  })
 
+                  })
                 })
-              })
-            } )
+              } )
+            })
+
 
 
 
@@ -281,6 +286,25 @@ module.exports = {
 
 
   })
+
+  },
+  getMainStoryImage(storyData, wikidata, callback){
+    for (var i = 0; i < storyData.length; i++) {
+      if (storyData[i].image){
+        return callback(storyData[i].image)
+      }
+
+    }
+    for (var i = 0; i < wikidata.length; i++) {
+      var tempItem = wikidata[i];
+      if (tempItem.ps
+        && tempItem.ps.value
+        && (tempItem.ps.value == "http://www.wikidata.org/prop/statement/P18")
+        && tempItem.ps_
+        && tempItem.ps_.value
+      ) return callback(tempItem.ps_.value)
+    }
+    return callback('http://sciencestories.io/static/images/branding/logo_black.png')
 
   },
   processAnnotation(req, res){
@@ -727,6 +751,7 @@ module.exports = {
     //If a property related to winning an award
     if (wikidataMap.properties.awards.includes(tempval.pid.substr(39))){
       tempval.action = statement.wdLabel.value
+      if (!statement.objInstance) statement.objInstance = {value: false}
       // Check if medal
       if ( (tempval.title.includes('medal')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q131647"){
         tempval.type = 'medal'

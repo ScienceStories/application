@@ -37,6 +37,12 @@
  -->
 <script type="text/javascript">
   var wikititle = '{{wikipedia}}'.replace(" ", "_")
+  var addthis_share = {
+   url: "http://www.sciencestories.io/{{row.qid}}",
+   title: "{{title}}",
+   description: "{{meta.description}}",
+   media: "{{image}}"
+}
 </script>
 <div class="story-sidebar">
   {{#each data}}
@@ -97,6 +103,8 @@
   {{> index }}
 
 </div>
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5b8713ab5154d5c9"></script>
 <script>
   data = {{{json data}}};
   lastSlide = data.length;
