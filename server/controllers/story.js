@@ -46,6 +46,9 @@ module.exports = {
   getData(qid, next){
     return Story.findOne({where: {qid:qid}})
   },
+  getCount(callback){
+    return Story.count().then(count => callback(count))
+  },
   getContributors(id, callback){
     var filter = {where: {storyId: id}, attributes: ['memberId'], order: [
         ['updatedAt', 'DESC'],

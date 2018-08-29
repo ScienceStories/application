@@ -1,3 +1,17 @@
+var storyOdometer = document.querySelector('.story-odometer');
+
+od = new Odometer({
+  el: storyOdometer,
+  value: 100,
+
+  // Any option (other than auto and selector) can be passed in here
+  format: '(,ddd)',
+  theme: 'car'
+});
+
+// od.update(555)
+// or
+// el.innerHTML = 555
 $('#featuredCarousel').slick({
   centerMode: true,
   arrows: false,
@@ -61,6 +75,17 @@ ScrollReveal({ reset: true }).reveal('section',
 {
   origin: 'bottom',
   over: '3s'
+});
+ScrollReveal({ reset: true }).reveal('.odometer',
+{
+  origin: 'down',
+  over: '3s',
+  afterReveal: function (el) {
+    od.update(100)
+    setTimeout(  function(){od.update(countStories)}, 20)
+
+
+  }
 });
 ScrollReveal({ reset: true }).reveal('#features .left img',
 { delay: 500 ,

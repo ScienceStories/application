@@ -200,3 +200,29 @@ section#footer a:hover {
     font-size: 7em;
     color: #71ded49c;
 }
+section#storyCount {
+    font-size: 6vw;
+    text-align: center;
+    padding: 50px 10px;
+}
+span.counter-text {
+    vertical-align:  bottom;
+}
+
+span.smallText {
+    font-size:  50px;
+    color: #d2d2d2;
+}
+span.odometer-value {
+    color: white !important;
+}
+.odometer.odometer-auto-theme .odometer-digit:last-child, .odometer.odometer-theme-car .odometer-digit:last-child{
+    background: #16d2c0;
+}
+.odometer.odometer-auto-theme .odometer-digit:last-child, .odometer.odometer-theme-car .odometer-digit:last-child .odometer-value {
+    color: #323232;
+}
+
+.story-odometer.odometer.odometer-theme-car {
+    background: white;
+}

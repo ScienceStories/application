@@ -13,7 +13,11 @@ module.exports = (app, sessionChecker) => {
 
 // app.get('/browse', sessionChecker, (req, res) => loadPage(res, req, 'base', {file_id:'browse', nav:'browse'}));
   // route for Home-Page
-  app.get('/', (req, res) => loadPage(res, req, 'full', {file_id:'home', nav:'home', title:'Welcome'}))
+  app.get('/', (req, res) => {
+    storyController.getCount(function(count){
+      loadPage(res, req, 'full', {file_id:'home', nav:'home', title:'Welcome', story_count:count})
+    })
+  })
   app.get('/home', membersController.homeRedirect)
   app.get('/search', storyController.search)
   app.get('/annotate', (req, res) => membersController.accessCheck(req, res, 'author', annotationController.showPage));
