@@ -220,8 +220,17 @@ module.exports = {
         include: [
           { model: Story, required: true, as:'story'}
         ],}
+        topFilter = {where: {memberId: member.id},
+          order: [
+              ['views', 'DESC'],
+          ],
+          limit: 10,
+          include: [
+            { model: Story, required: true, as:'story'}
+          ],}
       data = {member:member}
       module.exports.getActivityList(req, res, 'favorites', favFilter, data, function(favoriteActivity){
+        module.exports.getActivityList(req, res, 'views', topFilter, data, function(viewActivity){
         module.exports.getMemberActivity([member.id], 25, function(feed_list){
           data.feed_list = feed_list
           LogStory.findAll({where: {memberId:member.id}, attributes:[], group: ['storyId'] })
@@ -230,7 +239,7 @@ module.exports = {
             return loadPage(res, req, 'base', {file_id:'member',  title:member.name + ' Member Page', nav:'member', data:data})
           })
         })
-      } )
+      } )} )
     })
   },
   getContributionGallery(req, res){

@@ -108,7 +108,7 @@
       {{#ifUserType data.member.type 'author'}}
         <li id="contributionLi"><a href="#contributions">Contributions</a></li>
       {{/ifUserType}}
-
+      <li><a href="#mostviews">Most Viewed</a></li>
     </ul>
     <div id="activity">
       <div class="tab-header">
@@ -127,7 +127,7 @@
         {{#if data.favorites.length }}
           {{data.member.name}} has favorited {{data.favorites.length}} stories
         {{else}}
-          {{data.member.name}} has not yet favorited to a story
+          {{data.member.name}} has not yet favorited a story
         {{/if}}
       </div>
       {{#each data.favorites}}
@@ -180,5 +180,34 @@
       </div>
 
     {{/ifUserType}}
+
+    <div id="mostviews">
+      <div class="tab-header">
+        {{#if data.views.length }}
+          {{data.views.length}} most viewed stories by {{data.member.name}}
+        {{else}}
+          {{data.member.name}} has not yet viewed a story
+        {{/if}}
+      </div>
+      {{#each data.views}}
+        <div class="favorite-item">
+          <a class="browse-story-link"  href="/{{this.qid}}">
+            <div class="favorite-title">
+              {{#if this.image}}
+              <div class="favorite-image">
+                <img src="{{this.image}}" alt="">
+              </div>
+              {{/if}}
+              <div class="favorite-content">
+              {{this.itemLabel}}
+              <div class="favorite-description">
+                {{this.itemDescription}}
+              </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {{/each}}
+    </div>
 
   </div>
