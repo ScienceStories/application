@@ -15,10 +15,13 @@
 </button>
 {{/ifUserType}}
 {{#ifUserType user.type 'author'}}
+<script>var isAuthor = true</script>
 <a href="/build?qid={{row.qid}}" title="Edit Story">
 <button id="buildBtn" class="" >
   <span><i class="far fa-edit"></i></span>
 </button></a>
+{{else}}
+<script>var isAuthor = false</script>
 {{/ifUserType}}
 <!-- slide types:
 
