@@ -1,3 +1,11 @@
+<style>
+/* .page-wrapper *{
+  transition: none;
+}
+ *{
+  transition: none;
+} */
+</style>
     <div id="viewer" style="width: 100%; height: 100%;position: fixed;"></div>
     <script src="build/mirador/mirador.js"></script>
     <script type="text/javascript">
@@ -77,14 +85,36 @@
             // console.log("Returned: " + JSON.stringify(data))
           })}
     }
+    localStorage.clear();
+    {{#if data.custom}}
+    loadAnnotationsFromManifest("{{data.custom}}")
+    function loopResizeLayout(){
+      if( $('.layout-slot') && $('.layout-slot').attr('style') == "left: 0px; top: 0px; width: 0px; height: 0px;"){
+        setTimeout(function(){
+          return $('a.grid-item[data-gridstring="1x1"]').click().click()
+        }, 2000)
+      }
+      else return setTimeout(function(){
+        return loopResizeLayout()
+      }, 200)
+    }
+    loopResizeLayout()
+    // setTimeout(function(){
+    //   return $('a.grid-item[data-gridstring="1x1"]').click().click()
+    // }, 2000)
+       {{else}}
+       {{#each data.files}}
+       loadAnnotationsFromManifest("/api/iiif/manifest/{{this}}")
+       {{/each}}
+    {{/if}}
 
     $.get("/api/iiif/load").done(function(data){
-      localStorage.clear();
+
          // console.log(data)
-         for (item in data){
-           console.log('Setting->', item)
-           localStorage.setItem(item, data[item])
-         }
+         // for (item in data){
+         //   console.log('Setting->', item)
+         //   localStorage.setItem(item, data[item])
+         // }
        }).done(
 
      $(function() {
@@ -93,12 +123,33 @@
          "id": "viewer",
          "layout": "1x1",
          "data": [
-            {{#each data.files}}
-               {"manifestUri": "/api/iiif/manifest/{{this}}", "location": "Yale University"},
-            {{/each}}
+           {{#if data.custom}}
+             {"manifestUri": "{{data.custom}}", "location": "Science Stories Upload"},
+              {{else}}
+              {{#each data.files}}
+                 {"manifestUri": "/api/iiif/manifest/{{this}}", "location": "Science Stories Upload"},
+              {{/each}}
+           {{/if}}
+
          ],
-         "windowObjects": [],
-         "openManifestsPage": true,
+         {{#if data.custom}}
+           "windowObjects": [{
+             "loadedManifest": '{{data.custom}}',
+             "sidePanel": false,
+             "sidePanelVisible": false,
+             "bottomPanelVisible": false,
+             "canvasControls": {
+               "annotations" : {
+                 "annotationLayer" : true,
+                 "annotationCreation" : true,
+                 "annotationState" : "on",
+               }
+             }
+           }],
+         {{else}}
+           "windowObjects": [],
+           "openManifestsPage": true,
+         {{/if}}
          "annotationEndpoint": { "name":"Local Storage", "module": "LocalStorageEndpoint" },
          "sidePanelOptions" : {
            "tocTabAvailable": true,
@@ -106,13 +157,9 @@
            "searchTabAvailable": true,
            "annotations" : true
          },
-      }) .done( function (){
+      })
 
 
-      }
-
-
-            )
     }))
     var counter = 0;
     var i = setInterval(function(){

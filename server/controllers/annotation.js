@@ -8,8 +8,21 @@ const awsController = require('./aws');
 
 module.exports = {
 
+
   showPage(req, res) {
     // res.redirect('/login');
+    if (req.query.manifest){
+      var data = {
+        file_id:'annotate',
+        nav:'annotate',
+        title:'Annotate Manifests',
+        data: {
+          'uriList':[],
+          'custom': req.query.manifest
+        }
+      }
+      return loadPage(res, req, 'base',  data)
+    }
     awsController.loadManifestList(req, res, function (s3, files){
       annoIds = []
       for (f=0; f < files.length; f++){

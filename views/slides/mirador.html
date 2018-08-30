@@ -19,10 +19,19 @@
         }
       })
     }
+    function annotateButton(elm, manifest){
+    return   setTimeout(function(){
+      // console.log('RAN ON-> ',elm, manifest, $(elm), $(elm).length)
+        return  $(elm).prepend(`<a href="/annotate?manifest=${manifest}">annotate</a>`)
+      }, 10000)
+    }
     instanceData{{id}} = {{{json config.data}}};
     var windowObjs{{id}} = [];
     for (x=0; x < instanceData{{id}}.length; x++ ){
       loadAnnotationsFromManifest(instanceData{{id}}[x].manifestUri);
+      {{#ifUserType user.type 'author'}}
+      annotateButton("#mirador{{id}} .window-manifest-navigation:nth("+x+")", instanceData{{id}}[x].manifestUri)
+      {{/ifUserType}}
       windowObjs{{id}}[x] = {
         "loadedManifest": instanceData{{id}}[x].manifestUri,
         "viewType": instanceData{{id}}[x].viewType,

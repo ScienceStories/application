@@ -127,7 +127,7 @@ h2.section-header {
     vertical-align: middle;
     height: 80vh;
     margin: 0 auto;
-    display: inline-block;
+    display: table-cell;
     padding: 5px;
 }
 
