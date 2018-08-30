@@ -246,15 +246,16 @@ module.exports = {
     memberName = req.params.member
     pageNumber = req.params.pageNumber
     return Member.find({where:{username:memberName}}).then(member => {
-      return LogStory.findAll({where: {memberId:member.id}, attributes:['storyId','updatedAt'], order: [['updatedAt', 'DESC']], include:[{model: Story, as :'story', attributes:['id','qid']} ]})
+      return LogStory.findAll({where: {memberId:member.id}, attributes:['storyId','updatedAt'], order: [['updatedAt', 'DESC']], include:[{model: Story, as :'story', attributes:['id','qid', 'data']} ]})
       .then(contributedStories => {
         var qidsContributed = []
         var qidsContributedMap = {}
-
+        var contributedDataList = []
         for (var i = 0; i < contributedStories.length; i++) {
           var tempQid = contributedStories[i].dataValues.story.qid
           if(!qidsContributedMap[tempQid]){
             qidsContributed.push(tempQid)
+            contributedDataList.push(contributedStories[i].dataValues.story.data)
             qidsContributedMap[tempQid] = true
           }
         }
@@ -266,11 +267,22 @@ module.exports = {
         prevPage = (pageNumber == 1) ? 0 : pageNumber - 1
         offset = (pageNumber-1)*stories_per_page
         qidsContributed = qidsContributed.slice(offset, offset+stories_per_page)
+        contributedDataList = contributedDataList.slice(offset, offset+stories_per_page)
         if (!qidsContributed.length) return res.status(404).send('No more stories.')
         data = {totalStories:total_stories, page:pageNumber, maxPage: maxPage, prevPage:prevPage, nextPage:nextPage}
         // return res.send(qidsContributed)
         return wikidataController.getDetailsList(req, res, qidsContributed, 'small_with_age', 'first', false,
           function(qidList){
+            for (var i = 0; i < qidList.length; i++) {
+              if(!qidList[i].image){
+                for (var k = 0; k < contributedDataList[i].length; k++) {
+                  if (contributedDataList[i][k].image){
+                    qidList[i].image = contributedDataList[i][k].image
+                    break;
+                  }
+                }
+              }
+            }
             data['list'] = qidList
             data.page = function(){ return 'story_gallery'}
             return res.render('blank', data)

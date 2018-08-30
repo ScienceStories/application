@@ -158,7 +158,7 @@ module.exports = {
       nextPage = (pageNumber == maxPage) ? 0 : pageNumber + 1
       prevPage = (pageNumber == 1) ? 0 : pageNumber - 1
       data = {totalStories:total_stories, page:pageNumber, maxPage: maxPage, prevPage:prevPage, nextPage:nextPage}
-      Story.findAll({ attributes:['qid'], order: [['updatedAt', 'DESC']], offset: offset, limit: stories_per_page })
+      Story.findAll({ attributes:['qid', 'data'], order: [['updatedAt', 'DESC']], offset: offset, limit: stories_per_page })
       .then(out => {
           story_total = out.length;
           qidList = [];
@@ -173,6 +173,17 @@ module.exports = {
               //     qidList[i][key] = out[i].dataValues[key];
               //   }
               // }
+              for (var i = 0; i < qidList.length; i++) {
+                if(!qidList[i].image){
+                  for (var k = 0; k < out[i].dataValues.data.length; k++) {
+                    if (out[i].dataValues.data[k].image){
+                      qidList[i].image = out[i].dataValues.data[k].image
+                      break;
+                    }
+
+                  }
+                }
+              }
               data['browseList'] = qidList
               loadPage(res, req, 'base', {file_id:'browse',  title:`Browse Stories (Page ${pageNumber})`, nav:'browse', data:data})
             })
