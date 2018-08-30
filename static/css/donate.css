@@ -1,0 +1,99 @@
+section#intro {
+    padding:  150px 20vw;
+}
+
+#project p.section-subheader {
+    text-align:  left;
+    padding-left:  20px;
+}
+
+
+.cycle {
+ opacity: .2;
+ position: relative;
+ width: 100%;
+ height: 100%;
+ margin: 0 auto;
+}
+
+.cycle img {
+ position: absolute;
+ top: 0;
+ left: 0;
+ z-index: 10;
+ width:  100%;
+ height:  100%;
+ object-fit:  cover;
+}
+
+.cycle span {
+ position: absolute;
+ top: 20px;
+ left: 10px;
+ width: 440px;
+ padding: 10px;
+ background: url('bg.png');
+ color: #FFF;
+ z-index: 11;
+}
+
+.cycle span a {
+ float: right;
+ color: #FFF;
+ font-size: 12px;
+}
+#project * {
+    transition: none;
+}
+.left, .right{
+  display: table-cell;
+}
+.left{
+  background: #3ccfbe;
+  padding: 0;
+}
+section#project {
+    height: 100%;
+    padding: 0;
+}
+.right {
+    padding:  40px;
+}
+.right .section-subheader i {
+    opacity: .5;
+    border: 1px solid #3ccfbe;
+    padding: 6px;
+    border-radius: 100%;
+    font-size: 28px;
+    width: 50px;
+    text-align: center;
+    height: 50px;
+    padding-top: 10px;
+    margin-top: 15px;
+    margin-right: 5px;
+}
+.section-subheader strong {
+    opacity: .8;
+}
+a.at300b.at-tjin-btn {
+    float: none !important;
+    margin: 10px;
+    text-align:  center;
+}
+
+.addthis_toolbox.addthis_default_style {
+    text-align:  center;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.at-tjin-title {
+    display: inline-block;
+}
+
+div#attj {
+    border:  1px solid gray;
+    text-align:  center;
+    background: white;
+    margin:  20px;
+}

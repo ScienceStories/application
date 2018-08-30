@@ -20,6 +20,13 @@ module.exports = {
       changefreq: 'weekly',
       priority: 1
     })
+    // Add Donate
+    urlset.push({
+      loc: '/donate',
+      lastmod: lastmod,
+      changefreq: 'daily',
+      priority: .3
+    })
     // Add Bibliography
     urlset.push({
       loc: '/bibliography',

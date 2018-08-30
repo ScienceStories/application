@@ -18,6 +18,11 @@ module.exports = (app, sessionChecker) => {
       loadPage(res, req, 'full', {file_id:'home', nav:'home', title:'Welcome', story_count:count})
     })
   })
+  app.get('/donate', (req, res) => {
+    storyController.getCount(function(count){
+      loadPage(res, req, 'full', {file_id:'donate', nav:'donate', title:'Giving', story_count:count})
+    })
+  })
   app.get('/home', membersController.homeRedirect)
   app.get('/search', storyController.search)
   app.get('/annotate', (req, res) => membersController.accessCheck(req, res, 'author', annotationController.showPage));
