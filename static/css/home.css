@@ -125,7 +125,6 @@ h2.section-header {
 .left, .right {
     width: 48%;
     vertical-align: middle;
-    height: 80vh;
     margin: 0 auto;
     display: table-cell;
     padding: 5px;
@@ -140,7 +139,7 @@ h2.section-header {
 }
 
 section#project {
-    height:  115vh;
+    /* height:  115vh; */
     background: #ececec;
     padding: 50px;
 }

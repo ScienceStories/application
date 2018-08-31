@@ -271,3 +271,7 @@ ul.pagination-ul {
 .accent-color{
   color: #3ccfbe;
 }
+#navSearch .form-group{
+    width: calc(100% - 50px);
+    display: inline-block;
+}

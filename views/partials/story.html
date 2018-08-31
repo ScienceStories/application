@@ -8,6 +8,9 @@
 <button id="upArrow">
   <span>↑</span>
 </button>
+<button id="menuBtn" class="" onclick="$('body').toggleClass('sidebar-closed')"  title="Open/Close Menu">
+  <span><i class="fas fa-bars"></i></span>
+</button>
 {{#ifUserType user.type 'user'}}
 <button id="favoriteBtn" class="{{#if_equal storyActivity.favorite 1}} favorited{{else}}{{/if_equal}}" onclick="toggleFavorite({{row.id}})"  title="Add/Remove Favorite">
   <span><i class="fas fa-heart"></i></span>
@@ -48,6 +51,7 @@
 }
 </script>
 <div class="story-sidebar">
+  <div class="sidebar-list">
   {{#each data}}
     <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">
       {{#if_equal this.type 'intro'}}
@@ -91,7 +95,7 @@
     <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikidata Logo"> Wikipedia Article</div>
   {{/if}}
     <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"> <i class="far fa-comments"></i> Learn More</div>
-</div>
+</div></div>
 <div id="pagepiling">
 
   {{#each data}}
@@ -188,9 +192,15 @@ $('#favoriteLoader').fadeOut('slow');
 	  var $p=$(this).parent().children();
     return $p.index(this);
 }
+if($(window).width() <= 768) {
+  $('body').addClass('sidebar-closed');
+}
   function sidebarNavigate(elm){
     var thisindx= $(elm).getIndex() + 1
     $('#pp-nav li:nth-child('+thisindx+') a').click()
+    if($(window).width() <= 768) {
+      return $('body').addClass('sidebar-closed');
+    }
 
   }
   $(document).ready(function(){
