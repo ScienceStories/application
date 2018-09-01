@@ -804,7 +804,7 @@ div#timeline {
     font-size: 180%;
     border-bottom:  1px solid;
     font-weight:  200;
-    text-transform:  uppercase;
+    text-transform:  lowercase;
 }
 
 .map-popup-item {
@@ -883,6 +883,9 @@ div#mapid {
 
 .sidebar-closed div#pagepiling {
     width:  100%;
+}
+div.slide-intro.pp-section {
+    padding-top: calc(100px + 40vh);
 }
 @media screen and (max-width: 768px) {
     .story-sidebar {
