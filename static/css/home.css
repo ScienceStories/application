@@ -133,7 +133,7 @@ h2.section-header {
 .left img, .right img {
     width:  100%;
     vertical-align: text-bottom;
-    height: 100%;
+    /* height: 100%; */
     object-fit:  cover;
     box-shadow: -1px 1px 1px #8c8c8c;
 }
