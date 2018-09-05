@@ -88,9 +88,19 @@ module.exports = {
     // console.log(req.params.id, req.query.id )
     return wikidataController.processStory(req, res, {data: JSON.parse(req.query.data)});
   },
+  searchFunction(string, tokens){
+    var tokenTotal = tokens.length
+    var searchScore = 0
+    for (var i = 0; i < tokenTotal; i++) {
+      if (string.indexOf(tokens[i]) > -1) searchScore++;
+    }
+    if ( searchScore/tokenTotal < .75) return false
+    return true
+  },
   search(req, res) {
     searchString = req.query.search.toLowerCase().trim()
     if (!searchString.length) loadError(req, res, 'No Search Detected')
+    searchTokens = searchString.split(" ")
     return wikidataController.searchItems(req, res, searchString, function(results){
       // console.log(results)
       return Story.findAll({where: {qid:results}})
@@ -116,7 +126,7 @@ module.exports = {
                   var objectStr = alldetailList[i].itemLabel + alldetailList[i].itemDescription;
                   objectStr = JSON.stringify(alldetailList[i]) + JSON.stringify(allStories[i].dataValues)
                   objectStr = objectStr.toLowerCase()
-                  if  ((objectStr.indexOf(searchString) > -1) && (resultQids.indexOf(alldetailList[i].qid) == -1) ){
+                  if  (module.exports.searchFunction(objectStr, searchTokens) && (resultQids.indexOf(alldetailList[i].qid) == -1) ){
                     var newItem = alldetailList[i]
                     for(var key in allStories[i].dataValues) newItem[key] = allStories[i].dataValues[key];
                     detailList.push(newItem)
@@ -127,7 +137,8 @@ module.exports = {
                 return Member.findAll({attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }}).then(members => {
                   var member_total = 0
                   for (var i = 0; i < members.length; i++) {
-                    if (JSON.stringify(members[i].dataValues).toLowerCase().indexOf(searchString) > -1) {
+                    var memberString = JSON.stringify(members[i].dataValues).toLowerCase()
+                    if (module.exports.searchFunction(memberString, searchTokens)) {
                       detailList.push({
                         qid : 'member:'+ members[i].dataValues.username,
                         image: members[i].dataValues.image,
