@@ -120,10 +120,26 @@ nav#mainNav .open a.dropdown-toggle{
 li#accountDropDown {
     border-left: 2px solid #3a3c3e;
 }
-#accountDropDown a.dropdown-toggle {
+#accountDropDown a.dropdown-toggle i {
     font-size: 150%;
 }
-
+.nav-image-container {
+    width: 25px;
+    height: 25px;
+    display:  inline-block;
+    vertical-align:  top;
+    border: 1px solid #ffffffb8;
+    border-radius: 100%;
+    margin: -3px;
+}
+.nav-image-container img {
+       width:  100%;
+    height:  100%;
+    object-fit:  cover;
+    object-position:  top;
+    /* border: 2px solid white; */
+    border-radius: 100%;
+}
 #accountDropDown ul.dropdown-menu, #createDropdown ul.dropdown-menu {
     background: #46494c;
     border-radius: 0;

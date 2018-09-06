@@ -49,7 +49,19 @@
             <li {{#if_equal nav "bibliography"}} class="active" {{else}}{{/if_equal}}><a href="/bibliography">Bibliography</a></li>
             <li><a href="https://github.com/ScienceStories" target="_blank">GitHub <i class="fab fa-github"></i></a></li>
             <li class="dropdown" id="accountDropDown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle"></i></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                {{#ifUserType data.user.type 'user'}}
+                  {{#if data.user.image}}
+                  <div class="nav-image-container">
+                    <img src="{{data.user.image}}">
+                  </div>
+                  {{else}}
+                  <i class="fa fa-user-circle"></i>
+                  {{/if}}
+                {{else}}
+                Sign-Up / Login
+                {{/ifUserType}}
+              </a>
               <ul class="dropdown-menu">
                 {{#ifUserType data.user.type 'user'}}
                 <li{{#if_equal nav "profile"}} class="active" {{else}}{{/if_equal}}><a href="/profile">
