@@ -229,6 +229,7 @@ module.exports = {
             { model: Story, required: true, as:'story'}
           ],}
       data = {member:member}
+      meta = {description: `${member.name} is a member on Science Stories. ${member.bio} | Join Science Stories to connect with ${member.name} and others you may know.`}
       module.exports.getActivityList(req, res, 'favorites', favFilter, data, function(favoriteActivity){
         module.exports.getActivityList(req, res, 'views', topFilter, data, function(viewActivity){
         module.exports.getMemberActivity([member.id], 25, function(feed_list){
@@ -236,7 +237,7 @@ module.exports = {
           LogStory.findAll({where: {memberId:member.id}, attributes:[], group: ['storyId'] })
           .then(total_contributed_stories => {
             data.contributed_total = total_contributed_stories.length
-            return loadPage(res, req, 'base', {file_id:'member',  title:member.name + ' Member Page', nav:'member', data:data})
+            return loadPage(res, req, 'base', {file_id:'member',  title:member.name + ' Member Page', nav:'member', data:data, meta:meta})
           })
         })
       } )} )

@@ -16,6 +16,11 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{{#if meta}}
+			{{#if meta.description}}
+				<meta name="description" content="{{meta.description}}">
+			{{/if}}
+		{{/if}}
 	 <link rel="icon" type="image/png" href="static/images/icons/favicon.ico"/>
 
 	 <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
