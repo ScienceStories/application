@@ -119,6 +119,7 @@ nav#mainNav .open a.dropdown-toggle{
 }
 li#accountDropDown {
     border-left: 2px solid #3a3c3e;
+    background: #3e847c;
 }
 #accountDropDown a.dropdown-toggle i {
     font-size: 150%;

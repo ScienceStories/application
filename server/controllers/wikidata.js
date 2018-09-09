@@ -411,6 +411,7 @@ module.exports = {
     module.exports.processMapData(inverseData, true)
 
     // mapOutput = {'new': mapOutput, 'wd':wdData }
+    if (!Object.keys(mapOutput).length) mapOutput = false
     return callback(mapOutput)
   },
   processTimelineData(input, inverse=false){
