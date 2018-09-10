@@ -69,7 +69,7 @@ module.exports = (app, sessionChecker) => {
   // route for user Login
 app.route('/login')
     .get(sessionChecker, (req, res) => {
-      res.redirect('/profile')
+      res.redirect('/overview')
     })
 app.post('/login', membersController.login)
       // route for user's dashboard
@@ -85,9 +85,11 @@ app.get('/dashboard', (req, res) => {
 // route for user logout
 app.get('/logout', membersController.logout);
 // route for user profile
-  app.get('/profile', (req, res) => membersController.accessCheck(req, res, 'user', membersController.profile));
+app.get('/profile', (req, res) => membersController.accessCheck(req, res, 'user', membersController.profile));
+  app.get('/overview', (req, res) => membersController.accessCheck(req, res, 'user', membersController.overview));
   app.get('/feed', (req, res) => membersController.accessCheck(req, res, 'user', membersController.feed));
   app.get('/account', (req, res) => membersController.accessCheck(req, res, 'user', membersController.account));
+  app.get('/contributions', (req, res) => membersController.accessCheck(req, res, 'user', membersController.contributions));
   app.get('/member::username', membersController.memberPage);
 
   app.get('/admin', (req, res) => membersController.accessCheck(req, res, 'admin', membersController.admin));

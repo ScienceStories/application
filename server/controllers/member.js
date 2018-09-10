@@ -158,10 +158,13 @@ module.exports = {
     else return false
   },
   homeRedirect(req, res) {
-    if (module.exports.loggedIn(req)) res.redirect('/profile')
+    if (module.exports.loggedIn(req)) res.redirect('/overview')
     else res.redirect('/')
   },
   profile(req, res) {
+    return res.redirect('/member:'+req.session.user.username)
+  },
+  overview(req, res) {
 
     return Member.findById(req.session.user.id)
     .then(member => {
@@ -194,7 +197,7 @@ module.exports = {
               return wikidataController.getDetailsList(req, res, trendList, 'small',false,'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
                 function(trendData){
                   data['trending'] = trendData
-                  return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Profile', nav:'profile', profile_nav:function(){ return "overview"}, subtitle: "WELCOME BACK", data:data})
+                  return loadPage(res, req, 'base', {file_id:'profile',  title: `Overview (${member.name})`, nav:'profile', profile_nav:function(){ return "overview"}, subtitle: "WELCOME BACK", data:data})
                 })
 
             })
@@ -234,14 +237,18 @@ module.exports = {
         module.exports.getActivityList(req, res, 'views', topFilter, data, function(viewActivity){
         module.exports.getMemberActivity([member.id], 25, function(feed_list){
           data.feed_list = feed_list
-          LogStory.findAll({where: {memberId:member.id}, attributes:[], group: ['storyId'] })
-          .then(total_contributed_stories => {
-            data.contributed_total = total_contributed_stories.length
+          module.exports.getContributionCount(member.id, function(total_contributed_stories){
+            data.contributed_total = total_contributed_stories
             return loadPage(res, req, 'base', {file_id:'member',  title:member.name + ' Member Page', nav:'member', data:data, meta:meta})
           })
+
         })
       } )} )
     })
+  },
+  getContributionCount(memberId, callback){
+    return LogStory.findAll({where: {memberId:memberId}, attributes:[], group: ['storyId'] })
+     .then(total => callback(total.length))
   },
   getContributionGallery(req, res){
     memberName = req.params.member
@@ -338,7 +345,7 @@ module.exports = {
       req.session.user = member;
       module.exports.getMemberActivity(false, 25, function(feed_list){
         data.feed_list = feed_list
-        return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Story Feed', nav:'profile', profile_nav:function(){ return "feed"}, subtitle: "NEWS FEED", data:data})
+        return loadPage(res, req, 'base', {file_id:'profile',  title: `Story Feed (${member.name})`, nav:'profile', profile_nav:function(){ return "feed"}, subtitle: "NEWS FEED", data:data})
 
       })
       })
@@ -348,7 +355,19 @@ module.exports = {
     .then(member => {
       req.session.user = member;
       data = {user:member}
-      return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Account Settings', nav:'account', profile_nav:function(){ return "account"}, subtitle: "ACCOUNT SETTINGS", data:data})
+      return loadPage(res, req, 'base', {file_id:'profile',  title: `Account Settings (${member.name})`, nav:'account', profile_nav:function(){ return "account"}, subtitle: "ACCOUNT SETTINGS", data:data})
+        })
+  },
+  contributions(req, res){
+    return Member.findById(req.session.user.id)
+    .then(member => {
+      req.session.user = member;
+      data = {user:member}
+      return module.exports.getContributionCount(member.id, function(total){
+        data.contribution_total = total;
+        return loadPage(res, req, 'base', {file_id:'profile',  title: `Contributions (${member.name})`, nav:'contributions', profile_nav:function(){ return "contributions"}, subtitle: "CONTRIBUTIONS", data:data})
+      })
+
         })
   },
   admin(req, res){
@@ -377,7 +396,7 @@ module.exports = {
                       .then(editCount => {
                         return googleController.getAdminStats(googleStats => {
                           data.counts = {members: memberCount, stories: storyCount, favorites: faveCount, empty: emptyCount, edits: editCount, comments: commentCount, annotations: annotationCount, google: googleStats}
-                          return loadPage(res, req, 'base', {file_id:'profile',  title:member.name + ' Admin Panel', nav:'profile', profile_nav:function(){ return "admin"}, subtitle: "ADMIN PANEL", data:data})
+                          return loadPage(res, req, 'base', {file_id:'profile',  title: `Admin Panel (${member.name})`, nav:'profile', profile_nav:function(){ return "admin"}, subtitle: "ADMIN PANEL", data:data})
                         })
 
                       })

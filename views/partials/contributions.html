@@ -1,0 +1,39 @@
+<div id="profileBody">
+  <div class="profile-header">My Contributions</div>
+  <div class="" id="contributions">
+    <div class="tab-header">
+        {{data.contribution_total}} stories contributed to
+    </div>
+    <div class="browse-gallery grid are-images-unloaded">
+      <div class="grid__col-sizer"></div>
+      <div class="grid__gutter-sizer"></div>
+    </div>
+    <div class="page-load-status">
+      <div class="loader-ellips infinite-scroll-request">
+        <span class="loader-ellips__dot"></span>
+        <span class="loader-ellips__dot"></span>
+        <span class="loader-ellips__dot"></span>
+        <span class="loader-ellips__dot"></span>
+      </div>
+      <p class="infinite-scroll-last">All Contributed Stories Loaded</p>
+      <p class="infinite-scroll-error">All Contributed Stories Loaded</p>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  var memberUsername = '{{data.user.username}}'
+</script>
+<link rel="stylesheet" type="text/css" href="static/css/browse.css">
+<link rel="stylesheet" type="text/css" href="static/css/member.css">
+<script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
+<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script  src="/static/js/browse.js"></script>
+<script  src="/static/js/member.js"></script>
+
+<script>
+  $(function(){
+    loadContributions(1)
+    loadGridGallery()
+  })
+</script>

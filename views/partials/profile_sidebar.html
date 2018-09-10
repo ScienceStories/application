@@ -14,7 +14,7 @@
     <div class="sidebar-nav-btn {{#if_equal (profile_nav) "account"}}active{{/if_equal}}" onclick="window.location='/account';">
       Account
     </div>
-    <div class="sidebar-nav-btn {{#if_equal (profile_nav) "overview"}}active{{/if_equal}}" onclick="window.location='/profile';">
+    <div class="sidebar-nav-btn {{#if_equal (profile_nav) "overview"}}active{{/if_equal}}" onclick="window.location='/overview';">
       Overview
     </div>
     <div class="sidebar-nav-btn {{#if_equal (profile_nav) "feed"}}active{{/if_equal}}" onclick="window.location='/feed';">
@@ -24,7 +24,7 @@
       Analytics
     </div>
     {{#ifUserType data.user.type 'author'}}
-    <div class="sidebar-nav-btn" title="Coming Soon">
+    <div class="sidebar-nav-btn {{#if_equal (profile_nav) "contributions"}}active{{/if_equal}}" onclick="window.location='/contributions';">
       Contributions
     </div>
     {{/ifUserType}}
