@@ -4,6 +4,9 @@
 <script>
 (function(){
   // do some stuff
-  setInterval(function(){reloadComments({{row.id}})}, 600);
+  {{#if isPreview}}
+  {{else}}
+    setInterval(function(){reloadComments({{row.id}})}, 600);
+  {{/if}}
 })();
 </script>

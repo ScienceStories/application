@@ -17,6 +17,8 @@
           <option value="" disabled>--select type--</option>
           <option value="intro" {{#if_equal this.type "intro"}} selected {{else}}{{/if_equal}}>Intro</option>
           <option value="mirador"{{#if_equal this.type "mirador"}} selected {{else}}{{/if_equal}}>Mirador</option>
+          <option value="audio" {{#if_equal this.type "audio"}} selected {{else}}{{/if_equal}}>Audio</option>
+          <option value="video" {{#if_equal this.type "video"}} selected {{else}}{{/if_equal}}>Video</option>
           <option value="youtube" {{#if_equal this.type "youtube"}} selected {{else}}{{/if_equal}}>Youtube</option>
         </select>
         <div id="momentDetails">
@@ -63,6 +65,18 @@
               <input class="moment-config-input" name="layout"  placeholder="1x1" value="{{this.config.layout}}"/>
             </div>
           {{else}}
+          {{/if_equal}}
+          {{#if_equal this.type "audio" }}
+              <div class="inputDiv">
+                <div class="inputLabel">Embed Audio Source Url: </div>
+                <input class="moment-input" type="url" name="audio" value="{{this.audio}}" />
+              </div>
+          {{/if_equal}}
+          {{#if_equal this.type "video" }}
+              <div class="inputDiv">
+                <div class="inputLabel">Embed Video Source Url: </div>
+                <input class="moment-input" type="url" name="video" value="{{this.video}}" />
+              </div>
           {{/if_equal}}
           {{#if_equal this.type "youtube" }}
               <div class="inputDiv">
@@ -122,6 +136,8 @@ $(document).ready(function () {
               <option value="" disabled selected>--select type--</option>
               <option value="intro">Intro</option>
               <option value="mirador">Mirador</option>
+              <option value="audio">Audio</option>
+              <option value="video">Video</option>
               <option value="youtube">Youtube</option>
             </select>
             <div id="momentDetails">
@@ -167,21 +183,33 @@ $(document).ready(function () {
 
     qid = $('#wdIdentifier').val()
     if (qid){
-      $('#submitLoader').fadeIn('slow');
-      qid = 'Q'+ qid;
-      output = processForm();
-      return $.post('/api/story/update', {data: JSON.stringify(output), qid: qid }).done( function(data){
+      return $.get('/api/story/validate/Q'+qid).done(function(response){
+        if (response.valid) {
+          r = (response.active) ? confirm('This Identifier already has an active Story. Are you sure you want to overwrite an existing Story?') : true
+          if (r == true) {
+            $('#submitLoader').fadeIn('slow');
+            qid = 'Q'+ qid;
+            output = processForm();
+            return $.post('/api/story/update', {data: JSON.stringify(output), qid: qid }).done( function(data){
+              if (data == 'success'){
+                location.href = '/'+qid;
+              }
+              else{
+                alert(data)
+              }
+              $('#submitLoader').fadeOut('slow');
+            }
 
-        if (data == 'success'){
-          location.href = '/'+qid;
+            )
+          }
+          else {
+              // user pressed Cancel
+          }
         }
-        else{
-          alert(data)
+        else {
+          return alert('Invalid Wikidata Item \n Please check that there is an English label and that the item has the "Instance of (P31): Human (Q5)" statement')
         }
-        $('#submitLoader').fadeOut('slow');
-      }
-
-      )
+      })
     }
     else return alert('Please enter Wikidata Identifier')
 
@@ -254,13 +282,13 @@ var FORM_TYPE_TEMPLATE = {
     </div>
     <div class="inputDiv">
       <div class="inputLabel">Background Color: </div>
-      <input class="moment-input" type="color" name="color" value="#ffffff">
+      <input class="moment-input" type="color" name="color" value="#07a495">
     </div>
 
       <!--
     <div class="inputDiv">
       <div class="inputLabel">Overlay Color: </div>
-      <input class="moment-input" type="color" name="overlay-color" value="#1acca7">
+      <input class="moment-input" type="color" name="overlay-color" value="#07a495">
     </div>
 
     --!>
@@ -292,7 +320,53 @@ var FORM_TYPE_TEMPLATE = {
     </div>
     <div class="inputDiv">
       <div class="inputLabel">Background Color: </div>
-      <input class="moment-input" type="color" name="color" value="#ffffff">
+      <input class="moment-input" type="color" name="color" value="#07a495">
+    </div>
+
+  `,
+  'audio' : `
+    <div class="inputDiv">
+      <div class="inputLabel">Title: </div>
+      <input name='title' class="moment-input"/>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Description: </div>
+      <textarea class="moment-input" name="description"></textarea>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Embed Audio Source Url: </div>
+      <input class="moment-input" type="url" name="audio" />
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Tooltip: </div>
+      <input class="moment-input" name="tooltip" />
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Background Color: </div>
+      <input class="moment-input" type="color" name="color" value="#07a495">
+    </div>
+
+  `,
+  'video' : `
+    <div class="inputDiv">
+      <div class="inputLabel">Title: </div>
+      <input name='title' class="moment-input"/>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Description: </div>
+      <textarea class="moment-input" name="description"></textarea>
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Embed Video Source Url: </div>
+      <input class="moment-input" type="url" name="video" />
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Tooltip: </div>
+      <input class="moment-input" name="tooltip" />
+    </div>
+    <div class="inputDiv">
+      <div class="inputLabel">Background Color: </div>
+      <input class="moment-input" type="color" name="color" value="#07a495">
     </div>
 
   `,
@@ -315,7 +389,7 @@ var FORM_TYPE_TEMPLATE = {
     </div>
     <div class="inputDiv">
       <div class="inputLabel">Background Color: </div>
-      <input class="moment-input" type="color" name="color" value="#ffffff">
+      <input class="moment-input" type="color" name="color" value="#07a495">
     </div>
 
   `,

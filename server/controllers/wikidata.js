@@ -139,7 +139,12 @@ module.exports = {
   ).then(simplifiedResults => res.status(200).send(simplifiedResults))
 
   },
-
+  storyValidate(qid, callback){
+    var validateUrl = sparqlController.getStoryValidation(qid, 'en')
+    return appFetch(validateUrl).then(wikidataResponse => {
+      return callback(wikidataResponse)
+    })
+  },
   processStory(req, res, row) {
     // const jsonData = JSON.parse(fs.readFileSync("moments/hopper.json"));
     const jsonData = row.data
@@ -207,7 +212,8 @@ module.exports = {
                     // ADDED Here
                     return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
                       // FINAL CALL
-                      if (req.session.user && (req.url.indexOf('/preview') == -1)) {
+                      var isPreview = (req.url.indexOf('/preview') > -1)
+                      if (req.session.user && !isPreview) {
                         StoryActivity.findOrCreate({
                             where: {
                               memberId: req.session.user.id,
@@ -235,6 +241,7 @@ module.exports = {
                                 image: storyImage,
                                 user: req.session.user,
                                 row: row,
+                                isPreview: isPreview,
                                 comments: comments,
                                 meta: meta,
                                 map: mapData,
@@ -261,6 +268,7 @@ module.exports = {
                           qid: simplifiedResults.qid,
                           data: jsonData,
                           row: row,
+                          isPreview: isPreview,
                           comments: comments,
                           meta: meta,
                           map: mapData,

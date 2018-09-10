@@ -40,6 +40,8 @@
     10. Map
     11. Library
     12. award
+    13. Video
+    14. audio
  -->
 <script type="text/javascript">
   var wikititle = '{{wikipedia}}'.replace(" ", "_")
@@ -62,7 +64,10 @@
         {{else }}
           <i class="far fa-image"></i>
         {{/if_equal}}
-
+      {{else if_equal this.type 'audio'}}
+        <i class="fas fa-headphones-alt"></i>
+      {{else if_equal this.type 'video'}}
+        <i class="fas fa-video"></i>
       {{else if_equal this.type 'youtube'}}
         <i class="fab fa-youtube"></i>
       {{else}}
@@ -97,7 +102,6 @@
     <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"> <i class="far fa-comments"></i> Learn More</div>
 </div></div>
 <div id="pagepiling">
-
   {{#each data}}
     {{loadMoment this.type this}}
   {{/each}}

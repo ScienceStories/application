@@ -24,6 +24,14 @@ module.exports = {
     return wdk.sparqlQuery(query);
 
   },
+  getStoryValidation(qid, lang){
+    var query = `SELECT ?story ?storyLabel WHERE {
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+      VALUES (?story) {(wd:${qid})}.
+      ?story wdt:P31 wd:Q5.
+    }`
+    return wdk.sparqlQuery(query);
+  },
   getInverseClaims(qid, lang){
     var query = `SELECT   ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage ?objDate ?objProp
 ?objBirth ?objDeath ?objInstance ?objInstanceLabel{

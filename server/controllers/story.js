@@ -43,6 +43,21 @@ module.exports = {
       })
       .catch(error => loadError(req, res, 'Trouble Loading this Story'));
   },
+  validate(req, res){
+    var qid = req.params.qid
+    return Story.find({
+        where: {
+          qid: qid
+        },
+      }).then(story => {
+        if (story) return res.send({valid: true, active: true})
+        return wikidataController.storyValidate(qid, function(valid){
+          var isValid = (valid.results.bindings.length > 0)
+          return res.send({valid:isValid, active:false})
+        })
+
+      })
+  },
   getData(qid, next){
     return Story.findOne({where: {qid:qid}})
   },

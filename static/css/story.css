@@ -337,12 +337,28 @@ div.pp-section {
     background: black;
     height: 100%;
 }
+.page.page-audio {
+    text-align: center;
+    background: none;
+}
 .page.page-youtube {
     width: 100%;
     margin: 0;
     padding: 0;
     padding-bottom: 100px;
-    background: black;
+    background: none;
+}
+.page-video video {
+    width: 100%;
+    height: calc(100vh - 100px);
+    margin-bottom: 100px;
+}
+
+.page.page-video {
+    margin: 0;
+    width:  100%;
+    padding:  0;
+    background: #3b3b3b;
 }
 .slide-youtube .header {
 padding: 2px ;
@@ -714,13 +730,14 @@ iframe.index-preview {
     text-align: center;
     padding-bottom: 25px;
 }
-iframe#wikiframe {
+iframe#wikiframe, iframe#wdframe {
     border:  none;
     height: 100%;
     overflow-y: visible;
     height: 100vh;
     width: 100%;
 }
+
 .window {
     color: #777777;
 }

@@ -104,13 +104,13 @@ button#addMomentBtn:hover {
 }
 
 button#previewBtn {
-    color: #7f4faf;
-    border-color: #7f4faf;
+    color: #bc79ff;
+    border-color: #bc79ff;
     font-weight:  bold;
 }
 
 button#previewBtn:hover {
-    background:  #7f4faf;
+    background:  #bc79ff;
     color: white;
 }
 

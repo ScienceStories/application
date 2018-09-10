@@ -68,10 +68,13 @@
               </div>
             {{/each}}
           </figure>
+          {{#if_equal award.length 1}}
+          {{else}}
           <nav>
             <button class="nav prev">Prev</button>
             <button class="nav next">Next</button>
           </nav>
+          {{/if_equal}}
         </div>
       </div>
     </div>
@@ -277,6 +280,8 @@ div#pagepiling .page-award .circle-carousel nav button:hover {
 
   </style>
   <script>
+  {{#if_equal award.length 2}}
+  {{else}}
   window.addEventListener('load', function () {
   	var
   	carousels = document.querySelectorAll('.circle-carousel');
@@ -286,7 +291,7 @@ div#pagepiling .page-award .circle-carousel nav button:hover {
   		carousel(carousels[i]);
   	}
   });
-
+  {{/if_equal}}
   function carousel(root) {
   	var
   	figure = root.querySelector('figure'),

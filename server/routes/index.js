@@ -40,6 +40,7 @@ module.exports = (app, sessionChecker) => {
   app.get('/sitemap', sitemapController.generate);
   app.post('/api/comment/send', commentController.send);
   app.get('/api/comment/:comment_id', commentController.renderId);
+  app.get('/api/story/validate/:qid', storyController.validate);
   app.get('/api/story/:story_id/commentlist', commentController.renderList);
   app.get('/api/story/:story_id/comments', commentController.storyList);
   // route for Home-Page
