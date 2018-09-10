@@ -211,6 +211,9 @@ div.pp-section {
         background-position: center;
     background-repeat: no-repeat;
 }
+.slide-intro {
+  background-position: center 20%;
+}
 .slide-intro p {
     padding: 0 10% 10px 10%;
 }
