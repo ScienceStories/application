@@ -150,39 +150,45 @@ module.exports = {
     const jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
-    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage ?objInstance ?objInstanceLabel ?conferred ?conferredLabel{
-      VALUES (?company) {(wd:${qid})}
-      ?company ?p ?statement .
-      ?statement ?ps ?ps_ .
-      ?wd wikibase:claim ?p.
-      ?wd wikibase:statementProperty ?ps.
-      ?wd wikibase:propertyType  ?datatype.
-      OPTIONAL {
-      ?statement ?pq ?pq_ .
-      ?wdpq wikibase:qualifier ?pq .
+    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?conferred ?conferredLabel{
+    VALUES (?company) {(wd:${qid})}
+    ?company ?p ?statement .
+    ?statement ?ps ?ps_ .
+    ?wd wikibase:claim ?p.
+    ?wd wikibase:statementProperty ?ps.
+    ?wd wikibase:propertyType  ?datatype.
+    OPTIONAL {
+    ?statement ?pq ?pq_ .
+    ?wdpq wikibase:qualifier ?pq .
+    }
+OPTIONAL{
+   ?ps_ wdt:P31 ?objInstance .
+ }
+    OPTIONAL {
+      ?wd wdt:P1630 ?url  .
       }
-  OPTIONAL{
-     ?ps_ wdt:P31 ?objInstance .
+  OPTIONAL {
+  ?ps_ wdt:P856 ?objWebsite .
+  }
+      OPTIONAL{
+ ?ps_ wdt:P18 ?img .
+ }
+      OPTIONAL{
+ ?ps_ wdt:P154 ?logo .
+ }
+ OPTIONAL{
+   ?ps_ wdt:P276|wdt:P159 ?objLocationEntity .
+   ?objLocationEntity wdt:P625 ?objLocation.
+   OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
+ }
+ OPTIONAL{
+   ?ps_ wdt:P1027 ?conferred.
    }
-      OPTIONAL {
-        ?wd wdt:P1630 ?url  .
-        }
-        OPTIONAL{
-   ?ps_ wdt:P18 ?img .
-   }
-   OPTIONAL{
-     ?ps_ wdt:P276|wdt:P159 ?objLocationEntity .
-     ?objLocationEntity wdt:P625 ?objLocation.
-     OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
-   }
-   OPTIONAL{
-     ?ps_ wdt:P1027 ?conferred.
-     }
-   OPTIONAL{
-   ?ps_ wdt:P625 ?location .
-   }
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
-    } ORDER BY ?wd ?statement ?ps_
+ OPTIONAL{
+ ?ps_ wdt:P625 ?location .
+ }
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
+  } ORDER BY ?wd ?statement ?ps_
     `
     const url = wdk.sparqlQuery(sparql);
     appFetch(url).then(content => {
@@ -203,6 +209,9 @@ module.exports = {
               wikipedia = labels.entities[qid].sitelinks.enwiki.title
             }
             return module.exports.getMainStoryImage(row.data, simplifiedResults.statements, function(storyImage){
+              return module.exports.getEducationData(simplifiedResults.statements, function(educationData){
+
+                // return res.send(educationData)
               return module.exports.getAwardData(name, simplifiedResults.statements, function(awardData){
                 // return res.send(awardData)
                 return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
@@ -244,6 +253,7 @@ module.exports = {
                                 isPreview: isPreview,
                                 comments: comments,
                                 meta: meta,
+                                education: educationData,
                                 map: mapData,
                                 library: libraryData,
                                 timeline: timelineData,
@@ -271,6 +281,7 @@ module.exports = {
                           isPreview: isPreview,
                           comments: comments,
                           meta: meta,
+                          education: educationData,
                           map: mapData,
                           library: libraryData,
                           timeline: timelineData,
@@ -282,6 +293,7 @@ module.exports = {
                   })
                 })
               } )
+            })
             })
 
 
@@ -413,6 +425,33 @@ module.exports = {
       else mapOutput[tempMapitem.coordinates] = [ tempMapitem ]
     }}
   },
+  processEducationData(input){
+    for (var s=0; s < input.length; s++){
+      var tempEduItem = module.exports.checkEducationStatement(input[s])
+      if (tempEduItem){
+        if (!educationOutput[tempEduItem.qid]) educationOutput[tempEduItem.qid] = {}
+        var tempList = educationOutput[tempEduItem.qid]
+        if (!tempList.qid && tempEduItem.qid) tempList.qid = tempEduItem.qid
+        if (!tempList.title && tempEduItem.title) tempList.title = tempEduItem.title
+        if (!tempList.description && tempEduItem.description) tempList.description = tempEduItem.description
+        if (!tempList.image && tempEduItem.image) tempList.image = tempEduItem.image
+        if (!tempList.logo && tempEduItem.logo) tempList.logo = tempEduItem.logo
+        if (!tempList.website && tempEduItem.website) tempList.website = tempEduItem.website
+
+        if (!tempList.degree && tempEduItem.degree) tempList.degree = [tempEduItem.degree]
+        else if (tempList.degree && tempEduItem.degree && tempList.degree.indexOf(tempEduItem.degree) == -1){
+          tempList.degree.push(tempEduItem.degree)
+          // tempList.degree.sort()
+        }
+        if (!tempList.year && tempEduItem.year) tempList.year = [tempEduItem.year]
+        else if (tempList.year && tempEduItem.year && tempList.year.indexOf(tempEduItem.year) == -1){
+          tempList.year.push(tempEduItem.year)
+          tempList.year.sort()
+        }
+
+      }
+    }
+  },
   getMapData(name, wdData, inverseData, callback){
     mapOutput = {}
     module.exports.processMapData(wdData)
@@ -421,6 +460,29 @@ module.exports = {
     // mapOutput = {'new': mapOutput, 'wd':wdData }
     if (!Object.keys(mapOutput).length) mapOutput = false
     return callback(mapOutput)
+  },
+  getEducationData(wdData, callback){
+    educationOutput = {}
+    module.exports.processEducationData(wdData)
+
+    // educationOutput = {'new': educationOutput, 'wd':wdData }
+    if (!Object.keys(educationOutput).length) educationOutput = false
+    else {
+      var educationArray = []
+      // Create items array
+      var educationArray = Object.keys(educationOutput).map(function(key) {
+        return educationOutput[key];
+      });
+
+      // Sort the array based on the second element
+      educationArray.sort(function(second, first) {
+        if (!first.year) return 0
+        else if (!second.year) return 1
+        return second.year[0] - first.year[0];
+      });
+      return callback(educationArray)
+    }
+    return callback(educationOutput)
   },
   processTimelineData(input, inverse=false){
     for (var s=0; s < input.length; s++){
@@ -587,6 +649,50 @@ module.exports = {
       return tempval
     }
     return false
+  },
+  checkEducationStatement(statement){
+    if (statement.ps.value == "http://www.wikidata.org/prop/statement/P69" && statement.ps_ && statement.ps_Label && statement.ps_Label.value){
+      var tempval = {
+        qid : statement.ps_.value,
+        title: statement.ps_Label.value,
+        description: false,
+        degree: false,
+        year: false,
+        image: false,
+        website: false,
+        logo: false,
+      }
+      if(statement.ps_Description && statement.ps_Description.value){
+        tempval.description = statement.ps_Description.value
+      }
+
+      if(statement.img && statement.img.value){
+        tempval.image = statement.img.value
+      }
+      if(statement.objWebsite && statement.objWebsite.value){
+        tempval.website = statement.objWebsite.value
+      }
+      if(statement.logo && statement.logo.value){
+        tempval.logo = statement.logo.value
+      }
+      // Degree
+      if (statement.wdpq && statement.wdpq.value == "http://www.wikidata.org/entity/P512")
+      {
+        tempval.degree = statement.pq_Label.value
+      }
+      // Year
+      if (statement.wdpq
+        && ((statement.wdpq.value == "http://www.wikidata.org/entity/P580")
+          || (statement.wdpq.value == "http://www.wikidata.org/entity/P582")
+          || (statement.wdpq.value == "http://www.wikidata.org/entity/P585")))
+      {
+        tempval.year = parseInt(statement.pq_Label.value.substring(0,4), 10)
+      }
+
+      return tempval
+    }
+    else return false
+
   },
   checkTimelineStatement(name, statement, inverse=false){
     var tempval = {

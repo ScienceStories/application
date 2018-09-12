@@ -907,6 +907,15 @@ div#mapid {
 div.slide-intro.pp-section {
     padding-top: calc(100px + 40vh);
 }
+
+.page.page-education {
+    width: 100%;
+    padding: 0;
+    background: #d7efff;
+    margin-bottom:  0;
+    padding-bottom: 100px;
+}
+
 @media screen and (max-width: 768px) {
     .story-sidebar {
         display: inline-block;
