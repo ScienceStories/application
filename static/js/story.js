@@ -125,6 +125,9 @@ function reloadComments(story_id){
 $(document).ready(function(){
    $('.slide-index').scroll(function(){lazyload(".index-preview")});
    lazyload(".index-preview");
+   $('.people-list').draggable({
+    axis: "x"
+});
 });
 
 function lazyload(selector){

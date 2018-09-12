@@ -150,7 +150,7 @@ module.exports = {
     const jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
-    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?conferred ?conferredLabel{
+    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel{
     VALUES (?company) {(wd:${qid})}
     ?company ?p ?statement .
     ?statement ?ps ?ps_ .
@@ -176,6 +176,12 @@ OPTIONAL{
       OPTIONAL{
  ?ps_ wdt:P154 ?logo .
  }
+        OPTIONAL{
+ ?ps_ wdt:P569 ?objBirth .
+ }
+  OPTIONAL{
+ ?ps_ wdt:P570 ?objDeath .
+ }
  OPTIONAL{
    ?ps_ wdt:P276|wdt:P159 ?objLocationEntity .
    ?objLocationEntity wdt:P625 ?objLocation.
@@ -189,6 +195,7 @@ OPTIONAL{
  }
     SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
   } ORDER BY ?wd ?statement ?ps_
+
     `
     const url = wdk.sparqlQuery(sparql);
     appFetch(url).then(content => {
@@ -209,8 +216,9 @@ OPTIONAL{
               wikipedia = labels.entities[qid].sitelinks.enwiki.title
             }
             return module.exports.getMainStoryImage(row.data, simplifiedResults.statements, function(storyImage){
-              return module.exports.getEducationData(simplifiedResults.statements, function(educationData){
-
+              return module.exports.getPeopleData(name, simplifiedResults.statements,inverseStatements,  function(peopleData){
+                // return res.send(peopleData)
+                return module.exports.getEducationData(simplifiedResults.statements, function(educationData){
                 // return res.send(educationData)
               return module.exports.getAwardData(name, simplifiedResults.statements, function(awardData){
                 // return res.send(awardData)
@@ -253,6 +261,7 @@ OPTIONAL{
                                 isPreview: isPreview,
                                 comments: comments,
                                 meta: meta,
+                                people: peopleData,
                                 education: educationData,
                                 map: mapData,
                                 library: libraryData,
@@ -281,6 +290,7 @@ OPTIONAL{
                           isPreview: isPreview,
                           comments: comments,
                           meta: meta,
+                          people: peopleData,
                           education: educationData,
                           map: mapData,
                           library: libraryData,
@@ -295,7 +305,7 @@ OPTIONAL{
               } )
             })
             })
-
+})
 
 
 
@@ -425,6 +435,32 @@ OPTIONAL{
       else mapOutput[tempMapitem.coordinates] = [ tempMapitem ]
     }}
   },
+  processPeopleData(input, inverse=false){
+    for (var s=0; s < input.length; s++){
+      var tempPeopleItem = module.exports.checkPeopleStatement(name, input[s], inverse)
+      if (tempPeopleItem){
+        if (!peopleOutput[tempPeopleItem.qid]) peopleOutput[tempPeopleItem.qid] = {}
+        var tempList = peopleOutput[tempPeopleItem.qid]
+        if (!tempList.qid && tempPeopleItem.qid) tempList.qid = tempPeopleItem.qid
+        if (!tempList.title && tempPeopleItem.title) tempList.title = tempPeopleItem.title
+        if (!tempList.description && tempPeopleItem.description) tempList.description = tempPeopleItem.description
+        if (!tempList.image && tempPeopleItem.image) tempList.image = tempPeopleItem.image
+        if (!tempList.years && tempPeopleItem.years) tempList.years = tempPeopleItem.years
+
+        if (!tempList.relation && tempPeopleItem.relation) tempList.relation = [tempPeopleItem.relation]
+        else if (tempList.relation && tempPeopleItem.relation && tempList.relation.indexOf(tempPeopleItem.relation) == -1){
+          tempList.relation.push(tempPeopleItem.relation)
+          // tempList.relation.sort()
+        }
+        if (!tempList.qualifier && tempPeopleItem.qualifier) tempList.qualifier = [tempPeopleItem.qualifier]
+        else if (tempList.qualifier && tempPeopleItem.qualifier && tempList.qualifier.indexOf(tempPeopleItem.qualifier) == -1){
+          tempList.qualifier.push(tempPeopleItem.qualifier)
+          // tempList.qualifier.sort()
+        }
+
+      }
+    }
+  },
   processEducationData(input){
     for (var s=0; s < input.length; s++){
       var tempEduItem = module.exports.checkEducationStatement(input[s])
@@ -460,6 +496,15 @@ OPTIONAL{
     // mapOutput = {'new': mapOutput, 'wd':wdData }
     if (!Object.keys(mapOutput).length) mapOutput = false
     return callback(mapOutput)
+  },
+  getPeopleData(name, wdData, inverseData, callback){
+    peopleOutput = {}
+    module.exports.processPeopleData(wdData)
+    module.exports.processPeopleData(inverseData, true)
+
+    // peopleOutput = {'new': peopleOutput, 'wd':wdData }
+    if (!Object.keys(peopleOutput).length) peopleOutput = false
+    return callback(peopleOutput)
   },
   getEducationData(wdData, callback){
     educationOutput = {}
@@ -589,6 +634,46 @@ OPTIONAL{
     // Example: Point(-77.070795 38.876806)"
     var temp =  JSON.parse( point.substr(point.indexOf('Point'), point.length).substr(5).replace(' ', ',').replace(/\(/g, "[").replace(/\)/g, "]"));
     return [temp[1], temp[0]]
+  },
+  checkPeopleStatement(name, statement, inverse = false){
+    if (statement.objInstance && statement.objInstance.value == "http://www.wikidata.org/entity/Q5"){
+      var tempval = {
+        qid : statement.ps_.value,
+        pid : statement.ps.value,
+        title: statement.ps_Label.value,
+        description: false,
+        relation: false,
+        image: false,
+        qualifier: false,
+        years: false,
+        inverse: inverse
+      }
+      if(statement.img && statement.img.value){
+        tempval.image = statement.img.value
+      }
+      if (statement.ps_Label && statement.ps_Label.value) {
+        if (inverse) tempval.relation = statement.wdLabel.value + ": "+name
+        else tempval.relation = statement.wdLabel.value
+      }
+      if(statement.ps_Description && statement.ps_Description.value){
+        tempval.description = statement.ps_Description.value
+      }
+      if(statement.objBirth && statement.objBirth.value){
+        tempval.years = parseInt(statement.objBirth.value.substring(0,4), 10) + '-' 
+      }
+      if(statement.objDeath && statement.objDeath.value){
+        tempval.years += parseInt(statement.objDeath.value.substring(0,4), 10)
+      }
+      if (statement.wdpqLabel && statement.pq_Label){
+        if (inverse) tempval.qualifier = statement.wdpqLabel.value + " (for "+tempval.title+"): " + statement.pq_Label.value
+        else tempval.qualifier = statement.wdpqLabel.value + ': ' + statement.pq_Label.value
+      }
+
+      return tempval
+    }
+    else return false
+
+
   },
   checkMapStatement(name, statement, inverse = false){
     var tempval = {

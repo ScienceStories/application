@@ -915,6 +915,105 @@ div.slide-intro.pp-section {
     margin-bottom:  0;
     padding-bottom: 100px;
 }
+.page.page-people {
+    overflow-x: scroll;
+    overflow-y:  visible;
+    width: 100%;
+    background: #797676;
+    margin-bottom:  0;
+    padding-bottom: 100px;
+}
+
+span.person-image img {
+    width:  100%;
+}
+
+.page-people .people-list {
+    padding: 60px;
+    /* width: 800px; */
+    margin: 0 auto;
+    margin-top: 50px;
+    display: inline-block;
+    overflow-x: scroll;
+    overflow-y: visible;
+    white-space: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+.page-people .people-item {
+    display: inline-block;
+    width: 250px;
+    background: #0F1012;
+    color: #f9f9f9;
+    /* float: left; */
+    vertical-align: top;
+    text-transform: capitalize;
+    /* overflow-x: auto; */
+    white-space: normal;
+    margin: 10px;
+}
+.page-people .deal {
+  padding: 10px 0 0 0;
+}
+.page-people .deal span {
+  display: block;
+  text-align: center;
+}
+.page-people .deal span {
+    font-size: 23px;
+    text-transform: uppercase;
+}
+/* .page-people .deal span:last-of-type {
+  font-size: 13px;
+} */
+.page-people .people-item .price {
+  display: block;
+  width: 250px;
+  background: #292b2e;
+  margin: 15px 0 10px 0;
+  text-align: center;
+  font-size: 21px;
+  padding: 17px 0 17px 0;
+  font-weight: 200;
+}
+.page-people ul {
+  display: block;
+  margin: 20px 0 10px 0;
+  padding: 0;
+  list-style-type: none;
+  text-align: center;
+  color: #999999;
+}
+.page-people li {
+  display: block;
+  margin: 10px 0 0 0;
+}
+.page-people button {
+  border: none;
+  border-radius: 40px;
+  background: #292b2e;
+  color: #f9f9f9;
+  padding: 10px 37px;
+  margin: 10px 0 20px 60px;
+}
+.page-people .people-item:hover {
+  transform: scale(1.2);
+  height:  100%;
+  box-shadow: 0 0 4px 1px rgba(20, 20, 20, 0.8);
+}
+.page-people .people-item:hover button {
+  background: #8d6fe6;
+}
+.page-people .people-item:hover .price {
+  color: #c1acff;
+}
+li.people-item-description {
+    background: #8d6fe6;
+    font-size:  14px;
+    padding:  16px;
+    color: black;
+    font-weight: 300;
+}
 
 @media screen and (max-width: 768px) {
     .story-sidebar {

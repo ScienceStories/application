@@ -43,6 +43,7 @@
     13. Video
     14. audio
     15. education
+    16. People
  -->
 <script type="text/javascript">
   var wikititle = '{{wikipedia}}'.replace(" ", "_")
@@ -90,6 +91,9 @@
   {{#if timeline}}
     <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="far fa-calendar-alt"></i> Timeline of {{name}}</div>
   {{/if}}
+  {{#if people}}
+    <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-users"></i> People Relevant to {{name}}</div>
+  {{/if}}
   {{#if map}}
     <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-map-marked-alt"></i> Map of {{name}}</div>
   {{/if}}
@@ -111,6 +115,7 @@
   {{/each}}
   {{#if education}} {{> education }} {{/if}}
   {{#if timeline}} {{> timeline }} {{/if}}
+  {{#if people}} {{> people }} {{/if}}
   {{#if map}} {{> map }} {{/if}}
   {{#if library}} {{> library }} {{/if}}
   {{#if award}} {{> award }} {{/if}}
@@ -131,8 +136,8 @@
     tooltips.push((data[x].tooltip) ? data[x].tooltip : (data[x].title) ? data[x].title : data[x].description);
     colors.push(data[x].color);
   }
-  tooltips = tooltips.concat([{{#if education}}'Education',{{/if}} {{#if timeline}}'Timeline',{{/if}} {{#if map}}'Map',{{/if}} {{#if library}}'Library',{{/if}} {{#if award}}'Awards',{{/if}} 'Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
-  colors = colors.concat([{{#if education}}'#337399',{{/if}} {{#if timeline}}'#1dc7ce',{{/if}} {{#if map}}'rgb(29, 206, 173)',{{/if}} {{#if library}}'rgb(220, 132, 83)',{{/if}}  {{#if award}}'rgb(76, 76, 76)',{{/if}}  'rgb(255, 131, 148)', {{#if wikipedia}} 'rgb(129, 130, 160)',{{/if}} 'rgb(255, 185, 125)']);
+  tooltips = tooltips.concat([{{#if education}}'Education',{{/if}} {{#if timeline}}'Timeline',{{/if}} {{#if people}}'People',{{/if}} {{#if map}}'Map',{{/if}} {{#if library}}'Library',{{/if}} {{#if award}}'Awards',{{/if}} 'Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
+  colors = colors.concat([{{#if education}}'#337399',{{/if}} {{#if timeline}}'#1dc7ce',{{/if}}{{#if people}}'#8d6fe6',{{/if}} {{#if map}}'rgb(29, 206, 173)',{{/if}} {{#if library}}'rgb(220, 132, 83)',{{/if}}  {{#if award}}'rgb(76, 76, 76)',{{/if}}  'rgb(255, 131, 148)', {{#if wikipedia}} 'rgb(129, 130, 160)',{{/if}} 'rgb(255, 185, 125)']);
   lastSlide = tooltips.length;
   for (x=1; x <= lastSlide; x++){
     anchors.push(x)
