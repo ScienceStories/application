@@ -43,3 +43,6 @@
     padding: 50px;
     color: gray;
 }
+.work-item:hover {
+    transform: scale(1.02);
+}

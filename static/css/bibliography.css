@@ -52,3 +52,6 @@ div#bibliography {
     background: #5b298091;
     color: white;
 }
+.work-item:hover {
+    transform: scale(1.02);
+}

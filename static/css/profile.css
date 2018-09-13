@@ -38,7 +38,7 @@ span.accountIcon {
     margin-left:  6px;
 }
   div.profile-list-item:hover .profile-list-image {
-      height: 100px;
+      /* height: 100px; */
   }
 .profile-list-image {
     width: 75px;
@@ -117,7 +117,8 @@ div.profile-list-content > a {
     transition: all .4s ease;
 }
 .profile-list-item:hover {
-    font-size: 138%;
+    transform: scale(1.1);
+    /* font-size: 138%; */
     background: #ececec;
     /* text-align:  center; */
     color:  black;
