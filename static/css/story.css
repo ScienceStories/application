@@ -112,6 +112,7 @@ a#homeButton:hover {
     opacity: .5;
     width: 2em;
     height: 2em;
+    border: none;
 }
 button#upArrow:active, button#upArrow:focus {
     border:  none;
