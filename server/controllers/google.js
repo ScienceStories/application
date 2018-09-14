@@ -118,7 +118,7 @@ module.exports = {
         dateRanges[i] = {startDate: '30daysAgo', endDate: 'today'}
       }
       else if (dateRanges[i] == 'week'){
-        dateRanges[i] = {startDate: '77daysAgo', endDate: 'today'}
+        dateRanges[i] = {startDate: '7daysAgo', endDate: 'today'}
       }
     }
     return dateRanges
