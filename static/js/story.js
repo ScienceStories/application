@@ -1,3 +1,4 @@
+
 var wikidataAnnotationSet = {}
 function convertAnnotations(){
 $('.mirador-viewer .all-annotations .text-viewer p:not(.converted)').each(function() {
@@ -123,13 +124,24 @@ function reloadComments(story_id){
 
 
 $(document).ready(function(){
-   $('.slide-index').scroll(function(){lazyload(".index-preview")});
-   lazyload(".index-preview");
-   $('.people-list').draggable({
-    axis: "x"
-});
+  showPage();
+
+
 });
 
+function showPage() {
+  setTimeout(function () {
+    $(".loader-container").fadeOut('slow', 'swing', function(){
+      $(".post-loader").css('opacity', '').addClass('fade-in');
+      $('.slide-index').scroll(function(){lazyload(".index-preview")});
+      lazyload(".index-preview");
+      $('.people-list').draggable({axis: "x"});
+    });
+
+  }, 200);
+
+
+}
 function lazyload(selector){
    var wt = $(window).scrollTop();    //* top of the window
    var wb = wt + $(window).height();  //* bottom of the window

@@ -292,3 +292,78 @@ ul.pagination-ul {
     width: calc(100% - 50px);
     display: inline-block;
 }
+.fade-in {
+   opacity: 1;
+   transition: opacity .25s ease-in-out;
+   -moz-transition: opacity .25s ease-in-out;
+   -webkit-transition: opacity .25s ease-in-out;
+   }
+
+   .page-loader {
+       border: 16px solid #f3f3f3;
+       border-radius: 50%;
+       border-top: 16px solid #59ccc4;
+       border-right: 16px solid #59ccc4;
+       border-bottom: 16px solid #275d59;
+       border-left: 16px solid #58ccc4;
+       width: 250px;
+       height: 250px;
+       -webkit-animation: spin 2s linear infinite;
+       animation: spin 2s linear infinite;
+       margin: 0 auto;
+       vertical-align: middle;
+       position: absolute;
+       top: calc(50% - 125px);
+       left: calc(50% - 125px);
+   }
+   .loader-container {
+    width:  100%;
+    height: 100%;
+    text-align:  center;
+    position: absolute;
+    background: #1a7570;
+}
+
+.loader-image {
+    width: 210px;
+    top: calc(50% - 32px);
+    /* left: 50%; */
+    margin:  0 auto;
+    position:  relative;
+    text-align:  center;
+    vertical-align:  middle;
+    display:  inline-block;
+}
+
+.loader-image img {
+    width:  100%;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.small-screen-message{
+  display: none;
+}
+.small-screen-message button {
+    float: right;
+    opacity: .6;
+}
+@media screen and (max-width: 768px) {
+  .small-screen-message {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    z-index: 10000000000000;
+    padding: 10px 25px;
+    font-weight: 300;
+    background: white;
+    box-shadow: 2px 0px 17px black;
+  }
+}
