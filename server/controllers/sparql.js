@@ -116,7 +116,8 @@ module.exports = {
     WHERE
     {
       {?item wdt:P31 wd:Q13442814}
-      UNION {?item wdt:P31 wd:Q571}.
+      UNION {?item wdt:P31 wd:Q571}
+      UNION {?item wdt:P31 wd:Q10870555}.
       ?item wdt:P921 wd:Q113616.
       ?item wdt:P31 ?instance.
       optional {?item wdt:P2093 ?author.}

@@ -194,6 +194,9 @@ hbs.registerHelper('itemIcon', function convert_item_fa_class(item) {
         else if (value == 'Q13442814') { //Scholarly Article
           return 'far fa-file-alt';
         }
+        else if (value == 'Q10870555') { //Report
+          return 'far fa-chart-bar';
+        }
       }
     }
     return 'far fa-question-circle';

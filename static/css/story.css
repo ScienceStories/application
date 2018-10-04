@@ -324,6 +324,7 @@ div.pp-section {
     -moz-box-sizing: border-box;
     /* <=28 */
     box-sizing: border-box;
+    margin-bottom: 50vh !important;
 }
 .page p {
     font-style: 12px;

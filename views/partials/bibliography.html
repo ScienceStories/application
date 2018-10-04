@@ -9,7 +9,7 @@
       <a class="browse-story-link" target="_blank" href="https://wikidata.org/wiki/{{this.qid}}">
         <div class="item-title">
           <div class="work-icon">
-            <i class="{{#if_equal this.instanceLabel 'book'}}fa fa-book {{else}}far fa-file-alt{{/if_equal}} "></i>
+            <i class="{{#if_equal this.instanceLabel 'book'}}fa fa-book {{else}}{{#if_equal this.instanceLabel 'report'}}far fa-chart-bar{{else}}far fa-file-alt{{/if_equal}}{{/if_equal}} "></i>
           </div>
           <div class="work-content">
           {{this.itemLabel}}
