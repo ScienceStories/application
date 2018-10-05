@@ -225,3 +225,8 @@ span.odometer-value {
 .story-odometer.odometer.odometer-theme-car {
     background: white;
 }
+.twitter-container{
+  max-height: 500px;
+  overflow-y: scroll;
+  margin: 100px 100px 100px 50px;
+}
