@@ -104,14 +104,10 @@ app.post('/upload', (req, res) => membersController.accessCheck(req, res, 'user'
 // route for Building Stories
   app.get('/build', (req, res) => membersController.accessCheck(req, res, 'author', storyController.build));
 // route for Error Page
-  app.get('/error', (req, res) => res.render('base', {
-    page: function(){ return 'error'},
-    title: 'Error',
-    nav: 'error',
-    scripts: function(){ return 'error_scripts'},
-    links: function(){ return 'error_links'},
-    message: req.query.msg
-  }));
+  app.get('/error', (req, res) =>
+    loadError(req, res, req.query.msg)
+
+  );
   app.get('/api', (req, res) => res.status(200).send({
     message: 'Welcome to the Science Stories API!',
   }));

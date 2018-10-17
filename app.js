@@ -267,7 +267,7 @@ module.exports = {
     })
   },
   // Helper function to wrapp page load redering
-  loadPage: function (res, req, layout, data){
+  loadPage(res, req, layout, data, status=false){
     data.page  = function(){ return data.file_id}
     data.scripts = function(){ return data.file_id+'_scripts'}
     data.links = function(){ return data.file_id+'_links'}
@@ -277,11 +277,24 @@ module.exports = {
       }
       data.data.user = req.session.user;
     }
-
-    res.render(layout, data);
+    if (status) return res.status(status).render(layout, data);
+    return res.render(layout, data);
   },
-  loadError: function (req, res, msg){
-    return res.status(401).redirect('/error?msg='+encodeURIComponent(msg))
+  loadError(req, res, message, status=false){
+    data = {
+      page: function(){ return 'error'},
+      scripts: function(){ return 'error_scripts'},
+      links: function(){ return 'error_links'},
+      message: message
+    }
+    if (req.session.user){
+      if (data.data == undefined) {
+        data.data = {}
+      }
+      data.data.user = req.session.user;
+    }
+    if (status) return res.status(status).render('base', data);
+    return res.status(501).render('base', data);
   },
 };
 
