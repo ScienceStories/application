@@ -30,7 +30,7 @@ $("#uploadForm").submit(function(event) {
   setTimeout(function(data){
     console.log(data)
     filetype = $('#fileType').val()
-    fileName = $('#fileName').val().trim().replace(' ','_')
+    fileName = $('#fileName').val().trim().replace(/ /g,"_")
     if(filetype == 'general'){
       responseUrl = '/upload/'+$('#submitBtn').data('username') +'/'+fileName+'.'+$('#file').val().split('.').pop();
     }

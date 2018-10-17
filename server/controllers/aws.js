@@ -30,11 +30,12 @@ var upload = multer({
       cb(null, {fieldName: file.fieldname});
     },
     key: function (req, file, callback) {
+      var file_string = req.body.filename.trim().replace(/ /g,"_") + path.extname(file.originalname)
       return Member.findById(req.session.user.id)
       .then(member => {
         newFilename = UPLOAD_FILE_PREFIX[req.body.filetype]
         if (req.body.filetype != 'manifest') newFilename += member.username+'/'
-        newFilename += req.body.filename.trim().replace(' ','_') + path.extname(file.originalname)
+        newFilename += file_string
         callback(null, newFilename);
       })
     },
