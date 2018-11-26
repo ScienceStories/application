@@ -6,7 +6,9 @@
   // do some stuff
   {{#if isPreview}}
   {{else}}
-    setInterval(function(){reloadComments({{row.id}})}, 600);
+    setInterval(function(){
+      if ($('.slide-index').hasClass('active')) reloadComments({{row.id}})
+    }, 5000);
   {{/if}}
 })();
 </script>
