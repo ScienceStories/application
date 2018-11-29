@@ -190,10 +190,25 @@ module.exports = {
         module.exports.getActivityList(req, res, 'mostViews', topFilter, data, function(favoriteActivity){
             return googleController.getPopularStories(['week'], 10,  function(out){
               var rows = out.rows
-              trendList = []
+              resultObj = {}
               for (var i = 0; i < rows.length; i++) {
-                trendList.push(rows[i].dimensions[0].substr(1))
+                var qid = rows[i].dimensions[0].substr(1).toUpperCase()
+                var storyCount = parseInt(rows[i].metrics[0].values[0]);
+                if (resultObj[qid]) resultObj[qid] += storyCount
+                else resultObj[qid] = storyCount
               }
+              // Create items array
+              var items = Object.keys(resultObj).map(function(key) {
+                return [key, resultObj[key]];
+              });
+
+              // Sort the array based on the second element
+              items.sort(function(first, second) {
+                return second[1] - first[1];
+              });
+              trendList = items.map(function(key){
+                return key[0];
+              })
               return wikidataController.getDetailsList(req, res, trendList, 'small',false,'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
                 function(trendData){
                   data['trending'] = trendData
