@@ -71,12 +71,12 @@ $('#sourceCarousel').slick({
   ],
 });
 ScrollReveal({ distance: '100px' });
-ScrollReveal({ reset: true }).reveal('section',
+ScrollReveal().reveal('section',
 {
   origin: 'bottom',
   over: '3s'
 });
-ScrollReveal({ reset: true }).reveal('.odometer',
+ScrollReveal().reveal('.odometer',
 {
   origin: 'down',
   over: '3s',
@@ -87,17 +87,17 @@ ScrollReveal({ reset: true }).reveal('.odometer',
 
   }
 });
-ScrollReveal({ reset: true }).reveal('#features .left img',
+ScrollReveal().reveal('#features .left img',
 { delay: 500 ,
   origin: 'left',
   over: '3s'
 });
-ScrollReveal({ reset: true }).reveal('#features .right img',
+ScrollReveal().reveal('#features .right img',
 { delay: 500 ,
   origin: 'right',
   over: '3s'
 });
-ScrollReveal({ reset: true }).reveal('#features .bottom img',
+ScrollReveal().reveal('#features .bottom img',
 { delay: 500 ,
   origin: 'bottom',
   over: '3s'
