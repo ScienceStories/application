@@ -4,6 +4,7 @@
 input, textarea, option, select {
     padding: 5px;
     text-align: center;
+    font-weight: 400;
 }
 
 input.moment-config-data-input[name=manifestUri] {
