@@ -81,6 +81,10 @@
           {{#if_equal this.type "youtube" }}
               <div class="inputDiv">
                 <div class="inputLabel">Embed Video Source Url: </div>
+                <span class="small-text">
+                  If your link looks like "https://www.youtube.com/watch?v=video-id&t=6s", <br />
+                  convert to "https://www.youtube.com/embed/video-id"
+                </span>
                 <input class="moment-input" type="url" name="video" value="{{this.video}}" />
               </div>
           {{else}}
@@ -380,8 +384,12 @@ var FORM_TYPE_TEMPLATE = {
       <textarea class="moment-input" name="description"></textarea>
     </div>
     <div class="inputDiv">
-      <div class="inputLabel">Embed Video Source Url: </div>
-      <input class="moment-input" type="url" name="video" />
+      <div class="inputLabel">Embed Video Source Url:</div>
+      <span class="small-text">
+        If your link looks like "https://www.youtube.com/watch?v=video-id&t=6s", <br />
+        convert to "https://www.youtube.com/embed/video-id"
+      </span>
+      <input class="moment-input" type="url" name="video" placeholder="https://www.youtube.com/embed/video-id" />
     </div>
     <div class="inputDiv">
       <div class="inputLabel">Tooltip: </div>
