@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Story = require('../models').story;
 const Member = require('../models').member;
 const LogStory = require('../models').logstory;
@@ -7,6 +8,7 @@ const loadPage =  require('../../app').loadPage;
 const wikidataController = require('./wikidata');
 const loadError =  require('../../app').loadError;
 const sequelize = require('../models').sequelize;
+const featuredStories =  JSON.parse(fs.readFileSync("server/controllers/featuredStories.json"));
 module.exports = {
   create(req, res) {
     qid = 'Q' + req.body.qid
@@ -237,6 +239,11 @@ module.exports = {
           })
       })
       .catch(error => {console.log(error); res.send("Trouble Publishing This Story at This Time")});
+  },
+  getFeaturedList() {
+    // TODO: There is a bug when an odd number of elements are in the carousel.
+    // Duplicating the list is a temporary fix
+    return featuredStories.concat(featuredStories);
   },
 
 

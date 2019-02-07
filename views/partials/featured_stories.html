@@ -1,0 +1,19 @@
+
+<h2 class="section-header">Featured Stories</h2>
+<p class="section-subheader">Celebrating Black History Month With 5 Inspiring Black Scientists</p>
+<div id="featuredCarousel">
+  {{#each featured_stories}}
+    <div class="featured-story-item">
+      <a href="/{{this.qid}}">
+        <img src="{{this.image}}" alt="Image of {{this.name}}">
+        <div class="carousel-item-header">
+          {{this.name}} <span class="fontsize50">({{this.date_range}})</span>
+        </div>
+        <div class="carousel-item-details">
+          <span class="career-title">{{this.occupation}}</span><br>
+          {{this.description}}
+        </div>
+      </a>
+    </div>
+  {{/each}}
+</div>

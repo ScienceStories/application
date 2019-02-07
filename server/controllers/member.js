@@ -5,6 +5,7 @@ const Comment = require('../models').comment;
 const StoryActivity = require('../models').storyactivity;
 const bcrypt = require('bcrypt');
 const multer  = require('multer')
+const storyController = require('./story');
 const wikidataController = require('./wikidata');
 const googleController = require('./google');
 const loadPage =  require('../../app').loadPage;
@@ -55,7 +56,9 @@ module.exports = {
             res.redirect('/login');
         } else {
             req.session.user = user.dataValues;
-            res.redirect('/dashboard');
+            req.session.save(function(err) {
+              return res.redirect('/overview');
+            })
         }
     })
   },
@@ -80,7 +83,6 @@ module.exports = {
       return next(req, res);
     }
     else{
-      // console.log(req.session)
       user = req.session.user;
       accessType = {
         'user': ['basic', 'author', 'admin'],
@@ -165,7 +167,6 @@ module.exports = {
     return res.redirect('/member:'+req.session.user.username)
   },
   overview(req, res) {
-
     return Member.findById(req.session.user.id)
     .then(member => {
       req.session.user = member;
@@ -212,7 +213,8 @@ module.exports = {
               return wikidataController.getDetailsList(req, res, trendList, 'small',false,'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
                 function(trendData){
                   data['trending'] = trendData
-                  return loadPage(res, req, 'base', {file_id:'profile',  title: `Overview (${member.name})`, nav:'profile', profile_nav:function(){ return "overview"}, subtitle: "WELCOME BACK", data:data})
+                  let featured_stories = storyController.getFeaturedList();
+                  return loadPage(res, req, 'base', {file_id:'profile',  title: `Overview (${member.name})`, nav:'profile', profile_nav:function(){ return "overview"}, subtitle: "WELCOME BACK", data:data,featured_stories: featured_stories})
                 })
 
             })

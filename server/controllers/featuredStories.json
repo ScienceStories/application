@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Olivia Hooker",
+    "qid": "Q19668630",
+    "date_range": "1915-2018",
+    "occupation": "Psychologist and Professor",
+    "description": "She was the last known survivor of the Tulsa race riots of 1921, and the first African-American woman to enter the U.S. Coast Guard in February 1945",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/1/15/%22Two_Negro_SPARS_pause_on_the_ladder_of_the_dry-land_ship_%60U.S.S._Neversail%27_during_their_%60boot%27_training_at_the_U.S._Co_-_NARA_-_535869_%28cropped%29.jpg"
+  },
+  {
+    "name": "Katharine Johnson",
+    "qid": "Q11740",
+    "date_range": "1918-",
+    "occupation": "Mathematician and Physicist",
+    "description": "Calculated the orbital mechanics of the first and subsequent U.S. manned spaceflights for NASA",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Katherine_Johnson_at_NASA%2C_in_1966.jpg/1024px-Katherine_Johnson_at_NASA%2C_in_1966.jpg"
+  },
+  {
+    "name": "Rhetaugh Graves Dumas",
+    "qid": "Q14954654",
+    "date_range": "1928-2007",
+    "occupation": "Nurse, Professor, and Health Administrator",
+    "description": "Said to have been the first nurse to use the scientific method to conduct experiments that evaluated nursing practices, and the first woman or African American deputy director of the NIMH",
+    "image": "http://www.cpnas.org/aahp/biographies/primary-biography-photos/dumas_rhetaughg.jpg"
+  },
+  {
+    "name": "Mae C. Jemison",
+    "qid": "Q34091",
+    "date_range": "1956-",
+    "occupation": "Engineer, Physician and NASA Astronaut",
+    "description": "First African American woman to travel in space when she went into orbit aboard the Space Shuttle Endeavour on September 12, 1992",
+    "image": "https://d3n8a8pro7vhmx.cloudfront.net/theblackinstitute/pages/431/attachments/original/1489780974/800px-Dr._Mae_C._Jemison__First_African-American_Woman_in_Space_-_GPN-2004-00020.jpg?1489780974"
+  },
+  {
+    "name": "Mary Jackson",
+    "qid": "Q27221300",
+    "date_range": "1921-2005",
+    "occupation": "Mathematician and Aerospace Engineer",
+    "description": "In 1958, became NASA's first black female engineer and had earned the most senior engineering title available of her time.",
+    "image": "https://blog.spcollege.edu/engineering-manufacturing-building-arts-educational-information/wp-content/uploads/sites/7/cache/2018/02/mary-jackson/-1727696509.jpg"
+  }
+]
