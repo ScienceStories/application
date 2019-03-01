@@ -23,6 +23,10 @@ module.exports = {
         return pyshellrunner('wikidataToCommonsManifest.py', pyoptions,
                              (err, results) => {
                                 // console.log(err);
+                                if (err){
+                                  console.log(err);
+                                  return res.send({"status": "server error"});
+                                }
                                 let manifestJSON = JSON.parse(results);
                                 return res.send(manifestJSON);
         });
