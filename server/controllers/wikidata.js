@@ -228,6 +228,7 @@ OPTIONAL{
                     // return res.send(mapData)
                     // ADDED Here
                     return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
+                      let commonsCategory = module.exports.getCommonsCategory(simplifiedResults.statements, 'P373');
                       // FINAL CALL
                       var isPreview = (req.url.indexOf('/preview') > -1)
                       if (req.session.user && !isPreview) {
@@ -266,7 +267,8 @@ OPTIONAL{
                                 map: mapData,
                                 library: libraryData,
                                 timeline: timelineData,
-                                award: awardData
+                                award: awardData,
+                                commonsCategory: commonsCategory
                               })})
                             })
                         })
@@ -295,7 +297,8 @@ OPTIONAL{
                           map: mapData,
                           library: libraryData,
                           timeline: timelineData,
-                          award: awardData
+                          award: awardData,
+                          commonsCategory: commonsCategory
                         })
                       })
                     })
@@ -318,24 +321,29 @@ OPTIONAL{
   })
 
   },
+  getStatementValueByProp(statements, prop_id){
+    for (let i = 0; i < statements.length; i++) {
+      let tempItem = statements[i];
+      if (tempItem.ps
+        && tempItem.ps.value
+        && (tempItem.ps.value == "http://www.wikidata.org/prop/statement/"+prop_id)
+        && tempItem.ps_
+        && tempItem.ps_.value
+      ) return tempItem.ps_.value;
+    }
+    return false;
+  },
   getMainStoryImage(storyData, wikidata, callback){
     for (var i = 0; i < storyData.length; i++) {
       if (storyData[i].image){
         return callback(storyData[i].image)
       }
-
     }
-    for (var i = 0; i < wikidata.length; i++) {
-      var tempItem = wikidata[i];
-      if (tempItem.ps
-        && tempItem.ps.value
-        && (tempItem.ps.value == "http://www.wikidata.org/prop/statement/P18")
-        && tempItem.ps_
-        && tempItem.ps_.value
-      ) return callback(tempItem.ps_.value)
-    }
-    return callback('http://sciencestories.io/static/images/branding/logo_black.png')
-
+    let img_val = module.exports.getStatementValueByProp(wikidata, 'P18');
+    return (img_val) ? callback(img_val) : callback('http://sciencestories.io/static/images/branding/logo_black.png');
+  },
+  getCommonsCategory(statements){
+    return  module.exports.getStatementValueByProp(statements, 'P373');
   },
   processAnnotation(req, res){
     qid = req.params.qid;
@@ -659,7 +667,7 @@ OPTIONAL{
         tempval.description = statement.ps_Description.value
       }
       if(statement.objBirth && statement.objBirth.value){
-        tempval.years = parseInt(statement.objBirth.value.substring(0,4), 10) + '-' 
+        tempval.years = parseInt(statement.objBirth.value.substring(0,4), 10) + '-'
       }
       if(statement.objDeath && statement.objDeath.value){
         tempval.years += parseInt(statement.objDeath.value.substring(0,4), 10)

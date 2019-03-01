@@ -144,5 +144,14 @@ SELECT ?truc ?presLabel ?trucLabel ?coord ?layer WHERE {
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
 }`
 return wdk.sparqlQuery(query);
-  }
+},
+getCommonsCategory(item){
+  let query = `
+  SELECT ?item ?commonsCat
+  WHERE {
+    VALUES (?item) { (wd:${item}) }.
+    ?item wdt:P373 ?commonsCat  .
+  }`
+  return wdk.sparqlQuery(query);
+}
 }

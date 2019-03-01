@@ -1,6 +1,7 @@
 const membersController = require('../controllers').members;
 const storyController = require('../controllers').story;
 const wikidataController = require('../controllers').wikidata;
+const wikicommonsController = require('../controllers').wikicommons;
 const annotationController = require('../controllers').annotation;
 const commentController = require('../controllers').comment;
 const sitemapController = require('../controllers').sitemap;
@@ -32,14 +33,28 @@ module.exports = (app, sessionChecker) => {
   app.get('/annotate', (req, res) => membersController.accessCheck(req, res, 'author', annotationController.showPage));
   // route for Test-Page
   app.get('/test', (req, res) => {
+
+    let python = require('python-shell');
+    let po = {
+      pythonPath: '/Users/KSN/Documents/Yale/Classes/490/application/venv/bin/python',
+      scriptPath: './pyscripts'}
+      console.log('Startingggg')
+      let d =  python.PythonShell.run('t.py', po, function (err, results) {
+          console.log('HHHH')
+          console.log(err);
+          console.log('-->>> ', results);
+          var pres = JSON.parse(results);
+          console.log(pres)
+          return res.render('base', {
+            page: function(){ return 'test'},
+            scripts: function(){ return 'test_scripts'},
+            links: function(){ return 'test_links'},
+            title: "Welcome",
+            nav: "test",
+          });
+        });
       // res.redirect('/login');
-      res.render('base', {
-        page: function(){ return 'test'},
-        scripts: function(){ return 'test_scripts'},
-        links: function(){ return 'test_links'},
-        title: "Welcome",
-        nav: "test",
-      });
+
   });
   app.get('/sitemap', sitemapController.generate);
   app.post('/api/comment/send', commentController.send);
@@ -145,7 +160,7 @@ app.post('/api/dump/stories', (req, res) => {
   app.post('/api/iiif/loadFromUri', annotationController.loadFromUri);
 app.post('/api/iiif/loadFromManifest', annotationController.loadFromManifest);
   app.post('/api/iiif/update', annotationController.update);
-
+  app.get('/api/iiif/:qid/wikicat/manifest.json', wikicommonsController.generateCommonsManifestFromWikidataItem)
   app.get('/api/iiif/:manifest', (req, res) => {
     var content = fs.readFileSync("manifests/"+req.params.manifest+'/index.json');
     res.status(200).send(JSON.parse(content));
