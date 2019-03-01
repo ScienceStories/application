@@ -5,6 +5,7 @@ const loadPage =  require('../../app').loadPage;
 const loadError =  require('../../app').loadError;
 const sparqlController = require('./sparql');
 const commentController = require('./comment');
+const wikicommonsController = require('./wikicommons');
 const StoryActivity = require('../models').storyactivity;
 const sequelize = require('../models').sequelize;
 const fs = require('fs');
@@ -228,7 +229,7 @@ OPTIONAL{
                     // return res.send(mapData)
                     // ADDED Here
                     return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
-                      let commonsCategory = module.exports.getCommonsCategory(simplifiedResults.statements, 'P373');
+                      let commonsCategory = module.exports.getCommonsGalleryManifestURL(req, simplifiedResults.qid, simplifiedResults.statements);
                       // FINAL CALL
                       var isPreview = (req.url.indexOf('/preview') > -1)
                       if (req.session.user && !isPreview) {
@@ -342,8 +343,11 @@ OPTIONAL{
     let img_val = module.exports.getStatementValueByProp(wikidata, 'P18');
     return (img_val) ? callback(img_val) : callback('http://sciencestories.io/static/images/branding/logo_black.png');
   },
-  getCommonsCategory(statements){
-    return  module.exports.getStatementValueByProp(statements, 'P373');
+  getCommonsGalleryManifestURL(req, qid, statements){
+    if (module.exports.getStatementValueByProp(statements, 'P373')) {
+      return wikicommonsController.getManifestURL(req, qid);
+    }
+    return false;
   },
   processAnnotation(req, res){
     qid = req.params.qid;

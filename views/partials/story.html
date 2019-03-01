@@ -131,7 +131,7 @@
     {{#each data}}
       {{loadMoment this.type this}}
     {{/each}}
-    {{#if commonsCategory}} {{> universalviewer title="Media Gallery" description="Content Powered By Wikimedia Commons"}} {{/if}}
+    {{#if commonsCategory}} {{> universalviewer title="Media Gallery" description="Content Powered By Wikimedia Commons" manifestURL=commonsCategory}} {{/if}}
     {{#if education}} {{> education }} {{/if}}
     {{#if timeline}} {{> timeline }} {{/if}}
     {{#if people}} {{> people }} {{/if}}

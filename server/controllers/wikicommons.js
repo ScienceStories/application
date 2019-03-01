@@ -4,17 +4,21 @@ const appFetch =  require('../../app').appFetch;
 const sparqlController = require('./sparql');
 
 module.exports = {
+  getManifestURL(req, qid){
+    //TODO: Move the url formatting to a shared helper util
+    return urlformatter({
+      protocol: req.protocol,
+      host: req.get('host'),
+      pathname: '/api/iiif/'+qid+'/wikicat/manifest.json'
+    });
+  },
   generateCommonsManifestFromWikidataItem(req, res){
-    let url = sparqlController.getCommonsCategory(req.params.qid);
-    return appFetch(url).then(output => {
+    let qid = req.params.qid;
+    let query_url = sparqlController.getCommonsCategory(qid);
+    return appFetch(query_url).then(output => {
       let val = output.results.bindings;
       if (val.length && val[0].commonsCat){
-
-        let manifestUrl = urlformatter({
-          protocol: req.protocol,
-          host: req.get('host'),
-          pathname: req.originalUrl
-        }); //TODO: Move the url formatting to a shared helper util
+        let manifestUrl = module.exports.getManifestURL(req, qid);
         let pyoptions = {
           pythonPath: process.env.PYPATH,
           scriptPath: './pyscripts',

@@ -23,8 +23,6 @@ var sequelize = require('./server/models').sequelize
 const app = express();
 const moment = require('moment');
 const url_path = (process.env.NODE_ENV == 'production') ? 'http://sciencestories.io/' : '/'
-console.log(url_path)
-console.log('Python Path: ', process.env.PYPATH, process.env.PYTHONPATH, process.env.NODE_ENV)
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
