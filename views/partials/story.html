@@ -11,7 +11,7 @@
   <button onclick="$('.small-screen-message').slideFadeToggle('slow')"><i class="fa fa-times"></i></button>
   Science Stories is currently best viewed on a full-screen desktop window.
   Some elements may be distorted on a small screen such as a mobile device.
-  We are constantly expanding our support for more screen sizes and aspect ratios.
+  The Science Stories Team is constantly expanding our support for more screen sizes, resolutions, and aspect ratios.
 </div>
   <a id="homeButton" href="/home">
     <!-- Science Stories -->
@@ -70,63 +70,66 @@
   }
   </script>
   <div class="story-sidebar">
-    <div class="sidebar-list">
-    {{#each data}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">
-        {{#if_equal this.type 'intro'}}
-          <i class="far fa-bookmark"></i>
-        {{else if_equal this.type 'mirador'}}
-          {{#if_equal this.config.data.0.viewType "BookView"}}
-            <i class="fas fa-book-open"></i>
-          {{else }}
-            <i class="far fa-image"></i>
+    <div class="sidebar-sections-container">
+      <div class="sidebar-list">
+      {{#each data}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">
+          {{#if_equal this.type 'intro'}}
+            <i class="far fa-bookmark"></i>
+          {{else if_equal this.type 'mirador'}}
+            {{#if_equal this.config.data.0.viewType "BookView"}}
+              <i class="fas fa-book-open"></i>
+            {{else }}
+              <i class="far fa-image"></i>
+            {{/if_equal}}
+          {{else if_equal this.type 'audio'}}
+            <i class="fas fa-headphones-alt"></i>
+          {{else if_equal this.type 'video'}}
+            <i class="fas fa-video"></i>
+          {{else if_equal this.type 'youtube'}}
+            <i class="fab fa-youtube"></i>
+          {{else}}
+            <i class="fas fa-info-circle"></i>
           {{/if_equal}}
-        {{else if_equal this.type 'audio'}}
-          <i class="fas fa-headphones-alt"></i>
-        {{else if_equal this.type 'video'}}
-          <i class="fas fa-video"></i>
-        {{else if_equal this.type 'youtube'}}
-          <i class="fab fa-youtube"></i>
-        {{else}}
-          <i class="fas fa-info-circle"></i>
-        {{/if_equal}}
 
-        {{#if this.tooltip}}
-          {{this.tooltip}}
-        {{else if this.title}}
-          {{this.title}}
-        {{else}}
-          {{this.description}}
-        {{/if}}
-      </div>
-    {{/each}}
-    {{#if commonsCategory}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-images"></i> Wikimedia Gallery</div>
-    {{/if}}
-    {{#if education}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-user-graduate"></i> Education of {{name}}</div>
-    {{/if}}
-    {{#if timeline}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="far fa-calendar-alt"></i> Timeline of {{name}}</div>
-    {{/if}}
-    {{#if people}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-users"></i> People Relevant to {{name}}</div>
-    {{/if}}
-    {{#if map}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-map-marked-alt"></i> Map of {{name}}</div>
-    {{/if}}
-    {{#if library}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-archive"></i> Library of {{name}}</div>
-    {{/if}}
-    {{#if award}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-medal"></i> Award Room of {{name}}</div>
-    {{/if}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo"> Wikidata Statements</div>
-    {{#if wikipedia}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikidata Logo"> Wikipedia Article</div>
-    {{/if}}
-      <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"> <i class="far fa-comments"></i> Learn More</div>
-  </div></div>
+          {{#if this.tooltip}}
+            {{this.tooltip}}
+          {{else if this.title}}
+            {{this.title}}
+          {{else}}
+            {{this.description}}
+          {{/if}}
+        </div>
+      {{/each}}
+      {{#if commonsCategory}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-images"></i> Wikimedia Gallery</div>
+      {{/if}}
+      {{#if education}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-user-graduate"></i> Education of {{name}}</div>
+      {{/if}}
+      {{#if timeline}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="far fa-calendar-alt"></i> Timeline of {{name}}</div>
+      {{/if}}
+      {{#if people}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-users"></i> People Relevant to {{name}}</div>
+      {{/if}}
+      {{#if map}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-map-marked-alt"></i> Map of {{name}}</div>
+      {{/if}}
+      {{#if library}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-archive"></i> Library of {{name}}</div>
+      {{/if}}
+      {{#if award}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-medal"></i> Award Room of {{name}}</div>
+      {{/if}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo"> Wikidata Statements</div>
+      {{#if wikipedia}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikidata Logo"> Wikipedia Article</div>
+      {{/if}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"> <i class="far fa-comments"></i> Learn More</div>
+    </div>
+    </div>
+    </div>
   <div id="pagepiling">
     {{#each data}}
       {{loadMoment this.type this}}

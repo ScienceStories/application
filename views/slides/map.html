@@ -31,7 +31,7 @@
   });
 
 
-
+var mapgroup = new L.featureGroup([
     {{#each map}}
     L.marker( [{{this.0.coordinates}}] ,{ title: `{{this.0.location}} ({{this.0.coordinates}})`})
        .bindPopup( `
@@ -57,12 +57,12 @@
             </div>
           {{/each}}
         </div>
-         `)
-       .addTo( map );
+         `),
     {{/each}}
-
+    ]).addTo(map);;
+    map.fitBounds(mapgroup.getBounds());
     function selectMapLocation(latlong, title){
-      map.panTo(latlong)
+      map.flyTo(latlong, 12)
       $(`img[title="${title}"]`).click()
     }
   </script>
