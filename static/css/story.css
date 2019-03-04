@@ -319,9 +319,10 @@ div.pp-section {
    padding: 0 10%;
 }
 .header h1 {
-    font-size: 5em;
+    font-size: 4em;
     font-weight: bold;
     color: #fff;
+    margin: 0;
 }
 .header h1 img {
     height: 1em;
@@ -392,7 +393,14 @@ padding: 2px ;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-
+.page-pdf{
+  text-align: center;
+}
+.story-embed-pdf{
+    width: 90%;
+    margin: 0 auto;
+    min-height: 100vh;
+}
 /* timeline actions */
 .jqTimespaceTableContainer.jqTimespaceAnimated {
     max-height: 100% !important;
