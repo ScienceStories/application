@@ -18,7 +18,11 @@ module.exports = {
     return appFetch(query_url).then(output => {
       let val = output.results.bindings;
       if (val.length && val[0].commonsCat){
-        let manifestUrl = module.exports.getManifestURL(req, qid);
+        let manifestUrl = urlformatter({
+          protocol: req.protocol,
+          host: req.get('host'),
+          pathname: req.path
+        })
         let pyoptions = {
           pythonPath: process.env.PYPATH,
           scriptPath: './pyscripts',

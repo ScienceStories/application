@@ -1,18 +1,21 @@
 """Script to Generate a IIIF Manifest from a Wikidata Identifier."""
 import sys
 import requests
+import json
 from iiif_prezi.factory import ManifestFactory
 from html_sanitizer import Sanitizer
-import json
+from html2text import HTML2Text
 
 
+# CATEGORY_STRING = "Grace Hopper"
+# MANIFEST_URL = "http://example.com"
 CATEGORY_STRING = sys.argv[1]
 MANIFEST_URL = sys.argv[2]
 COMMONS_CAT_TEMPLATE = u"https://commons.wikimedia.org/w/api.php?action=query&\
                         generator=categorymembers&iiurlwidth={0}&gcmtitle=\
                         Category:{1}&gcmlimit=500&gcmtype=file&prop=imageinfo&\
                         iiprop=url|timestamp|user|mime|extmetadata&format=json"
-HEADERS = {'user-agent': 'iiif_test (tom.crane@digirati.com)'}
+HEADERS = {'user-agent': 'Science Stories API (info@sciencestories.io)'}
 sanitizer = Sanitizer({
     'tags': {
         'a', 'b', 'br', 'i', 'img', 'p', 'span'
@@ -24,6 +27,8 @@ sanitizer = Sanitizer({
     'empty': {'br'},
     'separate': {'a', 'p'}
 })
+html_converter = HTML2Text()
+html_converter.ignore_links = True
 
 
 def main():
@@ -52,17 +57,21 @@ def get_image_details(titles, size):
 
 def set_canvas_metadata(wiki_info, canvas):
     """Parse metadata for canvas."""
+    extmetadata = wiki_info.get('extmetadata', {})
+    description = extmetadata.get("ImageDescription")
+    if description:
+        sanitized_desc = sanitise(description.get('value', ''))
+        canvas.label = html_converter.handle(sanitized_desc)
+        canvas.set_metadata({'Media Description': sanitized_desc})
+        del extmetadata["ImageDescription"]
+
     if 'user' in wiki_info:
         canvas.set_metadata({"Wikipedia user": wiki_info['user']})
-        extmetadata = wiki_info.get('extmetadata', {})
     for key in extmetadata:
         value = extmetadata[key].get('value', None)
         if key == "LicenseUrl":
             canvas.license = value
-        if key == "ImageDescription":
-            canvas.label = sanitise(value)
-        elif value:
-            canvas.set_metadata({key: sanitise(value)})
+        canvas.set_metadata({key: sanitise(value)})
 
 
 def manifest_from_category(wiki_category):
@@ -79,7 +88,7 @@ def make_manifest_json(image_pages, thumbnail_images, identifier, page=None):
     """Generate the raw json for manifest."""
     fac = ManifestFactory()
     fac.set_base_prezi_uri(identifier)
-    fac.set_debug("error")
+    fac.set_debug('error')
     if page is None:
         page = {
             "title": "Media on Wikimedia Commons with the Category: {}"
@@ -93,7 +102,9 @@ def make_manifest_json(image_pages, thumbnail_images, identifier, page=None):
         page_id = image_page.get('pageid', None)
         wiki_info = image_page.get('imageinfo', [None])[0]
         # TODO: Extend support for more MIME Types
-        if wiki_info is not None and wiki_info['mime'] == "image/jpeg":
+        # Currently universalviewer does not support: "image/tiff"
+        verified_mimes = ["image/jpeg", "image/png"]
+        if wiki_info is not None and wiki_info['mime'] in verified_mimes:
             canvas = sequence.canvas(ident='c%s' % page_id,
                                      label=image_page['title'])
             canvas.set_hw(wiki_info['thumbheight'], wiki_info['thumbwidth'])
@@ -108,12 +119,15 @@ def make_manifest_json(image_pages, thumbnail_images, identifier, page=None):
                 canvas.thumbnail.format = "image/jpeg"
                 canvas.thumbnail.set_hw(thumb_info['thumbheight'],
                                         thumb_info['thumbwidth'])
-    return manifest.toJSON(top=True)
+    manifest_serialized = manifest.toJSON(top=True)
+    return manifest_serialized
 
 
 def iiif_cat_manifest(wiki_slug):
     """Create raw manifest json and convert into string."""
-    return json.dumps(manifest_from_category(wiki_slug))
+    manifest = manifest_from_category(wiki_slug)
+
+    return json.dumps(manifest)
 
 
 if __name__ == "__main__":

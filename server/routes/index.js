@@ -158,9 +158,9 @@ app.post('/api/dump/stories', (req, res) => {
   app.post('/api/iiif/save', annotationController.save);
   app.get('/api/iiif/load', annotationController.loadAll);
   app.post('/api/iiif/loadFromUri', annotationController.loadFromUri);
-app.post('/api/iiif/loadFromManifest', annotationController.loadFromManifest);
+  app.post('/api/iiif/loadFromManifest', annotationController.loadFromManifest);
   app.post('/api/iiif/update', annotationController.update);
-  app.get('/api/iiif/:qid/wikicat/manifest.json', wikicommonsController.generateCommonsManifestFromWikidataItem)
+  app.get('/api/iiif/:qid/wikicat/manifest.json', wikicommonsController.generateCommonsManifestFromWikidataItem);
   app.get('/api/iiif/:manifest', (req, res) => {
     var content = fs.readFileSync("manifests/"+req.params.manifest+'/index.json');
     res.status(200).send(JSON.parse(content));
