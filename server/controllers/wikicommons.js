@@ -1,16 +1,30 @@
 const pyshellrunner = require('python-shell').PythonShell.run;
-const urlformatter = require('url').format;
 const appFetch =  require('../../app').appFetch;
+const getURLPath =  require('../../app').getURLPath;
 const sparqlController = require('./sparql');
-
 module.exports = {
   getManifestURL(req, qid){
-    //TODO: Move the url formatting to a shared helper util
-    return urlformatter({
-      protocol: req.protocol,
-      host: req.get('host'),
-      pathname: '/api/iiif/'+qid+'/wikicat/manifest.json'
-    });
+    return getURLPath(req, '/api/iiif/'+qid+'/wikicat/manifest.json');
+  },
+  generateCommonsCategoryManifest(req, res){
+    let category = req.params.category;
+    let manifestUrl = getURLPath(req, req.path);
+    let pyoptions = {
+      pythonPath: process.env.PYPATH,
+      scriptPath: './pyscripts',
+      args: [category, manifestUrl]
+    }
+      return pyshellrunner('wikidataToCommonsManifest.py', pyoptions,
+         (err, results) => {
+            // console.log(err);
+            if (err){
+              console.log(err);
+              return res.send({"status": "server error"});
+            }
+            let manifestJSON = JSON.parse(results);
+            return res.send(manifestJSON);
+      });
+
   },
   generateCommonsManifestFromWikidataItem(req, res){
     let qid = req.params.qid;
@@ -18,28 +32,10 @@ module.exports = {
     return appFetch(query_url).then(output => {
       let val = output.results.bindings;
       if (val.length && val[0].commonsCat){
-        let manifestUrl = urlformatter({
-          protocol: req.protocol,
-          host: req.get('host'),
-          pathname: req.path
-        })
-        let pyoptions = {
-          pythonPath: process.env.PYPATH,
-          scriptPath: './pyscripts',
-          args: [val[0].commonsCat.value, manifestUrl]
-        }
-        return pyshellrunner('wikidataToCommonsManifest.py', pyoptions,
-                             (err, results) => {
-                                // console.log(err);
-                                if (err){
-                                  console.log(err);
-                                  return res.send({"status": "server error"});
-                                }
-                                let manifestJSON = JSON.parse(results);
-                                return res.send(manifestJSON);
-        });
+        req.params.category = val[0].commonsCat.value;
+        return module.exports.generateCommonsCategoryManifest(req, res);
       }
       return res.send({'status': 'No commons category detected for this item'})
-    })
+      })
   },
 };

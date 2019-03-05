@@ -1,8 +1,9 @@
 const wdk = require('wikidata-sdk');
 const fetch = require('node-fetch');
-const appFetch =  require('../../app').appFetch;
-const loadPage =  require('../../app').loadPage;
-const loadError =  require('../../app').loadError;
+const getURLPath = require('../../app').getURLPath;
+const appFetch = require('../../app').appFetch;
+const loadPage = require('../../app').loadPage;
+const loadError = require('../../app').loadError;
 const sparqlController = require('./sparql');
 const commentController = require('./comment');
 const wikicommonsController = require('./wikicommons');
@@ -235,7 +236,7 @@ OPTIONAL{
                     // return res.send(mapData)
                     // ADDED Here
                     return module.exports.getTimelineData(name, itemStatements, inverseStatements, function(timelineData){
-                      let commonsCategory = module.exports.getCommonsGalleryManifestURL(req, qid, itemStatements);
+                      let commonsCategory = module.exports.getCommonsCategory(req, qid, itemStatements);
                       // FINAL CALL
                       var isPreview = (req.url.indexOf('/preview') > -1)
                       if (req.session.user && !isPreview) {
@@ -257,6 +258,7 @@ OPTIONAL{
                                 links: function(){ return 'story_links'},
                                 title: name +" - Story",
                                 nav: "Story",
+                                urlPath: getURLPath(req),
                                 content: itemStatements,
                                 wikipedia: wikipedia,
                                 name: name,
@@ -289,6 +291,7 @@ OPTIONAL{
                           links: function(){ return 'story_links'},
                           title: name +" - Story",
                           nav: "Story",
+                          urlPath: getURLPath(req),
                           content: itemStatements,
                           wikipedia: wikipedia,
                           name: name,
@@ -342,9 +345,10 @@ OPTIONAL{
     let img_val = module.exports.getStatementValueByProp(wikidata, 'P18');
     return (img_val) ? callback(img_val) : callback('http://sciencestories.io/static/images/branding/logo_black.png');
   },
-  getCommonsGalleryManifestURL(req, qid, statements){
-    if (module.exports.getStatementValueByProp(statements, 'P373')) {
-      return wikicommonsController.getManifestURL(req, qid);
+  getCommonsCategory(req, qid, statements){
+    let category = module.exports.getStatementValueByProp(statements, 'P373');
+    if (category) {
+      return category;
     }
     return false;
   },

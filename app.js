@@ -12,6 +12,7 @@ const fetch = require('node-fetch');
 const cors = require('cors');
 const Sequelize = require('sequelize');
 const randomColor = require('randomcolor');
+const urlformatter = require('url').format;
 
 // initalize sequelize with session store
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
@@ -49,6 +50,14 @@ hbs.registerHelper('if_equal', function(a, b, opts) {
         return opts.inverse(this)
     }
 })
+
+hbs.registerHelper( 'concat', function() {
+  let output = ''
+    for (let i=0; i < arguments.length-1; i++){
+      output += arguments[i];
+    }
+    return output;
+});
 hbs.registerHelper('size', function(obj) {
 	if( typeof obj != "object" ) return;
 	var size = 0, key;
@@ -85,8 +94,8 @@ hbs.registerHelper( 'arrayToString', function(array, type='comma') {
     var arraySize = array.length;
     if (arraySize == 0) return ''
     else if (arraySize == 1) return array[0]
+    if (type == 'concat') return array.join('');
     var output = ''
-
     for (var i = 0; i < arraySize; i++) {
       if (type == 'comma') {
         if (i == 0){
@@ -227,12 +236,12 @@ fs.readdirSync(partials).forEach(function (file) {
     hbs.registerPartial(partial, source);
 });
 
-hbs.registerHelper('loadMoment', function(template, data) {
+hbs.registerHelper('loadMoment', function(template, data, options) {
     var loadedPartial = hbs.partials[template];
     if (typeof loadedPartial !== 'function') {
       loadedPartial = hbs.compile(loadedPartial);
     }
-    return new hbs.SafeString(loadedPartial(data));
+    return new hbs.SafeString(loadedPartial(data, options));
 });
 hbs.registerHelper('json', function(data) {
 
@@ -295,6 +304,13 @@ module.exports = {
     if (status) return res.status(status).render('base', data);
     return res.status(501).render('base', data);
   },
+  getURLPath(req, path=''){
+    return urlformatter({
+      protocol: req.protocol,
+      host: req.get('host'),
+      pathname: path
+    });
+  }
 };
 
 // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.

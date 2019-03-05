@@ -160,6 +160,7 @@ app.post('/api/dump/stories', (req, res) => {
   app.post('/api/iiif/loadFromUri', annotationController.loadFromUri);
   app.post('/api/iiif/loadFromManifest', annotationController.loadFromManifest);
   app.post('/api/iiif/update', annotationController.update);
+  app.get('/api/iiif/wikicat/:category/manifest.json', wikicommonsController.generateCommonsCategoryManifest);
   app.get('/api/iiif/:qid/wikicat/manifest.json', wikicommonsController.generateCommonsManifestFromWikidataItem);
   app.get('/api/iiif/:manifest', (req, res) => {
     var content = fs.readFileSync("manifests/"+req.params.manifest+'/index.json');
