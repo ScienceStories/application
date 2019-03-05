@@ -792,6 +792,10 @@ OPTIONAL{
 
   },
   checkTimelineStatement(name, statement, inverse=false){
+    // Skip Author Statements (Data is recoreded in the library)
+    if (statement.wdLabel && statement.wdLabel.value == "author"){
+      return false;
+    }
     var tempval = {
       qid : false,
       pid : statement.ps.value,
