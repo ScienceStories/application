@@ -146,8 +146,15 @@ module.exports = {
       return callback(wikidataResponse)
     })
   },
+  filterProperties(statements){
+    for (var i=0; i < statements.length; i++){
+      if (statements[i].ps.value == "http://www.wikidata.org/prop/statement/P1889"){
+        statements.splice(i, 1);
+      }
+    }
+    return statements;
+  },
   processStory(req, res, row) {
-    // const jsonData = JSON.parse(fs.readFileSync("moments/hopper.json"));
     const jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
@@ -199,37 +206,36 @@ OPTIONAL{
 
     `
     const url = wdk.sparqlQuery(sparql);
-    appFetch(url).then(content => {
-      output = module.exports.simplifySparqlFetch(content)
-      return {qid:qid, statements: output}
-    }
-      ).then(simplifiedResults => {
+    appFetch(url).then(itemStatements => {
+      itemStatements = module.exports.simplifySparqlFetch(itemStatements)
+        itemStatements = module.exports.filterProperties(itemStatements)
         var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
         appFetch(inverseUrl).then(inverseClaimsOutput => {
-          inverseStatements = module.exports.simplifySparqlFetch(inverseClaimsOutput)
+          inverseStatements = module.exports.simplifySparqlFetch(inverseClaimsOutput);
+          inverseStatements = module.exports.filterProperties(inverseStatements);
           appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
           .then(labels => {
             name = labels.entities[qid].labels.en.value
             meta = {}
-            meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, and more.`
+            meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
             wikipedia = ''
             if (labels.entities[qid].sitelinks.enwiki){
               wikipedia = labels.entities[qid].sitelinks.enwiki.title
             }
-            return module.exports.getMainStoryImage(row.data, simplifiedResults.statements, function(storyImage){
-              return module.exports.getPeopleData(name, simplifiedResults.statements,inverseStatements,  function(peopleData){
+            return module.exports.getMainStoryImage(row.data, itemStatements, function(storyImage){
+              return module.exports.getPeopleData(name, itemStatements, inverseStatements, function(peopleData){
                 // return res.send(peopleData)
-                return module.exports.getEducationData(simplifiedResults.statements, function(educationData){
+                return module.exports.getEducationData(itemStatements, function(educationData){
                 // return res.send(educationData)
-              return module.exports.getAwardData(name, simplifiedResults.statements, function(awardData){
+              return module.exports.getAwardData(name, itemStatements, function(awardData){
                 // return res.send(awardData)
                 return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
                   // return res.send(libraryData)
-                  return module.exports.getMapData(name, simplifiedResults.statements, inverseStatements, function(mapData){
+                  return module.exports.getMapData(name, itemStatements, inverseStatements, function(mapData){
                     // return res.send(mapData)
                     // ADDED Here
-                    return module.exports.getTimelineData(name, simplifiedResults.statements, inverseStatements, function(timelineData){
-                      let commonsCategory = module.exports.getCommonsGalleryManifestURL(req, simplifiedResults.qid, simplifiedResults.statements);
+                    return module.exports.getTimelineData(name, itemStatements, inverseStatements, function(timelineData){
+                      let commonsCategory = module.exports.getCommonsGalleryManifestURL(req, qid, itemStatements);
                       // FINAL CALL
                       var isPreview = (req.url.indexOf('/preview') > -1)
                       if (req.session.user && !isPreview) {
@@ -251,10 +257,10 @@ OPTIONAL{
                                 links: function(){ return 'story_links'},
                                 title: name +" - Story",
                                 nav: "Story",
-                                content: simplifiedResults.statements,
+                                content: itemStatements,
                                 wikipedia: wikipedia,
                                 name: name,
-                                qid: simplifiedResults.qid,
+                                qid: qid,
                                 storyActivity: output.dataValues,
                                 data: jsonData,
                                 image: storyImage,
@@ -283,11 +289,11 @@ OPTIONAL{
                           links: function(){ return 'story_links'},
                           title: name +" - Story",
                           nav: "Story",
-                          content: simplifiedResults.statements,
+                          content: itemStatements,
                           wikipedia: wikipedia,
                           name: name,
                           image: storyImage,
-                          qid: simplifiedResults.qid,
+                          qid: qid,
                           data: jsonData,
                           row: row,
                           isPreview: isPreview,
@@ -311,16 +317,9 @@ OPTIONAL{
             })
 })
 
-
-
-
           })
         })
-
-
-
-  })
-
+})
   },
   getStatementValueByProp(statements, prop_id){
     for (let i = 0; i < statements.length; i++) {

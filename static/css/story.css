@@ -699,8 +699,7 @@ div#pagepiling {
     bottom: 0;
 }
 .sidebar-tooltip {
-    padding: 20px 0 10px 5rem;
-    padding-left: 5rem;
+    padding: 20px 5px 10px 5rem;
     text-indent: -2rem;
     font-weight: 300;
     border-bottom: 2px dotted #dfdfdf;
