@@ -872,7 +872,7 @@ OPTIONAL{
     else if (statement.objDeath){
       tempval.title = statement.wdLabel.value
       if (inverse) tempval.title = statement.ps_Label.value + " is Passes ("+  statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.objBirth.value
+      tempval.date = statement.objDeath.value
       return tempval
     }
     return false
