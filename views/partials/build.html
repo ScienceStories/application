@@ -22,6 +22,7 @@
           <option value="youtube" {{#if_equal this.type "youtube"}} selected {{else}}{{/if_equal}}>Youtube</option>
           <option value="pdf" {{#if_equal this.type "pdf"}} selected {{else}}{{/if_equal}}>PDF Document</option>
           <option value="wikicat" {{#if_equal this.type "wikicat"}} selected {{else}}{{/if_equal}}>Wikimedia Category</option>
+          <option value="google_book" {{#if_equal this.type "google_book"}} selected {{else}}{{/if_equal}}>Google Book</option>
         </select>
         <div id="momentDetails">
           <div class="inputDiv">
@@ -107,6 +108,21 @@
                 </span>
                 <input class="moment-input" type="text" name="category" value="{{this.category}}"  placeholder="Commons_Category" />
               </div>
+          {{/if_equal}}
+          {{#if_equal this.type "google_book" }}
+              <div class="inputDiv">
+                <div class="inputLabel">Google Book ID: </div>
+                <span class="small-text">
+                  Example <br>
+                  Url: https://books.google.com/books?id=UP_U_j9rI_8C <br>
+                  Book Id: "UP_U_j9rI_8C"
+                </span>
+                <input class="moment-input" type="text" name="book_id" value="{{this.book_id}}" />
+              </div>
+              <div class="inputDiv">
+                <div class="inputLabel">Page Number <span class="small-text">(optional)</span>: </div>
+                <input class="moment-input" type="number" name="page_number" value="{{this.page_number}}" placeholder="1" />
+              </div>
           {{else}}
           {{/if_equal}}
           <div class="inputDiv">
@@ -165,6 +181,7 @@ $(document).ready(function () {
               <option value="youtube">Youtube</option>
               <option value="pdf">PDF Document</option>
               <option value="wikicat">Wikimedia Category</option>
+              <<option value="google_book">Google Book</option>
             </select>
             <div id="momentDetails">
             </div>
@@ -418,6 +435,35 @@ var FORM_TYPE_TEMPLATE = {
     <input class="moment-input" type="color" name="color" value="#07a495">
   </div>
   `,
+  'google_book':`<div class="inputDiv">
+    <div class="inputLabel">Title: </div>
+    <input name='title' class="moment-input"/>
+  </div>
+  <div class="inputDiv">
+    <div class="inputLabel">Description: </div>
+    <textarea class="moment-input" name="description"></textarea>
+  </div>
+  <div class="inputDiv">
+    <div class="inputLabel">Google Book ID: </div>
+    <span class="small-text">
+      Example <br>
+      Url: https://books.google.com/books?id=UP_U_j9rI_8C <br>
+      Book Id: "UP_U_j9rI_8C"
+    </span>
+    <input class="moment-input" type="text" name="book_id" value="{{this.book_id}}" />
+  </div>
+  <div class="inputDiv">
+    <div class="inputLabel">Page Number <span class="small-text">(optional)</span>: </div>
+    <input class="moment-input" type="number" name="page_number" value="{{this.page_number}}" placeholder="1" />
+  </div>
+  <div class="inputDiv">
+    <div class="inputLabel">Tooltip: </div>
+    <input class="moment-input" name="tooltip" />
+  </div>
+  <div class="inputDiv">
+    <div class="inputLabel">Background Color: </div>
+    <input class="moment-input" type="color" name="color" value="#07a495">
+  </div>`,
   'wikicat': `<div class="inputDiv">
     <div class="inputLabel">Title: </div>
     <input name='title' class="moment-input"/>

@@ -864,15 +864,15 @@ OPTIONAL{
       return tempval
     }
     else if (statement.objBirth){
-      tempval.title = statement.wdLabel.value
-      if (inverse) tempval.title = statement.ps_Label.value + " is Born ("+  statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.objBirth.value
-      return tempval
+      tempval.title = statement.wdLabel.value;
+      if (inverse) tempval.title = statement.ps_Label.value + " is Born ("+  statement.wdLabel.value + ": "+name+")";
+      tempval.date = statement.objBirth.value;
+      return tempval;
     }
     else if (statement.objDeath){
-      tempval.title = statement.wdLabel.value
-      if (inverse) tempval.title = statement.ps_Label.value + " is Passes ("+  statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.objDeath.value
+      tempval.title = statement.wdLabel.value;
+      if (inverse) tempval.title = statement.ps_Label.value + " is Passes ("+  statement.wdLabel.value + ": "+name+")";
+      tempval.date = statement.objDeath.value;
       return tempval
     }
     return false
