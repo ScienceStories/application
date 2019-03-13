@@ -6,6 +6,9 @@ from iiif_prezi.factory import ManifestFactory
 from html_sanitizer import Sanitizer
 from html2text import HTML2Text
 
+# Configure unicode support instead of ASCII
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 # CATEGORY_STRING = "Grace Hopper"
 # MANIFEST_URL = "http://example.com"
