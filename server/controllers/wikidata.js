@@ -156,7 +156,7 @@ module.exports = {
     return statements;
   },
   processStory(req, res, row) {
-    const jsonData = row.data
+    let jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
     SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel{
@@ -236,6 +236,9 @@ OPTIONAL{
                     // return res.send(mapData)
                     // ADDED Here
                     return module.exports.getTimelineData(name, itemStatements, inverseStatements, function(timelineData){
+                      return module.exports.getWikidataManifestData(name, itemStatements, inverseStatements, function(wikidataManifestData){
+                        jsonData = jsonData.concat(wikidataManifestData);
+                        // return res.send(wikidataManifestData)
                       let commonsCategory = module.exports.getCommonsCategory(req, qid, itemStatements);
                       // FINAL CALL
                       var isPreview = (req.url.indexOf('/preview') > -1)
@@ -312,7 +315,7 @@ OPTIONAL{
                         })
                       })
                     })
-
+                  })
                   })
                 })
               } )
@@ -440,7 +443,6 @@ OPTIONAL{
         for (var i = 0; i < mapOutput[tempMapitem.coordinates].length; i++) {
 
           if (mapOutput[tempMapitem.coordinates][i].title == tempMapitem.title) {
-            // console.log("checking ", mapOutput[tempMapitem.coordinates][i].title, '-->', tempMapitem.title)
             foundmap = true
             i = mapOutput[tempMapitem.coordinates].length
           }
@@ -499,9 +501,47 @@ OPTIONAL{
           tempList.year.push(tempEduItem.year)
           tempList.year.sort()
         }
-
       }
     }
+  },
+  getWikidataManifestData(name, wdData, inverseData, callback){
+    let output = [];
+    let manifestFound = {};
+    for (var i = 0; i < inverseData.length; i++) {
+      let statement = inverseData[i]
+      if (statement.manifest && statement.manifest.value && !manifestFound[statement.manifest.value]) {
+        let manifest_data = {
+          manifestUri: statement.manifest.value,
+          viewType: "ImageView",
+        };
+        if (statement.manifest_collectionLabel
+            && statement.manifest_collectionLabel.value){
+          manifest_data.location = statement.manifest_collectionLabel.value;
+        }
+        let manifest = {
+          type: "mirador",
+          title: statement.ps_Label.value,
+          color: randomColor({luminosity: 'dark'}),
+          config: {
+            data: [manifest_data],
+            layout: "1x1"
+          }
+        };
+        if (manifest_data.location){
+          manifest.tooltip = manifest_data.location+': '+manifest.title;
+        }
+        if (statement.ps_Description && statement.ps_Description.value){
+          let description = statement.ps_Description.value;
+          if (manifest_data.location){
+            description += ` (Content Provided By ${manifest_data.location})`
+          }
+          manifest.description = description;
+          manifestFound[manifest_data.manifestUri] = true;
+        }
+        output.push(manifest);
+      }
+    }
+    return callback(output);
   },
   getMapData(name, wdData, inverseData, callback){
     mapOutput = {}
