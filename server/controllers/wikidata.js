@@ -4,6 +4,8 @@ const getURLPath = require('../../app').getURLPath;
 const appFetch = require('../../app').appFetch;
 const loadPage = require('../../app').loadPage;
 const loadError = require('../../app').loadError;
+const safeOverwrite = require('../utils').safeOverwrite;
+const getValue = require('../utils').getValue;
 const sparqlController = require('./sparql');
 const commentController = require('./comment');
 const wikicommonsController = require('./wikicommons');
@@ -90,37 +92,37 @@ module.exports = {
     })
   },
   processDetailList(req, res, queryFunction, qidList, callback, mergeType, defaultImage){
-      var qidSet = [[]]
-      var thisSet = 0
-      var maxLength = 50
-      var check = 0
-      for (var i = 0; i < qidList.length; i++) {
-        if (check == maxLength){
-          check = 0;
-          thisSet += 1;
-          qidSet.push([qidList[i]])
-        }
-        else {
-          qidSet[thisSet].push(qidList[i])
-          check += 1;
-        }
+    var qidSet = [[]];
+    var thisSet = 0;
+    var maxLength = 50;
+    var check = 0;
+    for (var i = 0; i < qidList.length; i++) {
+      if (check == maxLength){
+        check = 0;
+        thisSet += 1;
+        qidSet.push([qidList[i]]);
       }
-      return module.exports.processDetailListSection(queryFunction, [], qidSet, 0, function(output){
-        // rawData = output.results.bindings;
-        if (!mergeType || mergeType == 'first'){
-          content = module.exports.mergeValuesFirst(qidList, output)
-          if (defaultImage){
-            for (var i=0; i<content.length;i++){
-              if (!content[i].image) content[i].image = defaultImage
-            }
+      else {
+        qidSet[thisSet].push(qidList[i]);
+        check += 1;
+      }
+    }
+    return module.exports.processDetailListSection(queryFunction, [], qidSet, 0, function(output){
+      if (!mergeType || mergeType == 'first'){
+        content = module.exports.mergeValuesFirst(qidList, output);
+        if (defaultImage){
+          for (var i=0; i<content.length;i++){
+            if (!content[i].image) content[i].image = defaultImage;
           }
-          return callback(content)}
-      })
+        }
+        return callback(content);
+      }
+    })
   },
   simplifySparqlFetch(content){
     return content.results.bindings.map(function(x){
-      if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value)
-      return x
+      if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value);
+      return x;
     })
   },
   getDetailsList(req, res, qidList, detailLevel, mergeType=false, defaultImage=false, callback){
@@ -137,9 +139,7 @@ module.exports = {
     var wd_url = wdk.sparqlQuery(req.body.query);
     appFetch(wd_url).then(content => {
       return content.results.bindings
-    }
-  ).then(simplifiedResults => res.status(200).send(simplifiedResults))
-
+    }).then(simplifiedResults => res.status(200).send(simplifiedResults))
   },
   storyValidate(qid, callback){
     var validateUrl = sparqlController.getStoryValidation(qid, 'en')
@@ -209,86 +209,32 @@ OPTIONAL{
     const url = wdk.sparqlQuery(sparql);
     appFetch(url).then(itemStatements => {
       itemStatements = module.exports.simplifySparqlFetch(itemStatements)
-        itemStatements = module.exports.filterProperties(itemStatements)
-        var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
-        appFetch(inverseUrl).then(inverseClaimsOutput => {
-          inverseStatements = module.exports.simplifySparqlFetch(inverseClaimsOutput);
-          inverseStatements = module.exports.filterProperties(inverseStatements);
-          appFetch(`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`)
-          .then(labels => {
-            name = labels.entities[qid].labels.en.value
-            meta = {}
-            meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
-            wikipedia = ''
-            if (labels.entities[qid].sitelinks.enwiki){
-              wikipedia = labels.entities[qid].sitelinks.enwiki.title
-            }
-            return module.exports.getMainStoryImage(row.data, itemStatements, function(storyImage){
-              return module.exports.getPeopleData(name, itemStatements, inverseStatements, function(peopleData){
-                // return res.send(peopleData)
-                return module.exports.getEducationData(itemStatements, function(educationData){
-                // return res.send(educationData)
-              return module.exports.getAwardData(name, itemStatements, function(awardData){
-                // return res.send(awardData)
-                return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
-                  // return res.send(libraryData)
-                  return module.exports.getMapData(name, itemStatements, inverseStatements, function(mapData){
-                    // return res.send(mapData)
-                    // ADDED Here
-                    return module.exports.getTimelineData(name, itemStatements, inverseStatements, function(timelineData){
+      itemStatements = module.exports.filterProperties(itemStatements)
+      var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
+      appFetch(inverseUrl).then(inverseClaimsOutput => {
+        inverseStatements = module.exports.simplifySparqlFetch(inverseClaimsOutput);
+        inverseStatements = module.exports.filterProperties(inverseStatements);
+        let labelURL = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`
+        appFetch(labelURL).then(labels => {
+          name = labels.entities[qid].labels.en.value;
+          meta = {};
+          meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
+          wikipedia = '';
+          if (labels.entities[qid].sitelinks.enwiki){
+            wikipedia = labels.entities[qid].sitelinks.enwiki.title;
+          }
+          return module.exports.getMainStoryImage(row.data, itemStatements, function(storyImage){
+            return module.exports.getPeopleData(name, itemStatements, inverseStatements, function(peopleData){
+              return module.exports.getEducationData(itemStatements, function(educationData){
+                return module.exports.getAwardData(name, itemStatements, function(awardData){
+                  return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
+                    return module.exports.getMapData(name, itemStatements, inverseStatements, function(mapData){
+                      let timelineData =  module.exports.getTimelineData(name, itemStatements, inverseStatements);
                       return module.exports.getWikidataManifestData(name, itemStatements, inverseStatements, function(wikidataManifestData){
                         jsonData = jsonData.concat(wikidataManifestData);
-                        // return res.send(wikidataManifestData)
-                      let commonsCategory = module.exports.getCommonsCategory(req, qid, itemStatements);
-                      // FINAL CALL
-                      var isPreview = (req.url.indexOf('/preview') > -1)
-                      if (req.session.user && !isPreview) {
-                        StoryActivity.findOrCreate({
-                            where: {
-                              memberId: req.session.user.id,
-                              storyId: row.id
-                            },
-                          })
-                        .spread((found, created) =>{
-                          found.update({
-                          views: found.views+1,
-                          lastViewed: sequelize.fn('NOW')})
-                            .then(output => {
-                                  return commentController.loadCommentsFromStory(row.id, function(comments){res.render('full', {
-
-                                page: function(){ return 'story'},
-                                scripts: function(){ return 'story_scripts'},
-                                links: function(){ return 'story_links'},
-                                title: name +" - Story",
-                                nav: "Story",
-                                urlPath: getURLPath(req),
-                                content: itemStatements,
-                                wikipedia: wikipedia,
-                                name: name,
-                                qid: qid,
-                                storyActivity: output.dataValues,
-                                data: jsonData,
-                                image: storyImage,
-                                user: req.session.user,
-                                row: row,
-                                isPreview: isPreview,
-                                comments: comments,
-                                meta: meta,
-                                people: peopleData,
-                                education: educationData,
-                                map: mapData,
-                                library: libraryData,
-                                timeline: timelineData,
-                                award: awardData,
-                                commonsCategory: commonsCategory
-                              })})
-                            })
-                        })
-                        .catch(error => {loadError(req, res, 'Something went wrong.')});
-                      }
-                      else return commentController.loadCommentsFromStory(row.id, function(comments){
-
-                        res.render('full', {
+                        let commonsCategory = module.exports.getCommonsCategory(req, qid, itemStatements);
+                        var isPreview = (req.url.indexOf('/preview') > -1);
+                        let storyRenderData = {
                           page: function(){ return 'story'},
                           scripts: function(){ return 'story_scripts'},
                           links: function(){ return 'story_links'},
@@ -298,12 +244,12 @@ OPTIONAL{
                           content: itemStatements,
                           wikipedia: wikipedia,
                           name: name,
-                          image: storyImage,
                           qid: qid,
                           data: jsonData,
+                          image: storyImage,
+                          user: req.session.user,
                           row: row,
                           isPreview: isPreview,
-                          comments: comments,
                           meta: meta,
                           people: peopleData,
                           education: educationData,
@@ -312,20 +258,36 @@ OPTIONAL{
                           timeline: timelineData,
                           award: awardData,
                           commonsCategory: commonsCategory
-                        })
+                        }
+                        if (req.session.user && !isPreview) {
+                          return StoryActivity
+                          .findOrCreate({where: {
+                            memberId: req.session.user.id,
+                            storyId: row.id
+                          }})
+                          .spread((found, created) => {
+                            found.update({
+                              views: found.views+1,
+                              lastViewed: sequelize.fn('NOW')
+                            })
+                            .then(output => {
+                              storyRenderData.storyActivity = output.dataValues;
+                              return res.render('full', storyRenderData);
+                            })
+                          })
+                          .catch(error => loadError(req, res, 'Something went wrong.'));
+                        }
+                        return res.render('full', storyRenderData);
                       })
                     })
                   })
-                  })
                 })
-              } )
+              })
             })
-            })
-})
-
           })
         })
-})
+      })
+    })
   },
   getStatementValueByProp(statements, prop_id){
     for (let i = 0; i < statements.length; i++) {
@@ -427,8 +389,6 @@ OPTIONAL{
           else{
             return res.send(annotationData)
           }
-
-
         })
       })
 
@@ -456,25 +416,21 @@ OPTIONAL{
     for (var s=0; s < input.length; s++){
       var tempPeopleItem = module.exports.checkPeopleStatement(name, input[s], inverse)
       if (tempPeopleItem){
-        if (!peopleOutput[tempPeopleItem.qid]) peopleOutput[tempPeopleItem.qid] = {}
-        var tempList = peopleOutput[tempPeopleItem.qid]
-        if (!tempList.qid && tempPeopleItem.qid) tempList.qid = tempPeopleItem.qid
-        if (!tempList.title && tempPeopleItem.title) tempList.title = tempPeopleItem.title
-        if (!tempList.description && tempPeopleItem.description) tempList.description = tempPeopleItem.description
-        if (!tempList.image && tempPeopleItem.image) tempList.image = tempPeopleItem.image
-        if (!tempList.years && tempPeopleItem.years) tempList.years = tempPeopleItem.years
-
+        let tempList = peopleOutput[tempPeopleItem.qid];
+        if (!tempList) tempList = {'properties':{}};
+        let overwriteKeys = ['qid', 'title', 'description', 'image', 'years'];
+        safeOverwrite(tempList, tempPeopleItem, overwriteKeys);
         if (!tempList.relation && tempPeopleItem.relation) tempList.relation = [tempPeopleItem.relation]
-        else if (tempList.relation && tempPeopleItem.relation && tempList.relation.indexOf(tempPeopleItem.relation) == -1){
+        else if (tempList.relation && tempPeopleItem.relation && !tempList.properties[tempPeopleItem.pid]
+          && tempList.relation.indexOf(tempPeopleItem.relation) == -1){
           tempList.relation.push(tempPeopleItem.relation)
-          // tempList.relation.sort()
         }
         if (!tempList.qualifier && tempPeopleItem.qualifier) tempList.qualifier = [tempPeopleItem.qualifier]
         else if (tempList.qualifier && tempPeopleItem.qualifier && tempList.qualifier.indexOf(tempPeopleItem.qualifier) == -1){
           tempList.qualifier.push(tempPeopleItem.qualifier)
-          // tempList.qualifier.sort()
         }
-
+        tempList.properties[tempPeopleItem.pid] = true;
+        peopleOutput[tempPeopleItem.qid] = tempList;
       }
     }
   },
@@ -484,17 +440,12 @@ OPTIONAL{
       if (tempEduItem){
         if (!educationOutput[tempEduItem.qid]) educationOutput[tempEduItem.qid] = {}
         var tempList = educationOutput[tempEduItem.qid]
-        if (!tempList.qid && tempEduItem.qid) tempList.qid = tempEduItem.qid
-        if (!tempList.title && tempEduItem.title) tempList.title = tempEduItem.title
-        if (!tempList.description && tempEduItem.description) tempList.description = tempEduItem.description
-        if (!tempList.image && tempEduItem.image) tempList.image = tempEduItem.image
-        if (!tempList.logo && tempEduItem.logo) tempList.logo = tempEduItem.logo
-        if (!tempList.website && tempEduItem.website) tempList.website = tempEduItem.website
-
+        let overwriteKeys = ['qid', 'title', 'description', 'image', 'logo',
+                             'website'];
+        safeOverwrite(tempList, tempEduItem, overwriteKeys);
         if (!tempList.degree && tempEduItem.degree) tempList.degree = [tempEduItem.degree]
         else if (tempList.degree && tempEduItem.degree && tempList.degree.indexOf(tempEduItem.degree) == -1){
           tempList.degree.push(tempEduItem.degree)
-          // tempList.degree.sort()
         }
         if (!tempList.year && tempEduItem.year) tempList.year = [tempEduItem.year]
         else if (tempList.year && tempEduItem.year && tempList.year.indexOf(tempEduItem.year) == -1){
@@ -547,8 +498,6 @@ OPTIONAL{
     mapOutput = {}
     module.exports.processMapData(wdData)
     module.exports.processMapData(inverseData, true)
-
-    // mapOutput = {'new': mapOutput, 'wd':wdData }
     if (!Object.keys(mapOutput).length) mapOutput = false
     return callback(mapOutput)
   },
@@ -556,8 +505,6 @@ OPTIONAL{
     peopleOutput = {}
     module.exports.processPeopleData(wdData)
     module.exports.processPeopleData(inverseData, true)
-
-    // peopleOutput = {'new': peopleOutput, 'wd':wdData }
     if (!Object.keys(peopleOutput).length) peopleOutput = false
     return callback(peopleOutput)
   },
@@ -584,10 +531,15 @@ OPTIONAL{
     }
     return callback(educationOutput)
   },
-  processTimelineData(input, inverse=false){
+  processTimelineData(timelineMap, timelineOutput, input, inverse=false){
     for (var s=0; s < input.length; s++){
-      var tempTLitem = module.exports.checkTimelineStatement(name, input[s], inverse)
-      if (tempTLitem && (module.exports.checkDuplicateDataItem(timelineOutput, tempTLitem, ['title', 'date']) == -1)) timelineOutput.push(tempTLitem)
+      let item = module.exports.checkTimelineStatement(name, input[s], inverse);
+      if (!item) continue;
+      let uuid = String(item.title) + String(item.date);
+      if (!timelineMap[uuid]){
+        timelineOutput.push(item);
+        timelineMap[uuid] = true;
+      }
     }
   },
   processLibraryData(input){
@@ -626,10 +578,8 @@ OPTIONAL{
           var checkOutput = awardOutput[i]
           if (tempTLitem.qid == checkOutput.qid && tempTLitem.date == checkOutput.date ){
             foundLib = true
-
-            // loop through conferredn
+            // loop through conferred
             if (tempTLitem.conferred.length && !checkOutput.conferred.includes(tempTLitem.conferred[0])){
-              // console.log('added contrib to ', tempTLitem.qid)
               checkOutput.conferred.push(tempTLitem.conferred[0])
             }
             // Change type if the current is otherContent
@@ -646,26 +596,12 @@ OPTIONAL{
       }
     }
   },
-  checkDuplicateDataItem(list, item, props=false){
-    for (var i = 0; i < list.length; i++) {
-      var checkItem = list[i]
-      if(props){
-        var allSame = true
-        for (var k = 0; k < props.length && allSame; k++) {
-          if (checkItem[props[k]] != item[props[k]]) allSame = false
-        }
-        if (allSame) return i
-      }
-      else if (item == checkItem) return i;
-    }
-    return -1
-  },
-  getTimelineData(name, wdData, inverseData, callback){
-    timelineOutput = []
-    module.exports.processTimelineData(wdData)
-    module.exports.processTimelineData(inverseData, true)
-    // timelineOutput = {'new': timelineOutput, 'wd':wdData }
-    return callback(timelineOutput)
+  getTimelineData(name, wdData, inverseData){
+    let timelineOutput = [];
+    let timelineMap = {};
+    module.exports.processTimelineData(timelineMap, timelineOutput, wdData);
+    module.exports.processTimelineData(timelineMap, timelineOutput, inverseData, true);
+    return timelineOutput;
   },
   getLibraryData(name, inverseData, callback){
     libraryOutput = {'book': [], 'article': [], 'other': []}
@@ -691,7 +627,7 @@ OPTIONAL{
     return [temp[1], temp[0]]
   },
   checkPeopleStatement(name, statement, inverse = false){
-    if (statement.objInstance && statement.objInstance.value == "http://www.wikidata.org/entity/Q5"){
+    if (getValue(statement.objInstance) == "http://www.wikidata.org/entity/Q5"){
       var tempval = {
         qid : statement.ps_.value,
         pid : statement.ps.value,
@@ -723,12 +659,9 @@ OPTIONAL{
         if (inverse) tempval.qualifier = statement.wdpqLabel.value + " (for "+tempval.title+"): " + statement.pq_Label.value
         else tempval.qualifier = statement.wdpqLabel.value + ': ' + statement.pq_Label.value
       }
-
-      return tempval
+      return tempval;
     }
-    else return false
-
-
+    return false;
   },
   checkMapStatement(name, statement, inverse = false){
     var tempval = {
@@ -835,8 +768,9 @@ OPTIONAL{
 
   },
   checkTimelineStatement(name, statement, inverse=false){
+
     // Skip Author Statements (Data is recoreded in the library)
-    if (statement.wdLabel && statement.wdLabel.value == "author"){
+    if (getValue(statement.wdLabel) == "author"){
       return false;
     }
     var tempval = {
@@ -844,78 +778,65 @@ OPTIONAL{
       pid : statement.ps.value,
       date: false,
       title: false,
-      image: false
+      image: getValue(statement.img)
     }
-    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
-      tempval.qid = statement.ps_.value
-    }
-    if(statement.img && statement.img.value){
-      tempval.image = statement.img.value
+    let statement_prop = getValue(statement.ps);
+    let statement_val = getValue(statement.ps_);
+    let statement_type = getValue(statement.datatype);
+    let qual_prop = getValue(statement.wdpq);
+
+    if (statement_type == "http://wikiba.se/ontology#WikibaseItem"){
+      tempval.qid = statement_val;
     }
     // Check if birth date
-    if (statement.ps.value == "http://www.wikidata.org/prop/statement/P569"){
+    if (statement_prop == "http://www.wikidata.org/prop/statement/P569"){
       tempval.title = name+" is Born"
-      tempval.date = statement.ps_.value
+      tempval.date = statement_val;
       return tempval
     }
     // Check if death date
-    else if (statement.ps.value == "http://www.wikidata.org/prop/statement/P570"){
+    else if (statement_prop == "http://www.wikidata.org/prop/statement/P570"){
       tempval.title = name+" Passes"
-      tempval.date = statement.ps_.value
+      tempval.date = statement_val;
       return tempval
     }
     // Start Time
-    else if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P580")){
+    else if (qual_prop == "http://www.wikidata.org/entity/P580"){
       tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Begins"
       if (inverse) tempval.title = statement.ps_Label.value + "- Begins ("+ statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.pq_Label.value
-      // console.log(statement)
+      tempval.date = statement.pq_Label.value;
       return tempval
     }
     // End Time
-    else if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P582")){
+    else if (qual_prop ==  "http://www.wikidata.org/entity/P582"){
       tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Ends"
       if (inverse) tempval.title = statement.ps_Label.value + "- Ends ("+ statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.pq_Label.value
-      // console.log(statement)
+      tempval.date = statement.pq_Label.value;
       return tempval
     }
     // Check if point in time
-    else if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P585")){
+    else if (qual_prop == "http://www.wikidata.org/entity/P585"){
       tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
       if (inverse) tempval.title = statement.ps_Label.value + " ("+ statement.wdLabel.value + ": "+name+")"
       tempval.date = statement.pq_Label.value
-      // console.log(statement)
-      return tempval
+      return tempval;
     }
     // If datetime value of statement
-    else if ((statement.datatype.value == "http://wikiba.se/ontology#Time")
-      || (statement.ps_.datatype ==  "http://www.w3.org/2001/XMLSchema#dateTime")){
-      tempval.title = statement.wdLabel.value
-      if (inverse) tempval.title = statement.ps_Label.value + " ("+ statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.ps_Label.value
-      return tempval
+    else if (statement_type == "http://wikiba.se/ontology#Time"
+      || statement.ps_.datatype ==  "http://www.w3.org/2001/XMLSchema#dateTime"){
+      tempval.title = statement.wdLabel.value;
+      if (inverse) tempval.title = statement.ps_Label.value + " ("+ statement.wdLabel.value + ": "+name+")";
+      tempval.date = statement.ps_Label.value;
+      return tempval;
     }
     // If datetime value of statement
     else if (statement.objDate){
-      tempval.title = statement.wdLabel.value
-      if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.objDate.value
-      return tempval
-    }
-    else if (statement.objBirth){
       tempval.title = statement.wdLabel.value;
-      if (inverse) tempval.title = statement.ps_Label.value + " is Born ("+  statement.wdLabel.value + ": "+name+")";
-      tempval.date = statement.objBirth.value;
+      if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
+      tempval.date = statement.objDate.value;
       return tempval;
     }
-    else if (statement.objDeath){
-      tempval.title = statement.wdLabel.value;
-      if (inverse) tempval.title = statement.ps_Label.value + " is Passes ("+  statement.wdLabel.value + ": "+name+")";
-      tempval.date = statement.objDeath.value;
-      return tempval
-    }
-    return false
+    return false;
   },
   checkLibraryStatement(name, statement){
     var tempval = {
@@ -1034,8 +955,6 @@ OPTIONAL{
       else if ((tempval.title.includes('award')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q618779"){
         tempval.type = 'award'
       }
-
-
       return tempval
     }
     return false
