@@ -247,7 +247,6 @@ OPTIONAL{
                           qid: qid,
                           data: jsonData,
                           image: storyImage,
-                          user: req.session.user,
                           row: row,
                           isPreview: isPreview,
                           meta: meta,
@@ -272,6 +271,7 @@ OPTIONAL{
                             })
                             .then(output => {
                               storyRenderData.storyActivity = output.dataValues;
+                              storyRenderData.user = req.session.user;
                               return res.render('full', storyRenderData);
                             })
                           })
