@@ -113,6 +113,30 @@ module.exports = {
     `
     return wdk.sparqlQuery(query);
   },
+  birthdayQuery(qidList, lang){
+    var qidStr = ''
+    for (var i=0; i < qidList.length; i++){
+      qidStr += `(wd:${qidList[i].qid} ${i})`
+    }
+    var query = `
+    SELECT ?index ?item ?itemLabel ?itemDescription ?image (YEAR(?date) as ?year) (?nowYear-?year as ?age) ?birth ?death
+    WHERE {
+      VALUES (?item ?index) {${qidStr}}.
+      BIND(NOW() AS ?now).
+      BIND(MONTH(?now) AS ?nowMonth).
+      BIND(DAY(?now) AS ?nowDay).
+      BIND(YEAR(?now) AS ?nowYear).
+      ?item wdt:P569 ?date .
+      optional {?item wdt:P569 ?birth  .}
+      optional {?item wdt:P570 ?death  .}
+      optional {?item wdt:P18 ?image  .}
+      FILTER (MONTH(?date) = ?nowMonth && DAY(?date) = ?nowDay)
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+    }
+    `
+    return query;
+    return wdk.sparqlQuery(query);
+  },
   getBibliography(lang){
     var query = `
     SELECT ?item ?itemLabel ?itemDescription ?instanceLabel ?authorLabel ?image

@@ -50,7 +50,11 @@ hbs.registerHelper('if_equal', function(a, b, opts) {
         return opts.inverse(this)
     }
 })
-
+hbs.registerHelper( 'ordinal', function(n) {
+  let s=["th","st","nd","rd"],
+  v=n%100;
+  return n+(s[(v-20)%10]||s[v]||s[0]);
+});
 hbs.registerHelper( 'concat', function() {
   let output = ''
     for (let i=0; i < arguments.length-1; i++){
@@ -265,10 +269,10 @@ app.use(session({
 }));
 module.exports = {
   // Wrapper for fetch
-  appFetch: function (url) {
+  appFetch: function (url, options) {
     if (url[0] == '/') url = 'http://sciencestories.io'+url
     return new Promise((resolve, reject) => {
-      fetch(url)
+      fetch(url, options)
         .then(res => res.json())
         .then(data => resolve(data))
         .catch(err => reject(err))

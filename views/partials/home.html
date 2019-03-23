@@ -105,10 +105,77 @@
     <div class="twitter-container">
       <a class="twitter-timeline" data-link-color="#3ccfbe" href="https://twitter.com/unforgettingSci?ref_src=twsrc%5Etfw">Tweets by unforgettingSci</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     </div>
-
-
   </div>
 </section>
+{{#if birthdays}}
+<style>
+  .grid{
+  	margin: 0 auto !important; /* this is the css that keeps the container centered in page */
+  	text-align: center;
+  	max-width: 80vw !important;
+  }
+  section.birthdays {
+    background: #f6f6f6;
+    padding-bottom: 50px;
+}
+.birthdays h2{
+    background: #55cbc2;
+    color: white;
+    font-weight: 500;
+    padding: 25px;
+}
+.card-badge {
+    padding: 10px 10px;
+    background: #55cbc2;
+    color: white;
+}
+</style>
+  <section class="birthdays">
+    <h2 class="section-header">
+      Happy Birthday
+    </h2>
+    <p class="section-subheader">
+      Today We Are Celebrating The Following Birthdays on Science Stories
+     </p>
+    <!-- TODO: Replace with story_gallery.html -->
+    <div class="grid browse-gallery" id="browseStories">
+      {{#each birthdays}}
+        <div class="grid-item">
+          <a class="browse-story-link" href="/{{item.value}}">
+            <div class="inventory-card">
+              <div class="card-header">
+                <div class="card-badge">
+                  <i class="fas fa-birthday-cake"></i><i class="fas fa-gifts"></i><br>
+                  {{ordinal age}} Birthday
+                </div>
+                {{#if image}}
+                  <div class="card-image-container">
+                    <img src="{{image}}" alt="">
+                  </div>
+                {{/if}}
+                <div class="card-title">
+                  {{item.label}}
+                  {{#if birth}}
+                    <div class="card-condition">
+                      {{dateFormat birth 'Y'}}-{{#if this.death}}{{dateFormat death 'Y'}}{{/if}}
+                    </div>
+                  {{/if}}
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="card-desc">{{item.description}}</p>
+              </div>
+              <div class="card-footer">
+                <div class="card-footer-sub card-updated">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      {{/each}}
+    </div>
+  </section>
+{{/if}}
 <section class="home-section" id="features">
   <div class="left">
     <img src="/static/images/screenshots/wd_annotation.png" alt="">

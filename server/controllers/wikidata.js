@@ -119,6 +119,17 @@ module.exports = {
       }
     })
   },
+  executeSPARQL(query, callback){
+    const { URLSearchParams } = require('url');
+    const params = new URLSearchParams();
+    params.append('query', query);
+    return appFetch('https://query.wikidata.org/sparql?format=json',
+    {
+      headers: { Accept: 'application/sparql-results+json' },
+      method: 'POST',
+      body: params
+    }).then(wdk.simplify.sparqlResults).then(content => callback(content))
+  },
   simplifySparqlFetch(content){
     return content.results.bindings.map(function(x){
       if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value);

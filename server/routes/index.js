@@ -14,15 +14,7 @@ module.exports = (app, sessionChecker) => {
 
 // app.get('/browse', sessionChecker, (req, res) => loadPage(res, req, 'base', {file_id:'browse', nav:'browse'}));
   // route for Home-Page
-  app.get('/', (req, res) => {
-    storyController.getCount(function(count){
-      var homeMeta = {
-        description: "Science Stories brings scientific work into social spaces where users discover information about underrepresented pioneers — creating starting points for further exploration. For institutions with cultural heritage resources in libraries, archives, museums and galleries that are not yet available on the web, we provide a web application that leverages Wikidata, IIIF, and semantic web technologies to demonstrate a vision of what getting scientific work products into social spaces can do."
-      }
-      let featured_stories = storyController.getFeaturedList();
-      loadPage(res, req, 'full', {file_id:'home', nav:'home', title:'Welcome', story_count:count, meta:homeMeta, featured_stories: featured_stories});
-    })
-  })
+  app.get('/', storyController.welcome)
   app.get('/donate', (req, res) => {
     storyController.getCount(function(count){
       loadPage(res, req, 'full', {file_id:'donate', nav:'donate', title:'Giving', story_count:count})
@@ -147,6 +139,7 @@ app.post('/api/dump/stories', (req, res) => {
   app.post('/api/member/create', membersController.create);
   app.post('/api/story/create', storyController.create);
   app.post('/api/story/update', storyController.update);
+  app.get('/api/story/birthday', storyController.birthday);
   app.get('/api/iiif/manifest-source/:source/:filename', (req, res) => {
     res.status(200).sendfile("manifests/_sources/"+req.params.source+'/'+req.params.filename);
   });

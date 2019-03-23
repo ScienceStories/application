@@ -5,6 +5,7 @@ const LogStory = require('../models').logstory;
 const wdk = require('wikidata-sdk');
 const appFetch =  require('../../app').appFetch;
 const loadPage =  require('../../app').loadPage;
+const sparqlController = require('./sparql');
 const wikidataController = require('./wikidata');
 const loadError =  require('../../app').loadError;
 const sequelize = require('../models').sequelize;
@@ -38,12 +39,29 @@ module.exports = {
         }
         return module.exports.getContributors(out.id, function(contributors){
           out.contributors = contributors
-          // return res.send(contributors)
           return wikidataController.processStory(req, res, out);
         })
-
       })
       .catch(error => loadError(req, res, 'Trouble Loading this Story'));
+  },
+  welcome(req, res){
+    return module.exports.getCount((count) => {
+      let homeMeta = {
+        description: "Science Stories brings scientific work into social spaces where users discover information about underrepresented pioneers — creating starting points for further exploration. For institutions with cultural heritage resources in libraries, archives, museums and galleries that are not yet available on the web, we provide a web application that leverages Wikidata, IIIF, and semantic web technologies to demonstrate a vision of what getting scientific work products into social spaces can do."
+      }
+      let featured_stories = module.exports.getFeaturedList();
+      return module.exports._getBirthdays((birthdays) =>
+        loadPage(res, req, 'full', {
+          file_id:'home',
+          nav:'home',
+          title:'Welcome',
+          story_count:count,
+          meta:homeMeta,
+          featured_stories: featured_stories,
+          birthdays:birthdays
+        })
+      )
+    })
   },
   validate(req, res){
     var qid = req.params.qid
@@ -179,6 +197,36 @@ module.exports = {
     stories_per_page = 50
     return module.exports.getGallery(req, res, false, page, stories_per_page)
   },
+  birthday(req, res){
+    return module.exports._getBirthdays((items) => res.send(items))
+  },
+  _getBirthdays(callback){
+    Story.findAll({ attributes:['qid', 'data']}).then(list => {
+      let qidList = [];
+      for(var i = 0; i < list.length; i++){
+        qidList.push(list[i].dataValues)
+      }
+      let query = sparqlController.birthdayQuery(qidList);
+      wikidataController.executeSPARQL(query, (content) => {
+        content = module.exports._imagesFromStory(qidList, content);
+        return callback(content);
+      })
+    })
+  },
+  _imagesFromStory(db_values, output){
+    for (var i = 0; i < output.length; i++) {
+      if(!output[i].image){
+        let index = output[i].index;
+        for (var k = 0; k < db_values[index].data.length; k++) {
+          if (db_values[index].data[k].image){
+            output[i].image = db_values[index].data[k].image;
+            break;
+          }
+        }
+      }
+    }
+    return output;
+  },
   getGallery(req, res, members, pageNumber, stories_per_page, callback){
     offset = (pageNumber-1)*stories_per_page
     return Story.count().then(total_stories => {
@@ -205,10 +253,9 @@ module.exports = {
                 if(!qidList[i].image){
                   for (var k = 0; k < out[i].dataValues.data.length; k++) {
                     if (out[i].dataValues.data[k].image){
-                      qidList[i].image = out[i].dataValues.data[k].image
+                      qidList[i].image = out[i].dataValues.data[k].image;
                       break;
                     }
-
                   }
                 }
               }
