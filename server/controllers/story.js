@@ -4,10 +4,8 @@ const Member = require('../models').member;
 const LogStory = require('../models').logstory;
 const wdk = require('wikidata-sdk');
 const appFetch =  require('../../app').appFetch;
-const loadPage =  require('../../app').loadPage;
 const sparqlController = require('./sparql');
 const wikidataController = require('./wikidata');
-const loadError =  require('../../app').loadError;
 const sequelize = require('../models').sequelize;
 const featuredStories =  JSON.parse(fs.readFileSync("server/controllers/featuredStories.json"));
 module.exports = {
@@ -35,33 +33,28 @@ module.exports = {
         })
       .then(out => {
         if (!out) {
-          return loadError(req, res, 'This story has not yet been curated.');
+          return res.renderError('This story has not yet been curated.');
         }
         return module.exports.getContributors(out.id, function(contributors){
           out.contributors = contributors
           return wikidataController.processStory(req, res, out);
         })
       })
-      .catch(error => loadError(req, res, 'Trouble Loading this Story'));
+      .catch(error => res.renderError('Trouble Loading this Story'));
   },
   welcome(req, res){
-    return module.exports.getCount((count) => {
-      let homeMeta = {
-        description: "Science Stories brings scientific work into social spaces where users discover information about underrepresented pioneers — creating starting points for further exploration. For institutions with cultural heritage resources in libraries, archives, museums and galleries that are not yet available on the web, we provide a web application that leverages Wikidata, IIIF, and semantic web technologies to demonstrate a vision of what getting scientific work products into social spaces can do."
-      }
-      let featured_stories = module.exports.getFeaturedList();
-      return module.exports._getBirthdays((birthdays) =>
-        loadPage(res, req, 'full', {
-          file_id:'home',
-          nav:'home',
-          title:'Welcome',
-          story_count:count,
-          meta:homeMeta,
-          featured_stories: featured_stories,
-          birthdays:birthdays
-        })
-      )
-    })
+    return module.exports.getCount(count => {
+      return module.exports._getBirthdays((birthdays) => {
+        let pageData = {
+          title: 'Welcome',
+          story_count: count,
+          meta: {description: "Science Stories brings scientific work into social spaces where users discover information about underrepresented pioneers — creating starting points for further exploration. For institutions with cultural heritage resources in libraries, archives, museums and galleries that are not yet available on the web, we provide a web application that leverages Wikidata, IIIF, and semantic web technologies to demonstrate a vision of what getting scientific work products into social spaces can do."},
+          featured_stories: module.exports.getFeaturedList(),
+          birthdays: birthdays
+        }
+        res.renderFullPage('home', pageData)
+      });
+    });
   },
   validate(req, res){
     var qid = req.params.qid
@@ -107,21 +100,20 @@ module.exports = {
     })
   },
   build(req, res){
+    let pageData = {title:'Story Creation'};
     if (req.query.qid){
-      Story.findOne({where: {qid:req.query.qid}})
-        .then(story => {
-          return loadPage(res, req, 'base', {file_id:'build',  title:'Story Creation', nav:'build', data:{moments:story.data}, idVal:req.query.qid.substr(1)})
-        })
+      return Story.findOne({where: {qid:req.query.qid}}).then(story => {
+        pageData.data = {moments:story.data};
+        pageData.idVal = req.query.qid.substr(1);
+        return res.renderPage('base', 'build', pageData);
+      })
     }
-    else{
-      return loadPage(res, req, 'base', {file_id:'build',  title:'Story Creation', nav:'build'})
-    }
+    return res.renderPage('base', 'build', pageData);
   },
   preview(req, res) {
-    // console.log(req.query.data)
-    req.params.id = req.query.id
-    // console.log(req.params.id, req.query.id )
-    return wikidataController.processStory(req, res, {data: JSON.parse(req.query.data)});
+    req.params.id = req.query.id;
+    let data = JSON.parse(req.query.data);
+    return wikidataController.processStory(req, res, {data: data});
   },
   searchFunction(string, tokens){
     var tokenTotal = tokens.length
@@ -133,30 +125,26 @@ module.exports = {
     return true
   },
   search(req, res) {
-    searchString = req.query.search.toLowerCase().trim()
-    if (!searchString.length) loadError(req, res, 'No Search Detected')
-    searchTokens = searchString.split(" ")
-    return wikidataController.searchItems(req, res, searchString, function(results){
-      // console.log(results)
-      return Story.findAll({where: {qid:results}})
-        .then(stories => {
-          // console.log(stories)
-          var resultQids = []
-          for (i=0;i < stories.length; i++){
-            resultQids.push(stories[i].dataValues.qid)
-          }
-          data = {}
-          return Story.findAll()
-            .then(allStories => {
-              allIds = []
-              for (i=0;i < allStories.length; i++){
-                allIds.push(allStories[i].dataValues.qid)
-              }
-              wikidataController.getDetailsList(req, res, resultQids, 'small', 'first', false, function(detailList){
-                wikidataController.getDetailsList(req, res, allIds, 'small', 'first', false,  function(alldetailList){
+    let searchString = req.query.search.toLowerCase().trim();
+    if (!searchString.length) return res.renderError('No Search Detected');
+    let searchTokens = searchString.split(" ");
+    return wikidataController.searchItems(req, res, searchString, results => {
+      return Story.findAll({where: {qid:results}}).then(stories => {
+        let resultQids = [];
+        for (i=0;i < stories.length; i++){
+          resultQids.push(stories[i].dataValues.qid);
+        }
+        let data = {};
+        return Story.findAll().then(allStories => {
+            let allIds = [];
+            for (i=0;i < allStories.length; i++){
+              allIds.push(allStories[i].dataValues.qid);
+            }
+            wikidataController.getDetailsList(req, res, resultQids, 'small', 'first', false, function(detailList){
+              wikidataController.getDetailsList(req, res, allIds, 'small', 'first', false,  function(alldetailList){
                 for(var i = 0; i < detailList.length; i++){
-                    for(var key in stories[i].dataValues) detailList[i][key] =stories[i].dataValues[key];
-                  }
+                  for(var key in stories[i].dataValues) detailList[i][key] =stories[i].dataValues[key];
+                }
                 for(var i = 0; i < alldetailList.length; i++){
                   var objectStr = alldetailList[i].itemLabel + alldetailList[i].itemDescription;
                   objectStr = JSON.stringify(alldetailList[i]) + JSON.stringify(allStories[i].dataValues)
@@ -166,30 +154,32 @@ module.exports = {
                     for(var key in allStories[i].dataValues) newItem[key] = allStories[i].dataValues[key];
                     detailList.push(newItem)
                   }
-                }
-                data['results'] = detailList
-                data.story_total = detailList.length
-                return Member.findAll({attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }}).then(members => {
-                  var member_total = 0
-                  for (var i = 0; i < members.length; i++) {
-                    var memberString = JSON.stringify(members[i].dataValues).toLowerCase()
-                    if (module.exports.searchFunction(memberString, searchTokens)) {
-                      detailList.push({
-                        qid : 'member:'+ members[i].dataValues.username,
-                        image: members[i].dataValues.image,
-                        itemLabel: "Member: "+members[i].dataValues.name,
-                        itemDescription: members[i].dataValues.bio
-                      })
-                      member_total++;
-                    }
+              }
+              data.results = detailList;
+              data.story_total = detailList.length
+              return Member.findAll({attributes: { exclude: ['password', 'createdAt', 'updatedAt'] }}).then(members => {
+                let member_total = 0
+                for (let i = 0; i < members.length; i++) {
+                  let m = members[i].dataValues;
+                  let memStr = JSON.stringify(m).toLowerCase();
+                  if (module.exports.searchFunction(memStr, searchTokens)) {
+                    detailList.push({
+                      qid: 'member:' + m.username,
+                      image: m.image,
+                      itemLabel: "Member: " + m.name,
+                      itemDescription: m.bio
+                    });
+                    member_total++;
                   }
-                  data.member_total = member_total
-                  return loadPage(res, req, 'base', {file_id:'search',  title:'Search '+req.query.search, nav:'search', data:data})
-                })
-
-              })})
-            })
-            })
+                }
+                data.member_total = member_total;
+                let pageData = {title:'Search '+req.query.search, data:data};
+                return res.renderPage('base', 'search', pageData)
+              });
+            });
+          });
+        });
+      });
     })
   },
   browse(req, res) {
@@ -228,42 +218,47 @@ module.exports = {
     return output;
   },
   getGallery(req, res, members, pageNumber, stories_per_page, callback){
-    offset = (pageNumber-1)*stories_per_page
+    offset = (pageNumber-1)*stories_per_page;
     return Story.count().then(total_stories => {
-      maxPage = Math.ceil(total_stories/stories_per_page) + 1
-      nextPage = (pageNumber == maxPage) ? 0 : pageNumber + 1
-      prevPage = (pageNumber == 1) ? 0 : pageNumber - 1
-      data = {totalStories:total_stories, page:pageNumber, maxPage: maxPage, prevPage:prevPage, nextPage:nextPage}
-      Story.findAll({ attributes:['qid', 'data'], order: [['updatedAt', 'DESC']], offset: offset, limit: stories_per_page })
-      .then(out => {
-          story_total = out.length;
-          qidList = [];
-          for(var i = 0; i < story_total; i++){
-            qidList.push(out[i].dataValues.qid)
-          }
-
-          return wikidataController.getDetailsList(req, res, qidList, 'small_with_age', 'first', false,
-            function(qidList){
-              // for(var i = 0; i < story_total; i++){
-              //   for(var key in out[i].dataValues) {
-              //     qidList[i][key] = out[i].dataValues[key];
-              //   }
-              // }
-              for (var i = 0; i < qidList.length; i++) {
-                if(!qidList[i].image){
-                  for (var k = 0; k < out[i].dataValues.data.length; k++) {
-                    if (out[i].dataValues.data[k].image){
-                      qidList[i].image = out[i].dataValues.data[k].image;
-                      break;
-                    }
-                  }
+      let query = {
+        attributes:['qid', 'data'],
+        order: [['updatedAt', 'DESC']],
+        offset: offset,
+        limit: stories_per_page
+      };
+      Story.findAll(query).then(out => {
+        story_total = out.length;
+        qidList = [];
+        for(var i = 0; i < story_total; i++){
+          qidList.push(out[i].dataValues.qid);
+        }
+        return wikidataController.getDetailsList(req, res, qidList, 'small_with_age', 'first', false, qidList => {
+          for (let i = 0; i < qidList.length; i++) {
+            if(!qidList[i].image){
+              for (let k = 0; k < out[i].dataValues.data.length; k++) {
+                if (out[i].dataValues.data[k].image){
+                  qidList[i].image = out[i].dataValues.data[k].image;
+                  break;
                 }
               }
-              data['browseList'] = qidList
-              loadPage(res, req, 'base', {file_id:'browse',  title:`Browse Stories (Page ${pageNumber})`, nav:'browse', data:data})
-            })
-        })
-    })
+            }
+          }
+          let maxPage = Math.ceil(total_stories/stories_per_page) + 1;
+          let pageData = {
+            title: `Browse Stories (Page ${pageNumber})`,
+            data: {
+              browseList: qidList,
+              totalStories: total_stories,
+              page: pageNumber,
+              maxPage: maxPage,
+              prevPage:(pageNumber == 1) ? 0 : pageNumber - 1,
+              nextPage: (pageNumber == maxPage) ? 0 : pageNumber + 1
+            }
+          }
+          return res.renderPage('base', 'browse', pageData);
+        });
+      });
+    });
   },
   update(req, res) {
     user_id = (req.session.user) ? req.session.user.id : false;

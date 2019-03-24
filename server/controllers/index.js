@@ -9,5 +9,6 @@ const comment = require('./comment');
 const sitemap = require('./sitemap');
 const google = require('./google');
 module.exports = {
-  members, story, wikidata, wikicommons, annotation, aws, sparql, comment, sitemap, google
+  members, story, wikidata, wikicommons, annotation, aws, sparql, comment,
+  sitemap, google
 };

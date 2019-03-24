@@ -1,7 +1,5 @@
 
 const appFetch = require('../../app').appFetch;
-const loadPage = require('../../app').loadPage;
-const loadError = require('../../app').loadError;
 const fs = require('fs');
 const Member = require('../models').member;
 
@@ -119,35 +117,25 @@ module.exports = {
          if (!err) res.status(200).send(JSON.parse(data.Body.toString()))
      }).on('error', error => {
      // Catching NoSuchKey & StreamContentLengthMismatch
-     return loadError(req, res, 'Could Not Find Manifest')
+     return res.renderError('Could Not Find Manifest')
      });
   },
   loadFile(req, res){
-    var params = {
-      Bucket: "sciencestories",
-      Key:req.url.substring(1),
-     };
-     errorFound = false
+    let params = {Bucket: "sciencestories", Key:req.url.substring(1)};
+    let errorFound = false
     var filestream = s3.getObject(params).createReadStream().on('error', error => {
-    // Catching NoSuchKey & StreamContentLengthMismatch
-    loadError(req, res, 'Could Not Find File')
-    errorFound = true
+      // Catching NoSuchKey & StreamContentLengthMismatch
+      renderError('Could Not Find File')
+      errorFound = true;
     });
     if(errorFound){
       return false
     }
-    else{
-      return filestream.pipe(res);
-    }
-
+    return filestream.pipe(res);
   },
   upload(req, res){
-    return Member.findById(req.session.user.id)
-    .then(member => {
-      data = {user:member}
-      return loadPage(res, req, 'base', {file_id:'upload',  title:'File Upload', nav:'upload', data:data})
-
-      })
+    return Member.findById(req.session.user.id).then(member =>
+      res.renderPage('base', 'upload', {data: {user: member}}))
   },
 
   saveUpload(req, res){

@@ -1,46 +1,44 @@
 const wdk = require('wikidata-sdk');
-const fetch = require('node-fetch');
 const getURLPath = require('../../app').getURLPath;
 const appFetch = require('../../app').appFetch;
-const loadPage = require('../../app').loadPage;
-const loadError = require('../../app').loadError;
 const safeOverwrite = require('../utils').safeOverwrite;
+const JSONFile = require('../utils').JSONFile;
 const getValue = require('../utils').getValue;
 const sparqlController = require('./sparql');
 const commentController = require('./comment');
 const wikicommonsController = require('./wikicommons');
 const StoryActivity = require('../models').storyactivity;
 const sequelize = require('../models').sequelize;
-const fs = require('fs');
 const moment = require('moment');
 const randomColor = require('randomcolor');
-iconMap =  JSON.parse(fs.readFileSync("server/controllers/iconMap.json"));
-itemTypeMap =  JSON.parse(fs.readFileSync("server/controllers/itemTypeMap.json"));
-wikidataMap =  JSON.parse(fs.readFileSync("server/controllers/wikidataMap.json"));
+const iconMap = JSONFile("server/controllers/iconMap.json");
+const itemTypeMap = JSONFile("server/controllers/itemTypeMap.json");
+const wikidataMap = JSONFile("server/controllers/wikidataMap.json");
+
 module.exports = {
   bibliography(req, res) {
-    var queryUrl = sparqlController.getBibliography('en')
-    return appFetch(queryUrl)
-      .then(output => {
-        var results = output.results.bindings;
-        works = []
-        qidsFound = []
-        for (i=0; i < results.length; i++){
-          var record = results[i]
-          var qid = record.item.value.replace('http://www.wikidata.org/entity/', '')
-          var index = qidsFound.indexOf(qid);
-          if ( index == -1){
-            qidsFound.push(qid);
-            newRecord = {qid:qid}
-            for(var key in record) newRecord[key] = record[key].value;
-            works.push(newRecord)
-          }
-          else if(works[index].authorLabel.indexOf(record.authorLabel.value) == -1){
-            works[index].authorLabel += ' | '+record.authorLabel.value
-          }
+    let queryUrl = sparqlController.getBibliography('en');
+    return appFetch(queryUrl).then(output => {
+      let results = output.results.bindings;
+      let works = [];
+      let qidsFound = [];
+      for(i=0; i < results.length; i++){
+        let record = results[i];
+        let qid = record.item.value.replace('http://www.wikidata.org/entity/', '');
+        let index = qidsFound.indexOf(qid);
+        if(index == -1) {
+          qidsFound.push(qid);
+          newRecord = {qid:qid};
+          for(let key in record) newRecord[key] = record[key].value;
+          works.push(newRecord);
         }
-         loadPage(res, req, 'base', {file_id:'bibliography', title:'Bibliography', nav:'bibliography', works: works})
-      })
+        else if(works[index].authorLabel.indexOf(record.authorLabel.value) == -1){
+          works[index].authorLabel += ' | ' + record.authorLabel.value;
+        }
+      }
+      let pageData = {title:'Bibliography', works: works};
+      return res.renderPage('base', 'bibliography', pageData);
+    });
   },
   searchItems(req, res, string, callback){
     var search_url = `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${string}&language=en&format=json`
@@ -288,7 +286,7 @@ OPTIONAL{
                               return res.render('full', storyRenderData);
                             })
                           })
-                          .catch(error => loadError(req, res, 'Something went wrong.'));
+                          .catch(error => res.renderError());
                         }
                         return res.render('full', storyRenderData);
                       })

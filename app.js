@@ -17,9 +17,7 @@ const urlformatter = require('url').format;
 // initalize sequelize with session store
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var sequelize = require('./server/models').sequelize
-// sequelize.queryInterface.removeColumn('storyactivities', 'lastViewed')
-// sequelize.queryInterface.addColumn('members', 'github', Sequelize.DataTypes.STRING )
-// console.log(sequelize)
+
 // Set up the express app
 const app = express();
 const moment = require('moment');
@@ -43,6 +41,7 @@ app.use('/build/mirador', cors(), express.static(__dirname + '/static/vendor/mir
 app.use('/api/iiif/manifest/local/',  cors(), express.static(__dirname + '/manifests/'));
 app.use('/static', cors(), express.static(__dirname + '/static/'));
 app.use('/uv-config.json', cors(), (req, res) => res.sendFile(__dirname + '/uv-config.json'));
+// TODO: create handlebarsHelpers.js
 hbs.registerHelper('if_equal', function(a, b, opts) {
     if (a == b) {
         return opts.fn(this)
@@ -267,8 +266,63 @@ app.use(session({
     store: myStore,
     saveUninitialized: true
 }));
+app.use((req, res, next) => {
+  req.member = (next) => {
+    let user = req.session.user;
+    if (user && user.id){
+      // TODO: Invesigate cirular import with appFerch
+      const membersController = require('./server/controllers').members;
+      return membersController.select(user.id, (member) => {
+        req.session.user = member;
+        return next(member);
+      });
+    }
+    return next(null);
+  };
+
+  res.access = (level, next) => {
+    // Levels are user, author, admin
+    accessType = {
+      'user': ['basic', 'author', 'admin'],
+      'author': ['author', 'admin'],
+      'admin': ['admin', ]
+    }
+    return req.member(member => {
+      if (member && accessType[level].indexOf(member.type) >= 0){
+        return next(req, res, next);
+      }
+      return res.renderError('unauthorized access')
+    });
+  };
+
+  res.ifAuthor = (next) => res.access('author', next);
+  res.ifUser = (next) => res.access('user', next);
+  res.ifAdmin = (next) => res.access('admin', next);
+
+  res.renderPage = (layout, page_name, data) => {
+    if (!data.nav) data.nav = page_name;
+    if (!data.title) data.title = page_name;
+    data.page = () => page_name;
+    data.scripts = () => page_name + '_scripts';
+    data.links = () => page_name + '_links';
+    if (req.session.user){
+      if (data.data == undefined) data.data = {};
+      data.data.user = req.session.user;
+    }
+    return res.render(layout, data);
+  };
+
+  res.renderFullPage = (page, data={}) => res.renderPage("full", page, data);
+
+  res.renderError = (msg='Something went wrong.', status=501) =>
+    res.status(status).renderPage('base', 'error', {message:msg})
+
+  next();
+});
+
 module.exports = {
   // Wrapper for fetch
+  // TODO: Move this to utils.js
   appFetch: function (url, options) {
     if (url[0] == '/') url = 'http://sciencestories.io'+url
     return new Promise((resolve, reject) => {
@@ -278,36 +332,7 @@ module.exports = {
         .catch(err => reject(err))
     })
   },
-  // Helper function to wrapp page load redering
-  loadPage(res, req, layout, data, status=false){
-    data.page  = function(){ return data.file_id}
-    data.scripts = function(){ return data.file_id+'_scripts'}
-    data.links = function(){ return data.file_id+'_links'}
-    if (req.session.user){
-      if (data.data == undefined) {
-        data.data = {}
-      }
-      data.data.user = req.session.user;
-    }
-    if (status) return res.status(status).render(layout, data);
-    return res.render(layout, data);
-  },
-  loadError(req, res, message, status=false){
-    data = {
-      page: function(){ return 'error'},
-      scripts: function(){ return 'error_scripts'},
-      links: function(){ return 'error_links'},
-      message: message
-    }
-    if (req.session.user){
-      if (data.data == undefined) {
-        data.data = {}
-      }
-      data.data.user = req.session.user;
-    }
-    if (status) return res.status(status).render('base', data);
-    return res.status(501).render('base', data);
-  },
+  // TODO: Move this to utils.js
   getURLPath(req, path=''){
     return urlformatter({
       protocol: req.protocol,

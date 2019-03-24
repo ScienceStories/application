@@ -1,64 +1,36 @@
 const Annotation = require('../models').annotation;
 const appFetch = require('../../app').appFetch;
-const loadPage = require('../../app').loadPage;
-const loadError = require('../../app').loadError;
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const awsController = require('./aws');
 
 module.exports = {
 
-
   showPage(req, res) {
-    // res.redirect('/login');
+    let pageData = {title:'Annotate Manifests'};
     if (req.query.manifest){
-      var data = {
-        file_id:'annotate',
-        nav:'annotate',
-        title:'Annotate Manifests',
-        data: {
-          'uriList':[],
-          'custom': req.query.manifest
-        }
-      }
-      return loadPage(res, req, 'base',  data)
+      pageData.data = {uriList:[], cutom: req.query.manifest};
+      return res.renderPage('base', 'annotate', pageData);
     }
-    awsController.loadManifestList(req, res, function (s3, files){
-      annoIds = []
+    return awsController.loadManifestList(req, res, (s3, files) => {
+      let annoIds = [];
       for (f=0; f < files.length; f++){
-        s3.getObject({
-          Bucket: "sciencestories",
-          Key: files[f],
-         }, function(err, data)
-        {
-            if (!err) {
-              var sequences = JSON.parse(data.Body.toString()).sequences
-              for (seqNum = 0; seqNum < sequences.length; seqNum++){
-                var canvases = sequences[seqNum].canvases
-                for (canNum = 0; canNum < canvases.length; canNum++){
-                  // console.log('Calling on -> ' + canvases[canNum]['@id'])
-                  annoIds.push(canvases[canNum]['@id'])
-                }
+        s3.getObject({Bucket: "sciencestories", Key: files[f]}, (err, data) => {
+          if (!err) {
+            let sequences = JSON.parse(data.Body.toString()).sequences;
+            for (seqNum = 0; seqNum < sequences.length; seqNum++){
+              let canvases = sequences[seqNum].canvases;
+              for (canNum = 0; canNum < canvases.length; canNum++){
+                annoIds.push(canvases[canNum]['@id']);
               }
             }
-
+          }
         });
         files[f] = files[f].replace('manifests/', '')
-
       }
-      var data = {
-        file_id:'annotate',
-        nav:'annotate',
-        title:'Annotate Manifests',
-        data: {
-          'files':files,
-          'uriList':annoIds
-        }
-      }
-      loadPage(res, req, 'base',  data)
+      pageData.data = {files:files, uriList:annoIds};
+      return res.renderPage('base', 'annotate',  pageData)
     });
-
-
   },
   create(data) {
     return Annotation
@@ -71,40 +43,30 @@ module.exports = {
       .catch(error => {return 0});
   },
   select(req, res) {
-    return Annotation
-      .find({
-        where: {
-          qid: 'Q'+req.params.id,
-          status: 'basic'
-        },
-      })
+    return Annotation.find({where: {qid: 'Q'+req.params.id, status: 'basic'}})
       .then(out => {
-        if (!out) {
-          return loadError(req, res, 'This annotation has not yet been curated.');
+        if (out) {
+          return wikidataController.processAnnotation(req, res, out);
         }
-        return wikidataController.processAnnotation(req, res, out);
-      })
-      .catch(error => loadError(req, res, 'Trouble Loading this Annotation'));
+        return res.renderError('This annotation has not yet been curated.');
+      }).catch(error => res.renderError('Trouble Loading this Annotation'));
   },
   loadFromUri(req, res, next=null, uriArray=false) {
     uriArray = (uriArray) ? uriArray : req.body.uri;
     sendData = {};
-    return Annotation
-      .findAll({where: {uri:uriArray}})
-      .then(out => {
-        for (anno in out){
-          sendData[out[anno].uri] = out[anno].state;
-        }
-        res.status(200).send(sendData);
-      })
+    return Annotation.findAll({where: {uri:uriArray}}).then(out => {
+      for (anno in out){
+        sendData[out[anno].uri] = out[anno].state;
+      }
+      res.status(200).send(sendData);
+    })
   },
   loadFromManifest(req, res, next=null, manifestUri=false) {
     manifestUri = (manifestUri) ? manifestUri : req.body.uri;
-    return appFetch(manifestUri)
-      .then(content => {
-        lst = module.exports.getUriListFromManifest(content);
-        return module.exports.loadFromUri(req, res, null, lst);
-      })
+    return appFetch(manifestUri).then(content => {
+      lst = module.exports.getUriListFromManifest(content);
+      return module.exports.loadFromUri(req, res, null, lst);
+    })
    },
   getUriListFromManifest(manifestObj){
     var output = []
@@ -112,7 +74,6 @@ module.exports = {
     for (seqNum = 0; seqNum < sequences.length; seqNum++){
       var canvases = sequences[seqNum].canvases
       for (canNum = 0; canNum < canvases.length; canNum++){
-        // console.log('Calling on -> ' + canvases[canNum]['@id'])
         output.push(canvases[canNum]['@id'])
       }
     }
@@ -130,22 +91,13 @@ module.exports = {
       })
   },
   update(data) {
-    return Annotation
-      .find({
-          where: {
-            uri: data.uri,
-          },
-      })
-      .then(found => {
+    return Annotation.find({where: {uri: data.uri}}).then(found => {
         if (!found){
           return 0;
         }
-        return found
-          .update(data, { fields: Object.keys(data) })
-          .then(() => {})
+        return found.update(data, {fields: Object.keys(data)}).then(() => {})
           .catch(error => {return 0});
-      })
-      .catch(error => {return error});
+      }).catch(error => {return error});
   },
   updateOrCreate (model, where, newItem) {
   // First try to find the record
@@ -179,7 +131,6 @@ module.exports = {
           .then(function(result) {
             result.item;  // the model
             result.created; // bool, if a new item was created.
-
           });
       }
     }
@@ -199,9 +150,7 @@ module.exports = {
             message: 'Annotation Not Found',
           });
         }
-
-        return out
-          .destroy()
+        return out.destroy()
           .then(() => res.status(200).send({ message: 'Player deleted successfully.' }))
           .catch(error => res.status(400).send(error));
       })
@@ -209,10 +158,7 @@ module.exports = {
   },
   bulkCreate(array){
     for (var i=0; i < array.length; i++){
-      Annotation.create({
-        qid: array[i],
-        status: 'basic',
-      })
+      Annotation.create({qid: array[i], status: 'basic'})
     }
   }
 };

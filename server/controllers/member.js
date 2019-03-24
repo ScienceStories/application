@@ -8,8 +8,6 @@ const multer  = require('multer')
 const storyController = require('./story');
 const wikidataController = require('./wikidata');
 const googleController = require('./google');
-const loadPage =  require('../../app').loadPage;
-const loadError =  require('../../app').loadError;
 const sequelize = require('../models').sequelize
 const LogStory = require('../models').logstory;
 MEMBER_UPDATABLE_FIELDS = ['name', 'image','bio', 'email', 'wikidata', 'linkedin','twitter', 'facebook','instagram', 'github','tumblr' ,'website', 'password']
@@ -40,8 +38,7 @@ module.exports = {
               res.redirect('/account');
           })
           .catch(error => {
-            console.log(error)
-            loadError(req, res, 'Trouble Creating Your Account')
+            res.renderError('Trouble Creating Your Account');
           });
   },
   login(req, res) {
@@ -65,7 +62,7 @@ module.exports = {
   logout(req, res) {
     req.session.destroy(function(err) {
       if(err) {
-        loadError(req, res, 'Oops... Problem Logging Out')
+        res.renderError('Oops... Problem Logging Out');
       } else {
         res.redirect('/');
       }
@@ -97,11 +94,14 @@ module.exports = {
           if (accessType[level].indexOf(type) >= 0) {
             return next(req, res);
           }
-          else loadError(req, res, 'unauthorized access')
+          else res.renderError('unauthorized access');
         })
       }
-      else loadError(req, res, 'unauthorized access')
+      else res.renderError('unauthorized access')
     }
+  },
+  select(id, callback){
+    return Member.findById(id).then(member => callback(member));
   },
   update(req, res) {
     var field = req.params.field
@@ -210,11 +210,19 @@ module.exports = {
               trendList = items.map(function(key){
                 return key[0];
               })
-              return wikidataController.getDetailsList(req, res, trendList, 'small',false,'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg',
-                function(trendData){
-                  data['trending'] = trendData
+              let defaultImg = 'https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg';
+              return wikidataController.getDetailsList(req, res, trendList,
+                'small', false, defaultImg, (trendData) => {
+                  data.trending = trendData;
                   let featured_stories = storyController.getFeaturedList();
-                  return loadPage(res, req, 'base', {file_id:'profile',  title: `Overview (${member.name})`, nav:'profile', profile_nav:function(){ return "overview"}, subtitle: "WELCOME BACK", data:data,featured_stories: featured_stories})
+                  let pageData = {
+                    title: `Overview (${member.name})`,
+                    profile_nav:function(){ return "overview"},
+                    subtitle: "WELCOME BACK",
+                    data:data,
+                    featured_stories: featured_stories
+                  }
+                  return res.renderPage('base', 'profile', pageData);
                 })
 
             })
@@ -226,29 +234,24 @@ module.exports = {
     })
   },
   memberPage(req, res) {
-
     return Member.find({where: {username:req.params.username.toLowerCase()}})
     .then(member => {
-      if (!member) return loadError(req, res, 'There is no user with the username: '+req.params.username)
+      if (!member) return res.renderError('There is no user with the username: '
+        + req.params.username)
 
-      // return res.send(member)
       //find Favorites
-      favFilter = {where: {memberId: member.id, favorite: 1},
-        order: [
-            ['updatedAt', 'DESC'],
-        ],
-        include: [
-          { model: Story, required: true, as:'story'}
-        ],}
-        topFilter = {where: {memberId: member.id},
-          order: [
-              ['views', 'DESC'],
-          ],
-          limit: 10,
-          include: [
-            { model: Story, required: true, as:'story'}
-          ],}
-      data = {member:member}
+      favFilter = {
+        where: {memberId: member.id, favorite: 1},
+        order: [['updatedAt', 'DESC']],
+        include: [{ model: Story, required: true, as: 'story'}]
+      }
+      topFilter = {
+        where: {memberId: member.id},
+        order: [['views', 'DESC']],
+        limit: 10,
+        include: [{ model: Story, required: true, as: 'story'}]
+      }
+      data = {member: member}
       meta = {description: `${member.name} is a member on Science Stories. ${member.bio} | Join Science Stories to connect with ${member.name} and others you may know.`}
       module.exports.getActivityList(req, res, 'favorites', favFilter, data, function(favoriteActivity){
         module.exports.getActivityList(req, res, 'views', topFilter, data, function(viewActivity){
@@ -256,9 +259,13 @@ module.exports = {
           data.feed_list = feed_list
           module.exports.getContributionCount(member.id, function(total_contributed_stories){
             data.contributed_total = total_contributed_stories
-            return loadPage(res, req, 'base', {file_id:'member',  title:member.name + ' Member Page', nav:'member', data:data, meta:meta})
+            let pageData = {
+              title: member.name + ' Member Page',
+              data: data,
+              meta: meta
+            }
+            return res.renderPage('base', 'member', pageData)
           })
-
         })
       } )} )
     })
@@ -356,44 +363,49 @@ module.exports = {
     })
   },
   feed(req, res){
-    return Member.findById(req.session.user.id)
-    .then(member => {
-      data = {user:member}
+    return Member.findById(req.session.user.id).then(member => {
       req.session.user = member;
-      module.exports.getMemberActivity(false, 25, function(feed_list){
-        data.feed_list = feed_list
-        return loadPage(res, req, 'base', {file_id:'profile',  title: `Story Feed (${member.name})`, nav:'profile', profile_nav:function(){ return "feed"}, subtitle: "NEWS FEED", data:data})
-
+      module.exports.getMemberActivity(false, 25, feed_list => {
+        let pageData = {
+          title: `Story Feed (${member.name})`,
+          profile_nav:function(){ return "feed"},
+          subtitle: "NEWS FEED",
+          data: {user:member, feed_list: feed_list}
+        };
+        return res.renderPage('base', 'profile', pageData);
       })
-      })
+    })
   },
   account(req, res){
-    return Member.findById(req.session.user.id)
-    .then(member => {
-      req.session.user = member;
-      data = {user:member}
-      return loadPage(res, req, 'base', {file_id:'profile',  title: `Account Settings (${member.name})`, nav:'account', profile_nav:function(){ return "account"}, subtitle: "ACCOUNT SETTINGS", data:data})
-        })
+    return req.member(member => {
+      let pageData = {
+        title: `Account Settings (${member.name})`,
+        nav:'account',
+        profile_nav: () => "account",
+        subtitle: "ACCOUNT SETTINGS",
+        data: {user: member}
+      }
+      return res.renderPage('base', 'profile', pageData)
+    })
   },
   contributions(req, res){
-    return Member.findById(req.session.user.id)
-    .then(member => {
-      req.session.user = member;
-      data = {user:member}
-      return module.exports.getContributionCount(member.id, function(total){
-        data.contribution_total = total;
-        return loadPage(res, req, 'base', {file_id:'profile',  title: `Contributions (${member.name})`, nav:'contributions', profile_nav:function(){ return "contributions"}, subtitle: "CONTRIBUTIONS", data:data})
-      })
-
-        })
+    return req.member(member => {
+      return module.exports.getContributionCount(member.id, (total) => {
+        let pageData = {
+          title: `Contributions (${member.name})`,
+          nav: 'contributions',
+          profile_nav: () => "contributions",
+          subtitle: "CONTRIBUTIONS",
+          data: {user: member, contribution_total: total}
+        }
+        return res.renderPage('base', 'profile', pageData);
+      });
+    });
   },
   admin(req, res){
-    return Member.findById(req.session.user.id)
-    .then(member => {
-      data = {user:member}
-      req.session.user = member;
+    return req.member(member => {
       return Member.findAll({group: ['type'], attributes: ['type', [sequelize.fn('COUNT', 'type'), 'MemberCount']],})
-      .then(membersRaw =>{
+      .then(membersRaw => {
         memberCount = {}
         for (var i = 0; i < membersRaw.length; i++) {
           memberCount[membersRaw[i].dataValues.type] = membersRaw[i].dataValues.MemberCount
@@ -402,31 +414,37 @@ module.exports = {
         .then(storyCount => {
           return sequelize.query("select count(id) from stories where stories.data::text <> '{}'::text;", { model: Story })
           .then(emptyCount => {
-            emptyCount = emptyCount[0].dataValues.count
-            return Annotation.count()
-            .then(annotationCount => {
-              return StoryActivity.count({where: {favorite:1}})
-              .then(faveCount => {
-                return Comment.count()
-                  .then(commentCount => {
-                    return LogStory.count()
-                      .then(editCount => {
-                        return googleController.getAdminStats(googleStats => {
-                          data.counts = {members: memberCount, stories: storyCount, favorites: faveCount, empty: emptyCount, edits: editCount, comments: commentCount, annotations: annotationCount, google: googleStats}
-                          return loadPage(res, req, 'base', {file_id:'profile',  title: `Admin Panel (${member.name})`, nav:'profile', profile_nav:function(){ return "admin"}, subtitle: "ADMIN PANEL", data:data})
-                        })
-
-                      })
-                  })
-              })})
-            })
-            })
-
-
-        })
-        })
-
-
+            emptyCount = emptyCount[0].dataValues.count;
+            return Annotation.count().then(annotations => {
+              return StoryActivity.count({where: {favorite:1}}).then(faves => {
+                return Comment.count().then(commentCount => {
+                  return LogStory.count().then(edits => {
+                    return googleController.getAdminStats(googleStats => {
+                      let pageData = {
+                        title: `Admin Panel (${member.name})`,
+                        nav: 'admin',
+                        profile_nav: () => "admin",
+                        subtitle: "ADMIN PANEL",
+                        data: {
+                          user:member,
+                          counts: {
+                            members: memberCount, stories: storyCount,
+                            empty: emptyCount, favorites: faves, edits: edits,
+                            comments: commentCount, annotations: annotations,
+                            google: googleStats
+                          }
+                        }
+                      };
+                      return res.renderPage('base', 'profile', pageData);
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
   },
   destroy(req, res) {
     return Member

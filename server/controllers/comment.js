@@ -1,7 +1,5 @@
 const Comment = require('../models').comment;
 const appFetch = require('../../app').appFetch;
-const loadPage = require('../../app').loadPage;
-const loadError = require('../../app').loadError;
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const sequelize = require('../models').sequelize
@@ -19,8 +17,7 @@ module.exports = {
       .catch(error => {return 0});
   },
   select(comment_id, callback){
-    return Comment.findById(comment_id)
-      .then(output => callback(output))
+    return Comment.findById(comment_id).then(output => callback(output))
   },
   storyList(req, res){
     story_id = req.params.story_id
@@ -143,7 +140,6 @@ module.exports = {
   for (var i = 0; i < comments.length; i++) {
     comments[i].order = i
   }
-
   callback(comments);
   })
 },
@@ -157,13 +153,10 @@ send(req, res){
       status: 0
     })
     .then(out => {
-      res.send('success')
+      res.send('success');
     })
     .catch(error => {
-      console.log(error);
-      res.send('Error')
+      res.send('Error');
     });
-}
-
-
+  }
 };

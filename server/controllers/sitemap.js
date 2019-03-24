@@ -1,8 +1,6 @@
 const Story = require('../models').story;
 const Member = require('../models').member;
 const appFetch = require('../../app').appFetch;
-const loadPage = require('../../app').loadPage;
-const loadError = require('../../app').loadError;
 const Sequelize = require('sequelize');
 const fs = require('fs');
 const sequelize = require('../models').sequelize
@@ -66,7 +64,6 @@ module.exports = {
               priority: .5
             })
           }
-
           // Add stories
           for (var i = 0; i < result.count; i++) {
             urlset.push({
