@@ -240,7 +240,8 @@ OPTIONAL{
                     return module.exports.getMapData(name, itemStatements, inverseStatements, function(mapData){
                       return module.exports.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
                         // return res.send([wikidata_date, wikipedia_date, row.createdAt])
-                      let timelineData =  module.exports.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, row.createdAt.toISOString());
+                      let ss_string = (row.createdAt) ? row.createdAt.toISOString() : null;
+                      let timelineData =  module.exports.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, ss_string);
                       return module.exports.getWikidataManifestData(name, itemStatements, inverseStatements, function(wikidataManifestData){
                         jsonData = jsonData.concat(wikidataManifestData);
                         let commonsCategory = module.exports.getCommonsCategory(req, qid, itemStatements);
