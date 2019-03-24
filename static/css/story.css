@@ -817,6 +817,7 @@ article.jqTimespaceDisplay {
 }
 .jqTimespaceDisplay section .tl-desc-div img {
     max-width: 100%;
+    max-height: 55vh;
 }
 
 .tl-desc-div {
@@ -1003,6 +1004,10 @@ span.person-image img {
   font-size: 21px;
   padding: 17px 0 17px 0;
   font-weight: 200;
+}
+.person-relation {
+    border-bottom: 2px dotted #606060;
+    padding: 15px 5px;
 }
 .page-people ul {
   display: block;

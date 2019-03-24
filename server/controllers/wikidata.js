@@ -170,7 +170,7 @@ module.exports = {
     let jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
-    SELECT ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel{
+    SELECT ?statement ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel{
     VALUES (?company) {(wd:${qid})}
     ?company ?p ?statement .
     ?statement ?ps ?ps_ .
@@ -240,7 +240,9 @@ OPTIONAL{
                 return module.exports.getAwardData(name, itemStatements, function(awardData){
                   return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
                     return module.exports.getMapData(name, itemStatements, inverseStatements, function(mapData){
-                      let timelineData =  module.exports.getTimelineData(name, itemStatements, inverseStatements);
+                      return module.exports.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
+                        // return res.send([wikidata_date, wikipedia_date, row.createdAt])
+                      let timelineData =  module.exports.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, row.createdAt.toISOString());
                       return module.exports.getWikidataManifestData(name, itemStatements, inverseStatements, function(wikidataManifestData){
                         jsonData = jsonData.concat(wikidataManifestData);
                         let commonsCategory = module.exports.getCommonsCategory(req, qid, itemStatements);
@@ -294,6 +296,7 @@ OPTIONAL{
                   })
                 })
               })
+            })
             })
           })
         })
@@ -587,12 +590,14 @@ OPTIONAL{
         var foundLib = false
         for (var i = 0; i < awardOutput.length && !foundLib; i++) {
           var checkOutput = awardOutput[i]
-          if (tempTLitem.qid == checkOutput.qid && tempTLitem.date == checkOutput.date ){
+          if (tempTLitem.id == checkOutput.id ){
             foundLib = true
             // loop through conferred
             if (tempTLitem.conferred.length && !checkOutput.conferred.includes(tempTLitem.conferred[0])){
               checkOutput.conferred.push(tempTLitem.conferred[0])
             }
+            // Check Date
+            if (!checkOutput.date) checkOutput.date = tempTLitem.date;
             // Change type if the current is otherContent
             if (tempTLitem.type != checkOutput.type && checkOutput.type == 'other' ){
               checkOutput.type = tempTLitem.type
@@ -607,9 +612,50 @@ OPTIONAL{
       }
     }
   },
-  getTimelineData(name, wdData, inverseData){
+  getWikiCreationDates(qid, wikipedia_name, callback){
+    let url_params = '?action=query&prop=revisions&rvlimit=1&rvprop=timestamp&rvdir=newer&format=json&titles='
+    let wikidataUrl = 'https://www.wikidata.org/w/api.php'+url_params+qid;
+    return appFetch(wikidataUrl).then((wdresponse) => {
+      let wikidata_date = module.exports._parseWikimediaAPIRevision(wdresponse);
+      let wikipediaUrl = 'https://en.wikipedia.org/w/api.php'+url_params+wikipedia_name;
+      return appFetch(wikipediaUrl).then((wpresponse) => {
+        let wikipedia_date = module.exports._parseWikimediaAPIRevision(wpresponse);
+        return callback(wikidata_date, wikipedia_date);
+      })
+    })
+  },
+  _parseWikimediaAPIRevision(response){
+    try {
+      return Object.values(response.query.pages)[0].revisions[0].timestamp;
+    }
+    catch(err) {
+      return null;
+    }
+  },
+  getTimelineData(name, wdData, inverseData, wikidata_date, wikipedia_date, ss_date){
     let timelineOutput = [];
     let timelineMap = {};
+    if (wikidata_date){
+      timelineOutput.push({
+          date: wikidata_date,
+          title: name + " Gets Added To Wikidata",
+          image: "https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg"
+      })
+    }
+    if (wikipedia_date){
+      timelineOutput.push({
+          date: wikipedia_date,
+          title: name + " Gets Added To English Wikipedia",
+          image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg"
+      })
+    }
+    if (ss_date){
+      timelineOutput.push({
+          date: ss_date,
+          title: name + " Gets a Science Story",
+          image: "/static/images/branding/logo_black.png"
+      })
+    }
     module.exports.processTimelineData(timelineMap, timelineOutput, wdData);
     module.exports.processTimelineData(timelineMap, timelineOutput, inverseData, true);
     return timelineOutput;
@@ -637,17 +683,50 @@ OPTIONAL{
     var temp =  JSON.parse( point.substr(point.indexOf('Point'), point.length).substr(5).replace(' ', ',').replace(/\(/g, "[").replace(/\)/g, "]"));
     return [temp[1], temp[0]]
   },
+  getYears(birthVal, deathVal){
+    if(birthVal){
+      let year_string = parseInt(birthVal.substring(0,4), 10) + '-';
+      if(deathVal) year_string += parseInt(deathVal.substring(0,4), 10);
+      return year_string;
+    }
+    return null;
+  },
   checkPeopleStatement(name, statement, inverse = false){
+    if (statement.person){
+      let tempval = {
+        qid: getValue(statement.person),
+        pid: getValue(statement.ps),
+        title: getValue(statement.personLabel),
+        description: getValue(statement.personDescription),
+        relation: false,
+        image: getValue(statement.personImg),
+        qualifier: false,
+        years: module.exports.getYears(
+                  getValue(statement.personBirth),
+                  getValue(statement.personDeath)),
+        inverse: inverse
+      }
+      let relation_prop = getValue(statement.ps);
+      if (relation_prop == "http://www.wikidata.org/prop/statement/P50"){
+        tempval.relation = "Co-Author";
+      }
+      else if (relation_prop == "http://www.wikidata.org/prop/statement/P112"){
+        tempval.relation = "Co-Founded " + getValue(statement.ps_Label)+" with " + name;
+      }
+      return tempval;
+    }
     if (getValue(statement.objInstance) == "http://www.wikidata.org/entity/Q5"){
       var tempval = {
-        qid : statement.ps_.value,
-        pid : statement.ps.value,
+        qid: statement.ps_.value,
+        pid: statement.ps.value,
         title: statement.ps_Label.value,
         description: false,
         relation: false,
         image: false,
         qualifier: false,
-        years: false,
+        years: module.exports.getYears(
+                  getValue(statement.objBirth),
+                  getValue(statement.objDeath)),
         inverse: inverse
       }
       if(statement.img && statement.img.value){
@@ -659,12 +738,6 @@ OPTIONAL{
       }
       if(statement.ps_Description && statement.ps_Description.value){
         tempval.description = statement.ps_Description.value
-      }
-      if(statement.objBirth && statement.objBirth.value){
-        tempval.years = parseInt(statement.objBirth.value.substring(0,4), 10) + '-'
-      }
-      if(statement.objDeath && statement.objDeath.value){
-        tempval.years += parseInt(statement.objDeath.value.substring(0,4), 10)
       }
       if (statement.wdpqLabel && statement.pq_Label){
         if (inverse) tempval.qualifier = statement.wdpqLabel.value + " (for "+tempval.title+"): " + statement.pq_Label.value
@@ -910,6 +983,7 @@ OPTIONAL{
   },
   checkAwardStatement(name, statement){
     var tempval = {
+      id: getValue(statement.statement),
       qid : false,
       pid : statement.ps.value,
       conferred: [],
@@ -926,8 +1000,9 @@ OPTIONAL{
     if (statement.objInstanceLabel){
       tempval.instance = statement.objInstanceLabel.value
     }
+    let qual_prop = getValue(statement.wdpq);
     // Check if point in time
-    if (statement.wdpq && (statement.wdpq.value == "http://www.wikidata.org/entity/P585")){
+    if (qual_prop == "http://www.wikidata.org/entity/P585"){
       tempval.date =  parseInt(statement.pq_Label.value.substring(0,4), 10)
     }
     if (statement.ps_Label){
@@ -935,6 +1010,9 @@ OPTIONAL{
     }
     if (statement.conferredLabel){
       tempval.conferred = [statement.conferredLabel.value]
+    }
+    if (qual_prop == "http://www.wikidata.org/entity/P1027"){
+      tempval.conferred.push(getValue(statement.pq_Label))
     }
     if (statement.ps_Description){
       tempval.description = statement.ps_Description.value
