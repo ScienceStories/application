@@ -74,7 +74,7 @@ const _ = module.exports = {
   },
   getInverseClaims(qid, lang){
     var query = `SELECT ?statement ?ps ?ps_Description ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage ?objDate ?objProp
-      ?objBirth ?objDeath ?objInstance ?objInstanceLabel ?manifest ?manifest_collectionLabel ?person ?personLabel ?personDescription ?personBirth ?personDeath ?personImg{
+      ?objBirth ?objDeath ?objInstance ?objInstanceLabel ?manifest ?manifest_collectionLabel ?person ?personLabel ?personDescription ?personBirth ?personDeath ?personImg ?doi ?handle ?full_work ?website{
       VALUES (?oldps_) {(wd:${qid})}
       ?ps_ ?p ?statement .
       ?statement ?ps ?oldps_ .
@@ -86,6 +86,10 @@ const _ = module.exports = {
      ?wdpq wikibase:qualifier ?pq.
    }
    OPTIONAL {?wd wdt:P1630 ?url.}
+   OPTIONAL {?ps_ wdt:P856 ?website.}
+   OPTIONAL {?ps_ wdt:P953 ?full_work.}
+   OPTIONAL{?ps_ wdt:P356 ?doi.}
+   OPTIONAL{?ps_ wdt:P1184 ?handle}
    OPTIONAL{?ps_ wdt:P18 ?img .}
    OPTIONAL{
      ?ps_ wdt:P276|wdt:P159 ?objLocationEntity .

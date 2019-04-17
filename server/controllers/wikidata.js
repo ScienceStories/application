@@ -911,15 +911,29 @@ OPTIONAL{
       title: false,
       type: 'other',
       instance: [],
+      url: false,
     }
     if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
-      tempval.qid = statement.ps_.value
+      tempval.qid = statement.ps_.value;
+      tempval.url = tempval.qid;
     }
     if (statement.objDate){
       tempval.date =  parseInt(statement.objDate.value.substring(0,4), 10)
     }
     if (statement.objInstanceLabel){
       tempval.instance = [statement.objInstanceLabel.value]
+    }
+    if (statement.website) {
+      tempval.url = statement.website.value;
+    }
+    if (statement.full_work) {
+      tempval.url = statement.full_work.value;
+    }
+    if (statement.handle) {
+      tempval.url = 'http://hdl.handle.net/'+statement.handle.value;
+    }
+    if (statement.doi) {
+      tempval.url = 'https://doi.org/'+statement.doi.value;
     }
     if (statement.wdLabel){
       tempval.contribution = [statement.wdLabel.value]
