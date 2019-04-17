@@ -270,7 +270,7 @@ app.use((req, res, next) => {
   req.member = (next) => {
     let user = req.session.user;
     if (user && user.id){
-      // TODO: Invesigate cirular import with appFerch
+      // TODO: Invesigate cirular import with appFetch
       const membersController = require('./server/controllers').members;
       return membersController.select(user.id, (member) => {
         req.session.user = member;
@@ -365,7 +365,7 @@ var sessionChecker = (req, res, next) => {
 
 // Require our routes into the application.
 require('./server/routes')(app, sessionChecker);
-
+// TODO: Create 404 Page HTML
 // Setup a default catch-all route that sends back a welcome message in JSON format.
 app.get('*', (req, res) => res.status(404).send({
   message: 'Could Not Find Page.',

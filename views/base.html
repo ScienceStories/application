@@ -1,68 +1,55 @@
 <!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120930598-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-120930598-1');
+    </script>
 
-<html lang="en" >
-	<head>
-	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-120930598-1"></script>
-	<script>
-	  window.dataLayer = window.dataLayer || [];
-	  function gtag(){dataLayer.push(arguments);}
-	  gtag('js', new Date());
-
-	  gtag('config', 'UA-120930598-1');
-	</script>
-
-		<title>{{title}} | Science Stories</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		{{#if meta}}
-			{{#if meta.description}}
-				<meta name="description" content="{{meta.description}}">
-			{{/if}}
-		{{/if}}
-	 <link rel="icon" type="image/png" href="/static/images/icons/favicon.ico"/>
-
-	 <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
-
-		<script src="/static/js/jquery.min.js"></script>
-		<script src="/static/js/main.js"></script>
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="/static/css/main.css" />
+    <title>{{title}} | Science Stories</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {{#if meta}}
+      {{#if meta.description}}
+        <meta name="description" content="{{meta.description}}">
+      {{/if}}
+    {{/if}}
+    <link rel="icon" type="image/png" href="/static/images/icons/favicon.ico"/>
+    <link href='https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/main.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/main.css" />
     {{> (links) }}
-		<link rel="stylesheet" href="/static/css/responsive.css" />
-	</head>
-	<script type="application/ld+json">
-{
-	"@context" : "http://schema.org",
-	"@type" : "Organization",
-	"name" : "Science Stories",
-	"image" : "http://sciencestories.io/static/images/branding/logo_black.png",
-	"logo": "http://sciencestories.io/static/images/branding/logo_black.png",
-	"email" : "info@sciencestories.io",
-	"url" : "http://www.sciencestories.io"
-}
-</script>
-	<body>
-		<!-- Header -->
-		  <header id="header" class="alt">
-					{{> navbar }}
-			</header>
-					<!-- <a id="constructionWarning" style="text-align:center" href="https://github.com/ScienceStories/application" target="_blank">
-					  Site Currently Under Construction<br />
-					  <span style="font-size:60%">Kenneth Seals-Nutt, Katherine Thornton & Vanessa Hunter</span>
-					</a> -->
-				<!-- Menu -->
-					<div class="page-wrapper">
-						{{> (page) }}
-					</div>
-
-  <!-- Scripts -->
-    <!-- <script src="/static/js/home_main.js"></script> -->
+    <link rel="stylesheet" href="/static/css/responsive.css" />
+  </head>
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Organization",
+      "name" : "Science Stories",
+      "image" : "http://sciencestories.io/static/images/branding/logo_black.png",
+      "logo": "http://sciencestories.io/static/images/branding/logo_black.png",
+      "email" : "info@sciencestories.io",
+      "url" : "http://www.sciencestories.io"
+    }
+  </script>
+  <body>
+    <!-- Header -->
+    <header id="header" class="alt">
+        {{> navbar }}
+    </header>
+    <div class="page-wrapper">
+      <!-- Content -->
+      {{> (page) }}
+    </div>
     {{> (scripts)}}
-
-	</body>
+  </body>
 </html>

@@ -8,7 +8,7 @@ const sparqlController = require('./sparql');
 const wikidataController = require('./wikidata');
 const sequelize = require('../models').sequelize;
 const featuredStories =  JSON.parse(fs.readFileSync("server/controllers/featuredStories.json"));
-module.exports = {
+const _ = module.exports = {
   create(req, res) {
     qid = 'Q' + req.body.qid
     if (req.body.key != 'ssyale'){
@@ -35,7 +35,7 @@ module.exports = {
         if (!out) {
           return res.renderError('This story has not yet been curated.');
         }
-        return module.exports.getContributors(out.id, function(contributors){
+        return _.getContributors(out.id, function(contributors){
           out.contributors = contributors
           return wikidataController.processStory(req, res, out);
         })
@@ -43,36 +43,30 @@ module.exports = {
       .catch(error => res.renderError('Trouble Loading this Story'));
   },
   welcome(req, res){
-    return module.exports.getCount(count => {
-      return module.exports._getBirthdays((birthdays) => {
+    return _.getCount(count => {
+      return _._getBirthdays((birthdays) => {
         let pageData = {
           title: 'Welcome',
           story_count: count,
           meta: {description: "Science Stories brings scientific work into social spaces where users discover information about underrepresented pioneers — creating starting points for further exploration. For institutions with cultural heritage resources in libraries, archives, museums and galleries that are not yet available on the web, we provide a web application that leverages Wikidata, IIIF, and semantic web technologies to demonstrate a vision of what getting scientific work products into social spaces can do."},
-          featured_stories: module.exports.getFeaturedList(),
+          featured_stories: _.getFeaturedList(),
           birthdays: birthdays
         }
-        res.renderFullPage('home', pageData)
+        return res.renderFullPage('home', pageData);
       });
     });
   },
   validate(req, res){
-    var qid = req.params.qid
-    return Story.find({
-        where: {
-          qid: qid
-        },
-      }).then(story => {
-        if (story) return res.send({valid: true, active: true})
-        return wikidataController.storyValidate(qid, function(valid){
-          var isValid = (valid.results.bindings.length > 0)
-          return res.send({valid:isValid, active:false})
-        })
-
-      })
+    let qid = req.params.qid;
+    return _.getByQID(qid, story => {
+      if (story) return res.send({valid: true, active: true});
+      return wikidataController.storyValidate(qid, isValid => {
+        return res.send({valid:isValid, active:false});
+      });
+    });
   },
-  getData(qid, next){
-    return Story.findOne({where: {qid:qid}})
+  getByQID(qid, next){
+    return Story.findOne({where: {qid:qid}}).then(next);
   },
   getCount(callback){
     return Story.count().then(count => callback(count))
@@ -149,7 +143,7 @@ module.exports = {
                   var objectStr = alldetailList[i].itemLabel + alldetailList[i].itemDescription;
                   objectStr = JSON.stringify(alldetailList[i]) + JSON.stringify(allStories[i].dataValues)
                   objectStr = objectStr.toLowerCase()
-                  if  (module.exports.searchFunction(objectStr, searchTokens) && (resultQids.indexOf(alldetailList[i].qid) == -1) ){
+                  if  (_.searchFunction(objectStr, searchTokens) && (resultQids.indexOf(alldetailList[i].qid) == -1) ){
                     var newItem = alldetailList[i]
                     for(var key in allStories[i].dataValues) newItem[key] = allStories[i].dataValues[key];
                     detailList.push(newItem)
@@ -162,7 +156,7 @@ module.exports = {
                 for (let i = 0; i < members.length; i++) {
                   let m = members[i].dataValues;
                   let memStr = JSON.stringify(m).toLowerCase();
-                  if (module.exports.searchFunction(memStr, searchTokens)) {
+                  if (_.searchFunction(memStr, searchTokens)) {
                     detailList.push({
                       qid: 'member:' + m.username,
                       image: m.image,
@@ -185,25 +179,26 @@ module.exports = {
   browse(req, res) {
     page = (req.query.page) ? parseInt(req.query.page, 10) : 1
     stories_per_page = 50
-    return module.exports.getGallery(req, res, false, page, stories_per_page)
+    return _.getGallery(req, res, false, page, stories_per_page)
   },
   birthday(req, res){
-    return module.exports._getBirthdays((items) => res.send(items))
+    return _._getBirthdays((items) => res.send(items))
   },
   _getBirthdays(callback){
     Story.findAll({ attributes:['qid', 'data']}).then(list => {
       let qidList = [];
-      for(var i = 0; i < list.length; i++){
-        qidList.push(list[i].dataValues)
+      let allStories = [];
+      for(let i in list){
+        qidList.push(list[i].dataValues.qid);
+        allStories.push(list[i].dataValues);
       }
-      let query = sparqlController.birthdayQuery(qidList);
-      wikidataController.executeSPARQL(query, (content) => {
-        content = module.exports._imagesFromStory(qidList, content);
+      return sparqlController.birthdayQuery(qidList, content => {
+        content = _.imagesFromStory(allStories, content);
         return callback(content);
       })
     })
   },
-  _imagesFromStory(db_values, output){
+  imagesFromStory(db_values, output){
     for (var i = 0; i < output.length; i++) {
       if(!output[i].image){
         let index = output[i].index;

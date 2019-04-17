@@ -15,25 +15,18 @@ const iconMap = JSONFile("server/controllers/iconMap.json");
 const itemTypeMap = JSONFile("server/controllers/itemTypeMap.json");
 const wikidataMap = JSONFile("server/controllers/wikidataMap.json");
 
-module.exports = {
+const _ = module.exports = {
   bibliography(req, res) {
-    let queryUrl = sparqlController.getBibliography('en');
-    return appFetch(queryUrl).then(output => {
-      let results = output.results.bindings;
-      let works = [];
-      let qidsFound = [];
-      for(i=0; i < results.length; i++){
-        let record = results[i];
-        let qid = record.item.value.replace('http://www.wikidata.org/entity/', '');
-        let index = qidsFound.indexOf(qid);
-        if(index == -1) {
-          qidsFound.push(qid);
-          newRecord = {qid:qid};
-          for(let key in record) newRecord[key] = record[key].value;
-          works.push(newRecord);
+    return sparqlController.getBibliography('en', output => {
+      let works = {};
+      for(i=0; i < output.length; i++){
+        let record = output[i];
+        let qid = record.item.value;
+        if (!works[qid]){
+          works[qid] = record;
         }
-        else if(works[index].authorLabel.indexOf(record.authorLabel.value) == -1){
-          works[index].authorLabel += ' | ' + record.authorLabel.value;
+        else if(works[qid] && works[qid].author.indexOf(record.author) == -1 ) {
+          works[qid].author += ' | ' + record.author;
         }
       }
       let pageData = {title:'Bibliography', works: works};
@@ -42,14 +35,13 @@ module.exports = {
   },
   searchItems(req, res, string, callback){
     var search_url = `https://www.wikidata.org/w/api.php?action=wbsearchentities&search=${string}&language=en&format=json`
-    appFetch(search_url)
-      .then(content => {
-        var qidList = []
-        for (i=0; i < content.search.length; i++){
-          qidList.push(content.search[i].id)
-        }
-        return callback(qidList)
-      })
+    return appFetch(search_url).then(content => {
+      let qidList = [];
+      for (let i=0; i < content.search.length; i++){
+        qidList.push(content.search[i].id);
+      }
+      return callback(qidList);
+    })
   },
   mergeValuesComma(){
     // TODO:
@@ -58,35 +50,34 @@ module.exports = {
     // TODO:
   },
   mergeValuesFirst(qidList, rawData){
-    var tempQidList = qidList.slice();
-    var content = []
-    for (var i=0; i<rawData.length;i++){
-      var qid = rawData[i].item.value.replace('http://www.wikidata.org/entity/', '')
-      var index = tempQidList.indexOf(qid);
+    let tempQidList = qidList.slice();
+    let content = [];
+    for (let i=0; i<rawData.length;i++){
+      let val = rawData[i];
+      let qid = val.item.value.replace('http://www.wikidata.org/entity/', '');
+      let index = tempQidList.indexOf(qid);
       if (index > -1) {
         tempQidList.splice(index, 1);
-        var record = rawData[i]
-        var newRecord = {qid: qid}
-        for(var key in record) newRecord[key] = record[key].value;
-        content.push(newRecord)
+        let newRecord = {qid: qid}
+        for(let key in val) newRecord[key] = getValue(val[key]);
+        content.push(newRecord);
       }
     }
-    return content
+    return content;
   },
   processDetailListSection(queryFunction, output, qidSet, setIndex, callback){
-    var queryUrl = queryFunction(qidSet[setIndex], 'en');
+    // TODO: Remove the recursion and call wikimedia via POST
+    let queryUrl = queryFunction(qidSet[setIndex], 'en');
     return appFetch(queryUrl).then(sectionOutput => {
       sectionOutput = sectionOutput.results.bindings;
-      for (var i = 0; i < sectionOutput.length; i++) {
+      for (let i = 0; i < sectionOutput.length; i++) {
         output.push(sectionOutput[i])
       }
       setIndex += 1;
       if (setIndex < qidSet.length){
-        return module.exports.processDetailListSection(queryFunction, output, qidSet, setIndex, callback)
+        return _.processDetailListSection(queryFunction, output, qidSet, setIndex, callback);
       }
-      else{
-        return callback(output)
-      }
+      return callback(output);
     })
   },
   processDetailList(req, res, queryFunction, qidList, callback, mergeType, defaultImage){
@@ -105,11 +96,11 @@ module.exports = {
         check += 1;
       }
     }
-    return module.exports.processDetailListSection(queryFunction, [], qidSet, 0, function(output){
+    return _.processDetailListSection(queryFunction, [], qidSet, 0, output => {
       if (!mergeType || mergeType == 'first'){
-        content = module.exports.mergeValuesFirst(qidList, output);
+        content = _.mergeValuesFirst(qidList, output);
         if (defaultImage){
-          for (var i=0; i<content.length;i++){
+          for (let i=0; i<content.length; i++){
             if (!content[i].image) content[i].image = defaultImage;
           }
         }
@@ -117,17 +108,7 @@ module.exports = {
       }
     })
   },
-  executeSPARQL(query, callback){
-    const { URLSearchParams } = require('url');
-    const params = new URLSearchParams();
-    params.append('query', query);
-    return appFetch('https://query.wikidata.org/sparql?format=json',
-    {
-      headers: { Accept: 'application/sparql-results+json' },
-      method: 'POST',
-      body: params
-    }).then(wdk.simplify.sparqlResults).then(content => callback(content))
-  },
+
   simplifySparqlFetch(content){
     return content.results.bindings.map(function(x){
       if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value);
@@ -137,11 +118,11 @@ module.exports = {
   getDetailsList(req, res, qidList, detailLevel, mergeType=false, defaultImage=false, callback){
     if (detailLevel == 'small'){
       //  label, description, optional image
-      return module.exports.processDetailList(req, res, sparqlController.getSmallDetailsList, qidList, callback, mergeType, defaultImage)
+      return _.processDetailList(req, res, sparqlController.getSmallDetailsList, qidList, callback, mergeType, defaultImage)
     }
     else if (detailLevel == 'small_with_age'){
       // label, description, optional image
-      return module.exports.processDetailList(req, res, sparqlController.getSmallDetailsListWithAge, qidList, callback, mergeType, defaultImage)
+      return _.processDetailList(req, res, sparqlController.getSmallDetailsListWithAge, qidList, callback, mergeType, defaultImage)
     }
   },
   customQuery(req, res) {
@@ -151,9 +132,9 @@ module.exports = {
     }).then(simplifiedResults => res.status(200).send(simplifiedResults))
   },
   storyValidate(qid, callback){
-    var validateUrl = sparqlController.getStoryValidation(qid, 'en')
-    return appFetch(validateUrl).then(wikidataResponse => {
-      return callback(wikidataResponse)
+    return sparqlController.getStoryValidation(qid, wikidataResponse => {
+      if (wikidataResponse.length) return callback(true);
+      return callback(false);
     })
   },
   filterProperties(statements){
@@ -217,12 +198,12 @@ OPTIONAL{
     `
     const url = wdk.sparqlQuery(sparql);
     appFetch(url).then(itemStatements => {
-      itemStatements = module.exports.simplifySparqlFetch(itemStatements)
-      itemStatements = module.exports.filterProperties(itemStatements)
+      itemStatements = _.simplifySparqlFetch(itemStatements)
+      itemStatements = _.filterProperties(itemStatements)
       var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
       appFetch(inverseUrl).then(inverseClaimsOutput => {
-        inverseStatements = module.exports.simplifySparqlFetch(inverseClaimsOutput);
-        inverseStatements = module.exports.filterProperties(inverseStatements);
+        inverseStatements = _.simplifySparqlFetch(inverseClaimsOutput);
+        inverseStatements = _.filterProperties(inverseStatements);
         let labelURL = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`
         appFetch(labelURL).then(labels => {
           name = labels.entities[qid].labels.en.value;
@@ -232,19 +213,19 @@ OPTIONAL{
           if (labels.entities[qid].sitelinks.enwiki){
             wikipedia = labels.entities[qid].sitelinks.enwiki.title;
           }
-          return module.exports.getMainStoryImage(row.data, itemStatements, function(storyImage){
-            return module.exports.getPeopleData(name, itemStatements, inverseStatements, function(peopleData){
-              return module.exports.getEducationData(itemStatements, function(educationData){
-                return module.exports.getAwardData(name, itemStatements, function(awardData){
-                  return module.exports.getLibraryData(name, inverseStatements, function(libraryData){
-                    return module.exports.getMapData(name, itemStatements, inverseStatements, function(mapData){
-                      return module.exports.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
+          return _.getMainStoryImage(row.data, itemStatements, function(storyImage){
+            return _.getPeopleData(name, itemStatements, inverseStatements, function(peopleData){
+              return _.getEducationData(itemStatements, function(educationData){
+                return _.getAwardData(name, itemStatements, function(awardData){
+                  return _.getLibraryData(name, inverseStatements, function(libraryData){
+                    return _.getMapData(name, itemStatements, inverseStatements, function(mapData){
+                      return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
                         // return res.send([wikidata_date, wikipedia_date, row.createdAt])
                       let ss_string = (row.createdAt) ? row.createdAt.toISOString() : null;
-                      let timelineData =  module.exports.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, ss_string);
-                      return module.exports.getWikidataManifestData(name, itemStatements, inverseStatements, function(wikidataManifestData){
+                      let timelineData =  _.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, ss_string);
+                      return _.getWikidataManifestData(name, itemStatements, inverseStatements, function(wikidataManifestData){
                         jsonData = jsonData.concat(wikidataManifestData);
-                        let commonsCategory = module.exports.getCommonsCategory(req, qid, itemStatements);
+                        let commonsCategory = _.getCommonsCategory(req, qid, itemStatements);
                         var isPreview = (req.url.indexOf('/preview') > -1);
                         let storyRenderData = {
                           page: function(){ return 'story'},
@@ -320,11 +301,11 @@ OPTIONAL{
         return callback(storyData[i].image)
       }
     }
-    let img_val = module.exports.getStatementValueByProp(wikidata, 'P18');
+    let img_val = _.getStatementValueByProp(wikidata, 'P18');
     return (img_val) ? callback(img_val) : callback('http://sciencestories.io/static/images/branding/logo_black.png');
   },
   getCommonsCategory(req, qid, statements){
-    let category = module.exports.getStatementValueByProp(statements, 'P373');
+    let category = _.getStatementValueByProp(statements, 'P373');
     if (category) {
       return category;
     }
@@ -332,6 +313,7 @@ OPTIONAL{
   },
   processAnnotation(req, res){
     qid = req.params.qid;
+    return sparqlController.getAnnotationData(qid, (data) => res.send(data))
     appFetch(sparqlController.getClaims(qid, 'en'))
       .then(content => {
         claims = content.results.bindings
@@ -408,7 +390,7 @@ OPTIONAL{
   },
   processMapData(input, inverse=false){
     for (var s=0; s < input.length; s++){
-    var tempMapitem = module.exports.checkMapStatement(name, input[s], inverse)
+    var tempMapitem = _.checkMapStatement(name, input[s], inverse)
     if (tempMapitem){
       if(mapOutput[tempMapitem.coordinates]) {
         var tempList = mapOutput[tempMapitem.coordinates]
@@ -427,7 +409,7 @@ OPTIONAL{
   },
   processPeopleData(input, inverse=false){
     for (var s=0; s < input.length; s++){
-      var tempPeopleItem = module.exports.checkPeopleStatement(name, input[s], inverse)
+      var tempPeopleItem = _.checkPeopleStatement(name, input[s], inverse)
       if (tempPeopleItem){
         let tempList = peopleOutput[tempPeopleItem.qid];
         if (!tempList) tempList = {'properties':{}};
@@ -449,7 +431,7 @@ OPTIONAL{
   },
   processEducationData(input){
     for (var s=0; s < input.length; s++){
-      var tempEduItem = module.exports.checkEducationStatement(input[s])
+      var tempEduItem = _.checkEducationStatement(input[s])
       if (tempEduItem){
         if (!educationOutput[tempEduItem.qid]) educationOutput[tempEduItem.qid] = {}
         var tempList = educationOutput[tempEduItem.qid]
@@ -509,21 +491,21 @@ OPTIONAL{
   },
   getMapData(name, wdData, inverseData, callback){
     mapOutput = {}
-    module.exports.processMapData(wdData)
-    module.exports.processMapData(inverseData, true)
+    _.processMapData(wdData)
+    _.processMapData(inverseData, true)
     if (!Object.keys(mapOutput).length) mapOutput = false
     return callback(mapOutput)
   },
   getPeopleData(name, wdData, inverseData, callback){
     peopleOutput = {}
-    module.exports.processPeopleData(wdData)
-    module.exports.processPeopleData(inverseData, true)
+    _.processPeopleData(wdData)
+    _.processPeopleData(inverseData, true)
     if (!Object.keys(peopleOutput).length) peopleOutput = false
     return callback(peopleOutput)
   },
   getEducationData(wdData, callback){
     educationOutput = {}
-    module.exports.processEducationData(wdData)
+    _.processEducationData(wdData)
 
     // educationOutput = {'new': educationOutput, 'wd':wdData }
     if (!Object.keys(educationOutput).length) educationOutput = false
@@ -546,7 +528,7 @@ OPTIONAL{
   },
   processTimelineData(timelineMap, timelineOutput, input, inverse=false){
     for (var s=0; s < input.length; s++){
-      let item = module.exports.checkTimelineStatement(name, input[s], inverse);
+      let item = _.checkTimelineStatement(name, input[s], inverse);
       if (!item) continue;
       let uuid = String(item.title) + String(item.date);
       if (!timelineMap[uuid]){
@@ -556,8 +538,9 @@ OPTIONAL{
     }
   },
   processLibraryData(input){
+    let libraryOutput =  {'book': [], 'article': [], 'other': []};
     for (var s=0; s < input.length; s++){
-      var tempTLitem = module.exports.checkLibraryStatement(name, input[s])
+      var tempTLitem = _.checkLibraryStatement(name, input[s])
       if (tempTLitem){
         var foundLib = false
         for (var i = 0; i < libraryOutput[tempTLitem.type].length && !foundLib; i++) {
@@ -581,10 +564,11 @@ OPTIONAL{
         if (!foundLib) libraryOutput[tempTLitem.type].push(tempTLitem)
       }
     }
+    return libraryOutput;
   },
   processAwardData(input){
     for (var s=0; s < input.length; s++){
-      var tempTLitem = module.exports.checkAwardStatement(name, input[s])
+      var tempTLitem = _.checkAwardStatement(name, input[s])
       if (tempTLitem){
         var foundLib = false
         for (var i = 0; i < awardOutput.length && !foundLib; i++) {
@@ -615,10 +599,10 @@ OPTIONAL{
     let url_params = '?action=query&prop=revisions&rvlimit=1&rvprop=timestamp&rvdir=newer&format=json&titles='
     let wikidataUrl = 'https://www.wikidata.org/w/api.php'+url_params+qid;
     return appFetch(wikidataUrl).then((wdresponse) => {
-      let wikidata_date = module.exports._parseWikimediaAPIRevision(wdresponse);
+      let wikidata_date = _._parseWikimediaAPIRevision(wdresponse);
       let wikipediaUrl = 'https://en.wikipedia.org/w/api.php'+url_params+wikipedia_name;
       return appFetch(wikipediaUrl).then((wpresponse) => {
-        let wikipedia_date = module.exports._parseWikimediaAPIRevision(wpresponse);
+        let wikipedia_date = _._parseWikimediaAPIRevision(wpresponse);
         return callback(wikidata_date, wikipedia_date);
       })
     })
@@ -655,23 +639,20 @@ OPTIONAL{
           image: "/static/images/branding/logo_black.png"
       })
     }
-    module.exports.processTimelineData(timelineMap, timelineOutput, wdData);
-    module.exports.processTimelineData(timelineMap, timelineOutput, inverseData, true);
+    _.processTimelineData(timelineMap, timelineOutput, wdData);
+    _.processTimelineData(timelineMap, timelineOutput, inverseData, true);
     return timelineOutput;
   },
   getLibraryData(name, inverseData, callback){
-    libraryOutput = {'book': [], 'article': [], 'other': []}
-    module.exports.processLibraryData(inverseData)
-    // libraryOutput = {'new': libraryOutput, 'wd':inverseData }
-    for (var val in libraryOutput) {
-      if (libraryOutput[val].length) return callback(libraryOutput)
+    let libraryOutput = _.processLibraryData(inverseData);
+    for (let val in libraryOutput) {
+      if (libraryOutput[val].length) return callback(libraryOutput);
     }
-    libraryOutput = false
     return callback(false)
   },
   getAwardData(name, wdData, callback){
     awardOutput = []
-    module.exports.processAwardData(wdData)
+    _.processAwardData(wdData)
     // awardOutput = {'new': awardOutput, 'wd':wdData }
 
     return callback(awardOutput)
@@ -700,7 +681,7 @@ OPTIONAL{
         relation: false,
         image: getValue(statement.personImg),
         qualifier: false,
-        years: module.exports.getYears(
+        years: _.getYears(
                   getValue(statement.personBirth),
                   getValue(statement.personDeath)),
         inverse: inverse
@@ -723,7 +704,7 @@ OPTIONAL{
         relation: false,
         image: false,
         qualifier: false,
-        years: module.exports.getYears(
+        years: _.getYears(
                   getValue(statement.objBirth),
                   getValue(statement.objDeath)),
         inverse: inverse
@@ -779,7 +760,7 @@ OPTIONAL{
         if (statement.ps_Label.value) {
           tempval.title += " in " +statement.ps_Label.value
         }
-        tempval.coordinates = module.exports.wdCoordinatesToArray(statement.location.value)
+        tempval.coordinates = _.wdCoordinatesToArray(statement.location.value)
         return tempval
       }
       // Check if death place
@@ -788,20 +769,20 @@ OPTIONAL{
         if (statement.ps_Label.value) {
           tempval.title += " in " +statement.ps_Label.value
         }
-        tempval.coordinates = module.exports.wdCoordinatesToArray(statement.location.value)
+        tempval.coordinates = _.wdCoordinatesToArray(statement.location.value)
         return tempval
       }
       else{
         tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
         if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
-        tempval.coordinates = module.exports.wdCoordinatesToArray(statement.location.value)
+        tempval.coordinates = _.wdCoordinatesToArray(statement.location.value)
         return tempval
       }
     }
     else if (statement.objLocation){
       tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
       if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
-      tempval.coordinates = module.exports.wdCoordinatesToArray(statement.objLocation.value)
+      tempval.coordinates = _.wdCoordinatesToArray(statement.objLocation.value)
       return tempval
     }
     return false

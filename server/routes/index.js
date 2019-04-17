@@ -8,6 +8,7 @@ const sitemapController = require('../controllers').sitemap;
 const awsController = require('../controllers').aws;
 const fetch = require('node-fetch');
 const fs = require('fs');
+
 module.exports = (app, sessionChecker) => {
 
   // route for Home-Page

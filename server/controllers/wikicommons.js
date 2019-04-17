@@ -23,12 +23,9 @@ module.exports = {
     });
   },
   generateCommonsManifestFromWikidataItem(req, res){
-    let qid = req.params.qid;
-    let query_url = sparqlController.getCommonsCategory(qid);
-    return appFetch(query_url).then(output => {
-      let val = output.results.bindings;
-      if (val.length && val[0].commonsCat){
-        req.params.category = val[0].commonsCat.value;
+    return sparqlController.getCommonsCategory(req.params.qid, output => {
+      if (output.length && output[0].category){
+        req.params.category = output[0].category;
         return module.exports.generateCommonsCategoryManifest(req, res);
       }
       return res.send({'status': 'No commons category detected for this item'})

@@ -1,7 +1,32 @@
 const wdk = require('wikidata-sdk');
 const fetch = require('node-fetch');
 const appFetch =  require('../../app').appFetch;
-module.exports = {
+const _ = module.exports = {
+  execute(query, callback){
+    let query_url = 'https://query.wikidata.org/sparql?format=json';
+    let reqParams = {
+      headers: { Accept: 'application/sparql-results+json' }
+    }
+    if (query.length < 1000){
+      query_url = wdk.sparqlQuery(query);
+      reqParams.method = 'GET';
+    }
+    else {
+      const { URLSearchParams } = require('url');
+      const params = new URLSearchParams();
+      params.append('query', query);
+      reqParams.method = 'POST';
+      reqParams.body = params;
+    }
+    return appFetch(query_url, reqParams).then(wdk.simplify.sparqlResults)
+      .then(content => callback(content));
+  },
+  valuesFromArray(qidList, keepOrder=false){
+    let qidStr = '';
+    if (keepOrder) for (let i in qidList) qidStr += `(wd:${qidList[i]} ${i}) `;
+    else for (let i in qidList) qidStr += `(wd:${qidList[i]}) `;
+    return qidStr;
+  },
   getClaims(qid, lang){
     var query = `
     SELECT ?ps ?wdLabel ?datatype ?ps_Label ?ps_ ?wdpq ?wdpqLabel ?pq_Label ?url {
@@ -17,20 +42,35 @@ module.exports = {
       }
       OPTIONAL {
         ?wd wdt:P1630 ?url  .
-        }
+      }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
     } ORDER BY ?wd ?statement ?ps_
     `
     return wdk.sparqlQuery(query);
-
   },
-  getStoryValidation(qid, lang){
-    var query = `SELECT ?story ?storyLabel WHERE {
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-      VALUES (?story) {(wd:${qid})}.
-      ?story wdt:P31 wd:Q5.
-    }`
-    return wdk.sparqlQuery(query);
+  getAnnotationData(qid, callback){
+    return _.execute(`
+      SELECT ?item ?itemLabel ?instance ?instanceLabel
+      WHERE {
+        SERVICE wikibase:label {
+          bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".
+        }
+        VALUES (?item) {(wd:${qid})}.
+        ?item wdt:P31 ?instance.
+      }
+    `, callback);
+  },
+  getStoryValidation(qid, callback){
+    return _.execute(`
+      SELECT ?story ?storyLabel
+      WHERE {
+        SERVICE wikibase:label {
+          bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en".
+        }
+        VALUES (?story) {(wd:${qid})}.
+        ?story wdt:P31 wd:Q5.
+      }
+    `, callback);
   },
   getInverseClaims(qid, lang){
     var query = `SELECT ?statement ?ps ?ps_Description ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage ?objDate ?objProp
@@ -76,14 +116,12 @@ module.exports = {
     return wdk.sparqlQuery(query);
   },
   getSmallDetailsList(qidList, lang){
-    var qidStr = ''
-    for (var i=0; i < qidList.length; i++){
-      qidStr += `(wd:${qidList[i]} ${i}) `
-    }
-    var query = `
+    // TODO: This query is ran 3 times on overview page, we should consolidate
+    let values = _.valuesFromArray(qidList, true);
+    let query = `
       SELECT ?item ?itemLabel  ?itemDescription ?image #
       WHERE {
-        VALUES (?item ?place) { ${qidStr} }.
+        VALUES (?item ?place) { ${values} }.
         optional {?item wdt:P18 ?image  .}
         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
       }
@@ -92,14 +130,11 @@ module.exports = {
     return wdk.sparqlQuery(query);
   },
   getSmallDetailsListWithAge(qidList, lang){
-    var qidStr = ''
-    for (var i=0; i < qidList.length; i++){
-      qidStr += `(wd:${qidList[i]} ${i}) `
-    }
-    var query = `
+    let values = _.valuesFromArray(qidList, true);
+    let query = `
       SELECT ?item ?itemLabel  ?itemDescription ?image ?birth ?death
       WHERE {
-        VALUES (?item ?place) { ${qidStr} }.
+        VALUES (?item ?place) { ${values} }.
         optional {?item wdt:P18 ?image  .}
         optional {?item wdt:P569 ?birth  .}
         optional {?item wdt:P570 ?death  .}
@@ -109,72 +144,66 @@ module.exports = {
     `
     return wdk.sparqlQuery(query);
   },
-  birthdayQuery(qidList, lang){
-    var qidStr = ''
-    for (var i=0; i < qidList.length; i++){
-      qidStr += `(wd:${qidList[i].qid} ${i})`
-    }
-    var query = `
-    SELECT ?index ?item ?itemLabel ?itemDescription ?image (YEAR(?date) as ?year) (?nowYear-?year as ?age) ?birth ?death
-    WHERE {
-      VALUES (?item ?index) {${qidStr}}.
-      BIND(NOW() AS ?now).
-      BIND(MONTH(?now) AS ?nowMonth).
-      BIND(DAY(?now) AS ?nowDay).
-      BIND(YEAR(?now) AS ?nowYear).
-      ?item wdt:P569 ?date .
-      optional {?item wdt:P569 ?birth  .}
-      optional {?item wdt:P570 ?death  .}
-      optional {?item wdt:P18 ?image  .}
-      FILTER (MONTH(?date) = ?nowMonth && DAY(?date) = ?nowDay)
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-    }
-    `
-    return query;
-    return wdk.sparqlQuery(query);
+  birthdayQuery(qidList, callback){
+    let values = _.valuesFromArray(qidList, true);
+    return _.execute(`
+      SELECT ?index ?item ?itemLabel ?itemDescription ?image
+        (YEAR(?date) as ?year) (?nowYear-?year as ?age) ?birth ?death
+      WHERE {
+        VALUES (?item ?index) {${values}}.
+        BIND(NOW() AS ?now).
+        BIND(MONTH(?now) AS ?nowMonth).
+        BIND(DAY(?now) AS ?nowDay).
+        BIND(YEAR(?now) AS ?nowYear).
+        ?item wdt:P569 ?date .
+        optional {?item wdt:P569 ?birth .}
+        optional {?item wdt:P570 ?death .}
+        optional {?item wdt:P18 ?image .}
+        FILTER (MONTH(?date) = ?nowMonth && DAY(?date) = ?nowDay)
+        SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+      }
+    `, callback);
   },
-  getBibliography(lang){
-    var query = `
-    SELECT ?item ?itemLabel ?itemDescription ?instanceLabel ?authorLabel ?image
-    WHERE
-    {
-      {?item wdt:P31 wd:Q13442814}
-      UNION {?item wdt:P31 wd:Q571}
-      UNION {?item wdt:P31 wd:Q10870555}.
-      ?item wdt:P921 wd:Q113616.
-      ?item wdt:P31 ?instance.
-      optional {?item wdt:P2093 ?author.}
-      optional {?item wdt:P18 ?image  .}
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-    }
-    `
-    return wdk.sparqlQuery(query);
+  getBibliography(lang, callback){
+    return _.execute(`
+      SELECT ?item ?itemLabel ?itemDescription ?instance ?instanceLabel ?author
+      WHERE{
+        {?item wdt:P31 wd:Q13442814}
+        UNION {?item wdt:P31 wd:Q571}
+        UNION {?item wdt:P31 wd:Q10870555}.
+        ?item wdt:P921 wd:Q113616.
+        ?item wdt:P31 ?instance.
+        optional {?item wdt:P2093 ?author.}
+        SERVICE wikibase:label
+        { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+      }
+    `, callback);
   },
   getNamedAfter(item, lang){
     var query = `#defaultView:Map
-SELECT ?truc ?presLabel ?trucLabel ?coord ?layer WHERE {
-  {
-    SELECT DISTINCT ?truc (SAMPLE(?coord) AS ?coord) (SAMPLE(?layer) AS ?layer) WHERE {
-     VALUES ( ?pres) {(wd:Q11641) } .
+    SELECT ?truc ?presLabel ?trucLabel ?coord ?layer WHERE {
+      {
+        SELECT DISTINCT ?truc (SAMPLE(?coord) AS ?coord) (SAMPLE(?layer) AS ?layer) WHERE {
+         VALUES ( ?pres) {(wd:Q11641) } .
 
-      ?truc wdt:P138 ?pres .
-      optional {
-       ?truc     wdt:P625 ?coord.
+          ?truc wdt:P138 ?pres .
+          optional {
+           ?truc     wdt:P625 ?coord.
+            }
         }
-    }
-    GROUP BY ?truc ?trucLabel
+        GROUP BY ?truc ?trucLabel
+      }
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+    }`
+    return wdk.sparqlQuery(query);
+  },
+  getCommonsCategory(item, callback){
+    return _.execute(`
+      SELECT ?item ?category
+      WHERE {
+        VALUES (?item) { (wd:${item}) }.
+        ?item wdt:P373 ?category.
+      }
+    `, callback);
   }
-  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-}`
-return wdk.sparqlQuery(query);
-},
-getCommonsCategory(item){
-  let query = `
-  SELECT ?item ?commonsCat
-  WHERE {
-    VALUES (?item) { (wd:${item}) }.
-    ?item wdt:P373 ?commonsCat  .
-  }`
-  return wdk.sparqlQuery(query);
-}
 }

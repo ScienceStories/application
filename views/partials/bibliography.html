@@ -1,23 +1,23 @@
 <div class="page-header">
   <div class="overlayHeader">
-    Bibliography of {{works.length}} Works on the Topic of Women in Science
+    Bibliography of {{size works}} Works on the Topic of Women in Science
   </div>
 </div>
 <div id="bibliography">
   {{#each works}}
     <div class="work-item">
-      <a class="browse-story-link" target="_blank" href="https://wikidata.org/wiki/{{this.qid}}">
+      <a class="browse-story-link" target="_blank" href="https://wikidata.org/wiki/{{@key}}">
         <div class="item-title">
           <div class="work-icon">
-            <i class="{{#if_equal this.instanceLabel 'book'}}fa fa-book {{else}}{{#if_equal this.instanceLabel 'report'}}far fa-chart-bar{{else}}far fa-file-alt{{/if_equal}}{{/if_equal}} "></i>
+            <i class="{{#if_equal this.instance.label 'book'}}fa fa-book {{else}}{{#if_equal this.instance.label 'report'}}far fa-chart-bar{{else}}far fa-file-alt{{/if_equal}}{{/if_equal}} "></i>
           </div>
           <div class="work-content">
-          {{this.itemLabel}}
+          {{this.item.label}}
           <div class="work-description">
-            {{this.itemDescription}}
+            {{this.item.description}}
           </div>
             <div class="item-author">
-              {{this.authorLabel}}
+              {{this.author}}
             </div>
           </div>
         </div>
