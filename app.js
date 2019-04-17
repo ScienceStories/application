@@ -1,5 +1,6 @@
 /*jslint node: true */
 const express = require('express');
+const favicon = require('serve-favicon')
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -36,6 +37,7 @@ app.use(logger('dev'));
 app.engine('html', cons.handlebars)
 app.set('view engine', 'html')
 app.set('views', __dirname + '/views/')
+app.use(favicon(path.join(__dirname, '/static/images/icons', 'favicon.ico')))
 app.use('/scripts', cors(), express.static(__dirname + '/node_modules/'));
 app.use('/build/mirador', cors(), express.static(__dirname + '/static/vendor/mirador/'));
 app.use('/api/iiif/manifest/local/',  cors(), express.static(__dirname + '/manifests/'));

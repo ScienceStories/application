@@ -12,7 +12,7 @@ const fs = require('fs');
 module.exports = (app, sessionChecker) => {
 
   // route for Home-Page
-  app.get('/', storyController.welcome)
+  app.get('/', storyController.welcome);
   app.get('/donate', (req, res) => res.renderFullPage('donate', {title:'Giving'}))
   app.get('/home', membersController.homeRedirect)
   app.get('/search', storyController.search)

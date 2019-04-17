@@ -51,6 +51,7 @@
     "randomcolor": "^0.5.3",
     "sequelize": "^4.39.1",
     "sequelize-cli": "^4.1.1",
+    "serve-favicon": "^2.5.0",
     "tabula-rasa": "^1.0.9",
     "tinycolor2": "^1.4.1",
     "universalviewer": "3.0.21",
