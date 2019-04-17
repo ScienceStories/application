@@ -313,7 +313,8 @@ OPTIONAL{
   },
   processAnnotation(req, res){
     qid = req.params.qid;
-    return sparqlController.getAnnotationData(qid, (data) => res.send(data))
+    // TODO: simplify using getAnnotationData query
+    // return sparqlController.getAnnotationData(qid, (data) => res.send(data))
     appFetch(sparqlController.getClaims(qid, 'en'))
       .then(content => {
         claims = content.results.bindings

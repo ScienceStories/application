@@ -25,7 +25,7 @@ const _ = module.exports = {
   },
   select(req, res) {
     return Story
-      .find({
+      .findOne({
           where: {
             qid: 'Q'+req.params.id,
             status: 'basic'
@@ -286,7 +286,7 @@ const _ = module.exports = {
 
   destroy(req, res) {
     return Story
-      .find({
+      .findOne({
           where: {
             id: req.params.StoryId,
             bracketId: req.params.bracketId,

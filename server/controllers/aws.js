@@ -29,7 +29,7 @@ var upload = multer({
     },
     key: function (req, file, callback) {
       var file_string = req.body.filename.trim().replace(/ /g,"_") + path.extname(file.originalname)
-      return Member.findById(req.session.user.id)
+      return Member.findByPk(req.session.user.id)
       .then(member => {
         newFilename = UPLOAD_FILE_PREFIX[req.body.filetype]
         if (req.body.filetype != 'manifest') newFilename += member.username+'/'
@@ -134,7 +134,7 @@ module.exports = {
     return filestream.pipe(res);
   },
   upload(req, res){
-    return Member.findById(req.session.user.id).then(member =>
+    return Member.findByPk(req.session.user.id).then(member =>
       res.renderPage('base', 'upload', {data: {user: member}}))
   },
 

@@ -43,7 +43,7 @@ module.exports = {
       .catch(error => {return 0});
   },
   select(req, res) {
-    return Annotation.find({where: {qid: 'Q'+req.params.id, status: 'basic'}})
+    return Annotation.findOne({where: {qid: 'Q'+req.params.id, status: 'basic'}})
       .then(out => {
         if (out) {
           return wikidataController.processAnnotation(req, res, out);
@@ -91,7 +91,7 @@ module.exports = {
       })
   },
   update(data) {
-    return Annotation.find({where: {uri: data.uri}}).then(found => {
+    return Annotation.findOne({where: {uri: data.uri}}).then(found => {
         if (!found){
           return 0;
         }
@@ -138,7 +138,7 @@ module.exports = {
   },
   destroy(req, res) {
     return Annotation
-      .find({
+      .findOne({
           where: {
             id: req.params.AnnotationId,
             bracketId: req.params.bracketId,

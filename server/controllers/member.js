@@ -8,7 +8,8 @@ const multer  = require('multer')
 const storyController = require('./story');
 const wikidataController = require('./wikidata');
 const googleController = require('./google');
-const sequelize = require('../models').sequelize
+const sequelize = require('../models').sequelize;
+const Op = require('sequelize').Op;
 const LogStory = require('../models').logstory;
 MEMBER_UPDATABLE_FIELDS = ['name', 'image','bio', 'email', 'wikidata', 'linkedin','twitter', 'facebook','instagram', 'github','tumblr' ,'website', 'password']
 module.exports = {
@@ -44,7 +45,7 @@ module.exports = {
   login(req, res) {
     var userinput = req.body.username.toLowerCase()
     return Member
-      .findOne({ where:  {[sequelize.Op.or]: [{username: userinput}, {email: userinput}] }})
+      .findOne({ where:  {[Op.or]: [{username: userinput}, {email: userinput}] }})
       .then(function (user) {
         // console.log('USER-?', user)
         if (!user) {
@@ -87,7 +88,7 @@ module.exports = {
         'admin': ['admin', ]
       }
       if (user && user.id){
-        Member.findById(user.id)
+        Member.findByPk(user.id)
         .then(member => {
           type = member.type
           req.session.user = member;
@@ -101,12 +102,12 @@ module.exports = {
     }
   },
   select(id, callback){
-    return Member.findById(id).then(member => callback(member));
+    return Member.findByPk(id).then(member => callback(member));
   },
   update(req, res) {
     var field = req.params.field
     if (MEMBER_UPDATABLE_FIELDS.includes(field)){
-      return Member.findById(req.session.user.id)
+      return Member.findByPk(req.session.user.id)
       .then(member => {
         if (!member) {
           return res.status(404).send('Member Not Found');
@@ -167,7 +168,7 @@ module.exports = {
     return res.redirect('/member:'+req.session.user.username)
   },
   overview(req, res) {
-    return Member.findById(req.session.user.id)
+    return Member.findByPk(req.session.user.id)
     .then(member => {
       req.session.user = member;
       //find Favorites
@@ -234,7 +235,7 @@ module.exports = {
     })
   },
   memberPage(req, res) {
-    return Member.find({where: {username:req.params.username.toLowerCase()}})
+    return Member.findOne({where: {username:req.params.username.toLowerCase()}})
     .then(member => {
       if (!member) return res.renderError('There is no user with the username: '
         + req.params.username)
@@ -277,7 +278,7 @@ module.exports = {
   getContributionGallery(req, res){
     memberName = req.params.member
     pageNumber = req.params.pageNumber
-    return Member.find({where:{username:memberName}}).then(member => {
+    return Member.findOne({where:{username:memberName}}).then(member => {
       return LogStory.findAll({where: {memberId:member.id}, attributes:['storyId','updatedAt'], order: [['updatedAt', 'DESC']], include:[{model: Story, as :'story', attributes:['id','qid', 'data']} ]})
       .then(contributedStories => {
         var qidsContributed = []
@@ -363,7 +364,7 @@ module.exports = {
     })
   },
   feed(req, res){
-    return Member.findById(req.session.user.id).then(member => {
+    return Member.findByPk(req.session.user.id).then(member => {
       req.session.user = member;
       module.exports.getMemberActivity(false, 25, feed_list => {
         let pageData = {
@@ -448,7 +449,7 @@ module.exports = {
   },
   destroy(req, res) {
     return Member
-      .find({
+      .findOne({
           where: {
             id: req.params.MemberId,
             bracketId: req.params.bracketId,

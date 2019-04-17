@@ -2,7 +2,7 @@ const Comment = require('../models').comment;
 const appFetch = require('../../app').appFetch;
 const Sequelize = require('sequelize');
 const fs = require('fs');
-const sequelize = require('../models').sequelize
+const sequelize = require('../models').sequelize;
 const hbs = require('handlebars');
 module.exports = {
 
@@ -17,7 +17,7 @@ module.exports = {
       .catch(error => {return 0});
   },
   select(comment_id, callback){
-    return Comment.findById(comment_id).then(output => callback(output))
+    return Comment.findByPk(comment_id).then(output => callback(output))
   },
   storyList(req, res){
     story_id = req.params.story_id
