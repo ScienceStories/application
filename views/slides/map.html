@@ -7,7 +7,7 @@
     <div class="page page-map">
       <div class="map-legend">
         {{#each map}}
-          <div class="map-legend-item" onclick="selectMapLocation([{{this.0.coordinates}}], '{{this.0.location}} ({{this.0.coordinates}})')">
+          <div class="map-legend-item" onclick='selectMapLocation([{{this.0.coordinates}}], {{@index}})'>
             {{this.0.location}}
           </div>
         {{/each}}
@@ -63,7 +63,7 @@ var mapgroup = new L.featureGroup([
     map.fitBounds(mapgroup.getBounds());
     function selectMapLocation(latlong, title){
       map.flyTo(latlong, 12)
-      $(`img[title="${title}"]`).click()
+      $(`img.leaflet-marker-icon:eq(${title})`).click()
     }
   </script>
 </div>
