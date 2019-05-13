@@ -689,10 +689,22 @@ OPTIONAL{
       }
       let relation_prop = getValue(statement.ps);
       if (relation_prop == "http://www.wikidata.org/prop/statement/P50"){
-        tempval.relation = "Co-Author";
+        let person_prop = getValue(statement.personPropLabel);
+        if (person_prop == 'author'){
+          tempval.relation = "Co-Author";
+        }
+        else{
+          // TODO: Handle other relations besides co-author when P50 is used
+        }
       }
       else if (relation_prop == "http://www.wikidata.org/prop/statement/P112"){
-        tempval.relation = "Co-Founded " + getValue(statement.ps_Label)+" with " + name;
+        let person_prop = getValue(statement.personPropLabel);
+        if (person_prop == 'founded by'){
+          tempval.relation = `${tempval.title} co-founded "${getValue(statement.ps_Label)}" with ${name}`;
+        }
+        else {
+          tempval.relation = `${name} founded "${getValue(statement.ps_Label)}" \n ${person_prop}: ${tempval.title}`;
+        }
       }
       return tempval;
     }

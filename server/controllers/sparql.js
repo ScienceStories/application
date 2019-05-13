@@ -74,7 +74,7 @@ const _ = module.exports = {
   },
   getInverseClaims(qid, lang){
     var query = `SELECT ?statement ?ps ?ps_Description ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage ?objDate ?objProp
-      ?objBirth ?objDeath ?objInstance ?objInstanceLabel ?manifest ?manifest_collectionLabel ?person ?personLabel ?personDescription ?personBirth ?personDeath ?personImg ?doi ?handle ?full_work ?website{
+      ?objBirth ?objDeath ?objInstance ?objInstanceLabel ?manifest ?manifest_collectionLabel  ?personPropLabel ?person ?personLabel ?personDescription ?personBirth ?personDeath ?personImg ?doi ?handle ?full_work ?website{
       VALUES (?oldps_) {(wd:${qid})}
       ?ps_ ?p ?statement .
       ?statement ?ps ?oldps_ .
@@ -97,14 +97,15 @@ const _ = module.exports = {
      OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
    }
   OPTIONAL{
-   ?ps_ wdt:P50|wdt:P112 ?isperson . # check that the person's contribution matches the main person (i.e. both authors)
-   ?ps_ ?tval ?person .
-   ?person wdt:P31 wd:Q5 .
+    ?ps_ wdt:P50|wdt:P112 ?isperson . # check that the person's contribution matches the main person (i.e. both authors)
+    ?ps_ ?tval ?person .
+    ?person wdt:P31 wd:Q5 .
+    ?personProp wikibase:directClaim ?tval.
     filter( ?isperson = ?oldps_).
-   filter( ?person != ?oldps_).
-     OPTIONAL{?person wdt:P569 ?personBirth .}
-     OPTIONAL{?person wdt:P570 ?personDeath .}
-     OPTIONAL{?person wdt:P18 ?personImg .}
+    filter( ?person != ?oldps_).
+    OPTIONAL{?person wdt:P569 ?personBirth .}
+    OPTIONAL{?person wdt:P570 ?personDeath .}
+    OPTIONAL{?person wdt:P18 ?personImg .}
   }
   OPTIONAL{?ps_ wdt:P625 ?location .}
   OPTIONAL{?ps_ wdt:P571|wdt:P577 ?objDate .}
