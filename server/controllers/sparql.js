@@ -153,7 +153,7 @@ const _ = module.exports = {
     let values = _.valuesFromArray(qidList, true);
     return _.execute(`
       SELECT ?index ?item ?itemLabel ?itemDescription ?image
-        (YEAR(?date) as ?year) (?nowYear-?year as ?age) ?birth ?death
+        (YEAR(?date) as ?year) (?nowYear-?year as ?age) (?date as ?birth) ?death
       WHERE {
         VALUES (?item ?index) {${values}}.
         BIND(NOW() AS ?now).
@@ -161,8 +161,7 @@ const _ = module.exports = {
         BIND(DAY(?now) AS ?nowDay).
         BIND(YEAR(?now) AS ?nowYear).
         ?item wdt:P569 ?date .
-        optional {?item wdt:P569 ?birth .}
-        optional {?item wdt:P570 ?death .}
+        ?item wdt:P570 ?death .
         optional {?item wdt:P18 ?image .}
         FILTER (MONTH(?date) = ?nowMonth && DAY(?date) = ?nowDay)
         SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
