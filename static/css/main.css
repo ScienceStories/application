@@ -1,6 +1,9 @@
 * {
-    transition: all .4s ease;
+
     outline: none;
+}
+a {
+  transition: all .4s ease;
 }
 input:focus, input {
   outline: none;

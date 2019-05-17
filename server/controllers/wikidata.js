@@ -149,7 +149,7 @@ const _ = module.exports = {
     let jsonData = row.data
     const qid = 'Q'+req.params.id;
     const sparql = `
-    SELECT ?statement ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel{
+    SELECT ?statement ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?objLocationEntityLabel ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel{
     VALUES (?company) {(wd:${qid})}
     ?company ?p ?statement .
     ?statement ?ps ?ps_ .
@@ -213,70 +213,72 @@ OPTIONAL{
           if (labels.entities[qid].sitelinks.enwiki){
             wikipedia = labels.entities[qid].sitelinks.enwiki.title;
           }
-          return _.getMainStoryImage(row.data, itemStatements, function(storyImage){
-            return _.getPeopleData(name, itemStatements, inverseStatements, function(peopleData){
-              return _.getEducationData(itemStatements, function(educationData){
-                return _.getAwardData(name, itemStatements, function(awardData){
-                  return _.getLibraryData(name, inverseStatements, function(libraryData){
-                    return _.getMapData(name, itemStatements, inverseStatements, function(mapData){
-                      return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
-                        // return res.send([wikidata_date, wikipedia_date, row.createdAt])
-                      let ss_string = (row.createdAt) ? row.createdAt.toISOString() : null;
-                      let timelineData =  _.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, ss_string);
-                      return _.getWikidataManifestData(name, itemStatements, inverseStatements, function(wikidataManifestData){
-                        jsonData = jsonData.concat(wikidataManifestData);
-                        let commonsCategory = _.getCommonsCategory(req, qid, itemStatements);
-                        var isPreview = (req.url.indexOf('/preview') > -1);
-                        let storyRenderData = {
-                          page: function(){ return 'story'},
-                          scripts: function(){ return 'story_scripts'},
-                          links: function(){ return 'story_links'},
-                          title: name +" - Story",
-                          nav: "Story",
-                          urlPath: getURLPath(req),
-                          content: itemStatements,
-                          wikipedia: wikipedia,
-                          name: name,
-                          qid: qid,
-                          data: jsonData,
-                          image: storyImage,
-                          row: row,
-                          isPreview: isPreview,
-                          meta: meta,
-                          people: peopleData,
-                          education: educationData,
-                          map: mapData,
-                          library: libraryData,
-                          timeline: timelineData,
-                          award: awardData,
-                          commonsCategory: commonsCategory
-                        }
-                        if (req.session.user && !isPreview) {
-                          return StoryActivity
-                          .findOrCreate({where: {
-                            memberId: req.session.user.id,
-                            storyId: row.id
-                          }})
-                          .spread((found, created) => {
-                            found.update({
-                              views: found.views+1,
-                              lastViewed: sequelize.fn('NOW')
-                            })
-                            .then(output => {
-                              storyRenderData.storyActivity = output.dataValues;
-                              storyRenderData.user = req.session.user;
-                              return res.render('full', storyRenderData);
-                            })
+          return _.getMainStoryImage(row.data, itemStatements, (storyImage) => {
+            return _.getPeopleData(name, itemStatements, inverseStatements, (peopleData) => {
+              return _.getEducationData(itemStatements, (educationData) => {
+                return _.getEmployerData(itemStatements, (employerData) => {
+                  return _.getAwardData(name, itemStatements, (awardData) => {
+                    return _.getLibraryData(name, inverseStatements, (libraryData) => {
+                      return _.getMapData(name, itemStatements, inverseStatements, (mapData) => {
+                        return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
+                          let ss_string = (row.createdAt) ? row.createdAt.toISOString() : null;
+                          let timelineData =  _.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, ss_string);
+                          return _.getWikidataManifestData(name, itemStatements, inverseStatements, (wikidataManifestData) => {
+                            jsonData = jsonData.concat(wikidataManifestData);
+                            let commonsCategory = _.getCommonsCategory(req, qid, itemStatements);
+                            var isPreview = (req.url.indexOf('/preview') > -1);
+                            let storyRenderData = {
+                              page: function(){ return 'story'},
+                              scripts: function(){ return 'story_scripts'},
+                              links: function(){ return 'story_links'},
+                              title: name +" - Story",
+                              nav: "Story",
+                              urlPath: getURLPath(req),
+                              content: itemStatements,
+                              wikipedia: wikipedia,
+                              name: name,
+                              qid: qid,
+                              data: jsonData,
+                              image: storyImage,
+                              row: row,
+                              isPreview: isPreview,
+                              meta: meta,
+                              people: peopleData,
+                              education: educationData,
+                              employer: employerData,
+                              map: mapData,
+                              library: libraryData,
+                              timeline: timelineData,
+                              award: awardData,
+                              commonsCategory: commonsCategory
+                            }
+                            if (req.session.user && !isPreview) {
+                              return StoryActivity
+                              .findOrCreate({where: {
+                                memberId: req.session.user.id,
+                                storyId: row.id
+                              }})
+                              .spread((found, created) => {
+                                found.update({
+                                  views: found.views+1,
+                                  lastViewed: sequelize.fn('NOW')
+                                })
+                                .then(output => {
+                                  storyRenderData.storyActivity = output.dataValues;
+                                  storyRenderData.user = req.session.user;
+                                  return res.render('full', storyRenderData);
+                                })
+                              })
+                              .catch(error => res.renderError());
+                            }
+                            return res.render('full', storyRenderData);
                           })
-                          .catch(error => res.renderError());
-                        }
-                        return res.render('full', storyRenderData);
+                        })
                       })
                     })
                   })
                 })
               })
-            })
             })
           })
         })
@@ -451,6 +453,27 @@ OPTIONAL{
       }
     }
   },
+  processEmployerData(input){
+    for (let s=0; s < input.length; s++){
+      let tempEmpItem = _.checkEmployerStatement(input[s]);
+      if (tempEmpItem){
+        if (!employerOutput[tempEmpItem.qid]) employerOutput[tempEmpItem.qid] = {}
+        let tempList = employerOutput[tempEmpItem.qid]
+        let overwriteKeys = ['qid', 'title', 'description', 'image', 'logo',
+                             'website', 'location'];
+        safeOverwrite(tempList, tempEmpItem, overwriteKeys);
+        if (!tempList.quals && tempEmpItem.qual_value) tempList.quals = [{prop:tempEmpItem.qual_prop, value: tempEmpItem.qual_value}]
+        else if (tempEmpItem.qual_value && tempList.quals.map(e => e.prop.concat(e.value)).indexOf(tempEmpItem.qual_prop.concat(tempEmpItem.qual_value)) == -1){
+          tempList.quals.push({prop:tempEmpItem.qual_prop, value: tempEmpItem.qual_value})
+        }
+        // Take the smallest date to sort employers
+        if (!tempList.year && tempEmpItem.year) tempList.year = tempEmpItem.year;
+        else if (tempList.year && tempEmpItem.year){
+          tempList.year = Math.min(tempList.year, tempEmpItem.year)
+        }
+      }
+    }
+  },
   getWikidataManifestData(name, wdData, inverseData, callback){
     let output = [];
     let manifestFound = {};
@@ -526,6 +549,29 @@ OPTIONAL{
       return callback(educationArray)
     }
     return callback(educationOutput)
+  },
+  getEmployerData(wdData, callback){
+    employerOutput = {}
+    _.processEmployerData(wdData)
+
+    // employerOutput = {'new': employerOutput, 'wd':wdData }
+    if (!Object.keys(employerOutput).length) employerOutput = false
+    else {
+      var employerArray = []
+      // Create items array
+      var employerArray = Object.keys(employerOutput).map(function(key) {
+        return employerOutput[key];
+      });
+
+      // Sort the array based on the second element
+      employerArray.sort(function(second, first) {
+        if (!first.year) return 0
+        else if (!second.year) return 1
+        return second.year - first.year;
+      });
+      return callback(employerArray)
+    }
+    return callback(employerOutput)
   },
   processTimelineData(timelineMap, timelineOutput, input, inverse=false){
     for (var s=0; s < input.length; s++){
@@ -829,6 +875,62 @@ OPTIONAL{
       if (statement.wdpq && statement.wdpq.value == "http://www.wikidata.org/entity/P512")
       {
         tempval.degree = statement.pq_Label.value
+      }
+      // Year
+      if (statement.wdpq
+        && ((statement.wdpq.value == "http://www.wikidata.org/entity/P580")
+          || (statement.wdpq.value == "http://www.wikidata.org/entity/P582")
+          || (statement.wdpq.value == "http://www.wikidata.org/entity/P585")))
+      {
+        tempval.year = parseInt(statement.pq_Label.value.substring(0,4), 10)
+      }
+
+      return tempval
+    }
+    else return false
+
+  },
+  checkEmployerStatement(statement){
+    if (statement.ps.value == "http://www.wikidata.org/prop/statement/P108" && statement.ps_ && statement.ps_Label && statement.ps_Label.value){
+      var tempval = {
+        qid : statement.ps_.value,
+        title: statement.ps_Label.value,
+        description: false,
+        location: false,
+        year: false,
+        image: false,
+        website: false,
+        logo: false,
+        qual_prop: false,
+        qual_value: false,
+      }
+      if(statement.ps_Description && statement.ps_Description.value){
+        tempval.description = statement.ps_Description.value
+      }
+
+      if(statement.img && statement.img.value){
+        tempval.image = statement.img.value
+      }
+      else if (statement.locationImage && statement.locationImage.value){
+        tempval.image = statement.locationImage.value;
+      }
+      if(statement.objWebsite && statement.objWebsite.value){
+        tempval.website = statement.objWebsite.value
+      }
+      if(statement.logo && statement.logo.value){
+        tempval.logo = statement.logo.value
+      }
+      if (statement.objLocationEntityLabel){
+        tempval.location = statement.objLocationEntityLabel.value;
+      }
+      if (statement.wdpqLabel){
+        if (statement.pq_Label){
+          tempval.qual_prop = statement.wdpqLabel.value;
+          tempval.qual_value = statement.pq_Label.value;
+        } else if (statement.pq_) {
+          tempval.qual_label = statement.wdpqLabel.value;
+          tempval.qual_value = statement.pq_.value;
+        }
       }
       // Year
       if (statement.wdpq

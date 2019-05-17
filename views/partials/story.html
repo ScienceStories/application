@@ -59,6 +59,7 @@
       14. audio
       15. education
       16. People
+      17. Employers
    -->
   <script type="text/javascript">
     var wikititle = '{{wikipedia}}'.replace(" ", "_")
@@ -113,6 +114,9 @@
       {{#if education}}
         <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-user-graduate"></i> Education of {{name}}</div>
       {{/if}}
+      {{#if employer}}
+        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-id-badge"></i> Where {{name}} Worked</div>
+      {{/if}}
       {{#if timeline}}
         <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="far fa-calendar-alt"></i> Timeline</div>
       {{/if}}
@@ -142,6 +146,7 @@
     {{/each}}
     {{#if commonsCategory}} {{> wikimedia_gallery}} {{/if}}
     {{#if education}} {{> education }} {{/if}}
+    {{#if employer}} {{> employer }} {{/if}}
     {{#if timeline}} {{> timeline }} {{/if}}
     {{#if people}} {{> people }} {{/if}}
     {{#if map}} {{> map }} {{/if}}
@@ -164,8 +169,8 @@
       tooltips.push((data[x].tooltip) ? data[x].tooltip : (data[x].title) ? data[x].title : data[x].description);
       colors.push(data[x].color);
     }
-    tooltips = tooltips.concat([{{#if commonsCategory}}'Gallery',{{/if}}{{#if education}}'Education',{{/if}} {{#if timeline}}'Timeline',{{/if}} {{#if people}}'People',{{/if}} {{#if map}}'Map',{{/if}} {{#if library}}'Library',{{/if}} {{#if award}}'Awards',{{/if}} 'Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
-    colors = colors.concat([{{#if commonsCategory}}'#530244',{{/if}}{{#if education}}'#337399',{{/if}} {{#if timeline}}'#1dc7ce',{{/if}}{{#if people}}'#8d6fe6',{{/if}} {{#if map}}'rgb(29, 206, 173)',{{/if}} {{#if library}}'rgb(220, 132, 83)',{{/if}}  {{#if award}}'rgb(76, 76, 76)',{{/if}}  'rgb(255, 131, 148)', {{#if wikipedia}} 'rgb(129, 130, 160)',{{/if}} 'rgb(255, 185, 125)']);
+    tooltips = tooltips.concat([{{#if commonsCategory}}'Gallery',{{/if}}{{#if education}}'Education',{{/if}} {{#if employer}}'Employers',{{/if}} {{#if timeline}}'Timeline',{{/if}} {{#if people}}'People',{{/if}} {{#if map}}'Map',{{/if}} {{#if library}}'Library',{{/if}} {{#if award}}'Awards',{{/if}} 'Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
+    colors = colors.concat([{{#if commonsCategory}}'#530244',{{/if}}{{#if education}}'#337399',{{/if}} {{#if employer}}'#91ac99',{{/if}} {{#if timeline}}'#1dc7ce',{{/if}}{{#if people}}'#8d6fe6',{{/if}} {{#if map}}'rgb(29, 206, 173)',{{/if}} {{#if library}}'rgb(220, 132, 83)',{{/if}}  {{#if award}}'rgb(76, 76, 76)',{{/if}}  'rgb(255, 131, 148)', {{#if wikipedia}} 'rgb(129, 130, 160)',{{/if}} 'rgb(255, 185, 125)']);
     lastSlide = tooltips.length;
     for (x=1; x <= lastSlide; x++){
       anchors.push(x)
