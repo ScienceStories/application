@@ -48,7 +48,7 @@ const _ = module.exports = {
         let pageData = {
           title: 'Welcome',
           story_count: count,
-          meta: {description: "Science Stories brings scientific work into social spaces where users discover information about underrepresented pioneers — creating starting points for further exploration. For institutions with cultural heritage resources in libraries, archives, museums and galleries that are not yet available on the web, we provide a web application that leverages Wikidata, IIIF, and semantic web technologies to demonstrate a vision of what getting scientific work products into social spaces can do."},
+          meta: {description: "Science Stories brings scientific work into social spaces where users discover information about underrepresented scientists — creating starting points for further exploration. For institutions with cultural heritage resources in libraries, archives, museums and galleries that are not yet available on the web, we provide a web application that leverages Wikidata, IIIF, and semantic web technologies to demonstrate a vision of what getting scientific work products into social spaces can do."},
           featured_stories: _.getFeaturedList(),
           birthdays: birthdays
         }
