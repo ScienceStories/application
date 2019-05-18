@@ -10,29 +10,6 @@
 
         <div class="circle-carousel" data-gap="80">
           <figure>
-            <!-- <div class="circle-frame">
-              <div class="with-arrows">
-                <div class="award-content" >
-                  <div class="award-graphic" style="border-color:#46a2a7">
-                    <span class="award-icon" >
-                      <i class="fas fa-medal"></i>
-                    </span>
-                  </div>
-                  <div class="award-pretitle" style="color:#46a2a7">Certificate Of</div>
-                  <div class="award-title" style="color:#e2d42f">The Medal of Freedom</div>
-                   <div class="award-subtitle">This award is presented to</div>
-                   <div class="award-name" style="color:#46a2a7">Grace Hopper</div>
-                   <div class="award-description">joint-highest civilian award of the United States, bestowed by the President</div>
-                   <div class="award-organizer" style="border-color:#46a2a7">The United States Government</div>
-
-                   <div class="award-organizer-subtext">Conferred By</div>
-                </div>
-                <div class="arrow-right" style="background:#e2d42f"></div>
-                <div class="arrow-left"  style="background:#46a2a7"></div>
-                <div class="arrow-left-bottom"  style="background:#e2d42f"></div>
-                <div class="arrow-right-bottom" style="background:#46a2a7"></div>
-              </div>
-            </div> -->
             {{#each award}}
               <div class="circle-frame">
                 <div class="with-arrows">
@@ -67,6 +44,10 @@
                 </div>
               </div>
             {{/each}}
+            {{#if_equal award.length 2}}
+              <!-- Add a blank node when only two awards -->
+              <div class="circle-frame"></div>
+            {{/if_equal}}
           </figure>
           {{#if_equal award.length 1}}
           {{else}}
@@ -80,284 +61,67 @@
     </div>
     <a href="https://www.freepik.com/free-photos-vectors/background">Background vector created by Macrovector - Freepik.com</a>
   </div>
-  <style>
-  div#pagepiling .page.page-award {
-      background-image: url(/static/images/award-background.jpg);
-      background-size: cover;
-      background-position-y: 57%;
-      width: 100%;
-  }
-        div#pagepiling .page-award .circle-carousel {
-      padding: 20px;
-      -webkit-perspective: 500px;
-            perspective: 500px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      }
-      div#pagepiling .page-award .circle-carousel > * {
-      flex: 0 0 auto;
-      }
-      div#pagepiling .page-award .circle-carousel figure {
-      margin: 0;
-      width: 40%;
-      -webkit-transform-style: preserve-3d;
-            transform-style: preserve-3d;
-      transition: -webkit-transform 0.5s;
-      transition: transform 0.5s;
-      transition: transform 0.5s, -webkit-transform 0.5s;
-      }
-      div#pagepiling .page-award .circle-carousel figure .circle-frame {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 0 0px;
-      }
-      div#pagepiling .page-award .circle-carousel figure .circle-frame:not(:first-of-type) {
-      position: absolute;
-      left: 0;
-      top: 0;
-      }
-      div#pagepiling .page-award .circle-carousel nav {
-      display: flex;
-      justify-content: center;
-      margin: 20px 0 0;
-      z-index: 1;
-      }
-      div#pagepiling .page-award .circle-carousel nav button {
-      flex: 0 0 auto;
-      margin: 0 5px;
-      cursor: pointer;
-      color: #333;
-      background: none;
-      border: 1px solid;
-      letter-spacing: 1px;
-      padding: 5px 10px;
-      }
-      div#pagepiling .page-award .circle-carousel .with-arrows {
-    width: 100%;
-    background: #fffefa;
-    text-align: center;
-    padding: 35px;
-    height: 300px;
-    min-width: 350px;
-    box-shadow: 0 0 10px 4px #00000033;
-}
-
-.award-pretitle {
-    font-size:  15px;
-}
-
-.award-content {
-    text-transform:  uppercase;
-    display:  table-cell;
-    vertical-align:  middle;
-    color: #808080;
-}
-
-.award-title {
-    font-size:  25px;
-    font-weight:  bold;
-    text-shadow: 0 0px 2px black;
-}
-
-.award-subtitle {
-    font-size:  10px;
-    font-weight:  300;
-}
-
-.award-name {
-    font-size:  20px;
-    font-weight: 600;
-}
-
-.award-description {
-    font-size:  10px;
-    font-weight: 500;
-}
-
-.award-organizer {
-    font-size: 21px;
-    font-family: cursive;
-    text-transform: capitalize;
-    margin: 10px 12%;
-    border-bottom:  1px solid;
-    margin-bottom:  0;
-}
-
-.award-organizer-subtext {
-    font-weight:  bold;
-    font-size: 10px;
-}
-
-.circle-frame {
-    display:  table;
-    vertical-align:  middle;
-}
-
-.circle-frame .with-arrows {
-    display: table;
-}
-.slide-timeline.section > .content > a {
-    padding: 5px;
-    font-size: 10px;
-    color: white;
-}
-.award-graphic {
-    width: 100%;
-    text-align: center;
-    border-bottom: 4px solid #000;
-    line-height: 0.1em;
-    margin: 10px 0 20px;
-}
-span.award-icon {
-    background: #fffefa;
-    padding: 0 10px;
-    font-size:  40px;
-}
-
-.award-icon * {
-    margin-bottom: -27px;
-}
-div#pagepiling .page-award .circle-carousel nav button:hover {
-    background: #1dcead;
-    color: white;
-    border-color: #1dcead;
-}
-/* MAIN STYLES */
-.with-arrows {
-  height: 200px;
-  margin: 0 auto;
-  overflow: hidden;
-  position: relative;
-  width: 400px;
-}
-.arrow-left {
-  background-color: #444;
-  box-shadow: 0 0 3px 2px rgba(0,0,0,0.8);
-  height: 100px;
-  right: -50px;
-  position: absolute;
-  top: -50px;
-  width: 100px;
-
-  -webkit-transform: rotate(-45deg);
-}
-
-.arrow-right {
-  background-color: #444;
-  box-shadow: 0 0 3px 2px rgba(0,0,0,0.8);
-  height: 100px;
-  left: -50px;
-  position: absolute;
-  top: -50px;
-  width: 100px;
-
-  -webkit-transform: rotate(-45deg);
-}
-.arrow-right-bottom {
-  background-color: #444;
-  box-shadow: 0 0 3px 2px rgba(0,0,0,0.8);
-  height: 100px;
-  left: -50px;
-  position: absolute;
-  bottom: -50px;
-  width: 100px;
-
-  -webkit-transform: rotate(-45deg);
-}
-.arrow-left-bottom {
-  background-color: #444;
-  box-shadow: 0 0 3px 2px rgba(0,0,0,0.8);
-  height: 100px;
-  right: -50px;
-  position: absolute;
-  bottom: -50px;
-  width: 100px;
-
-  -webkit-transform: rotate(-45deg);
-}
-
-  </style>
   <script>
-  {{#if_equal award.length 2}}
-  {{else}}
-  window.addEventListener('load', function () {
-  	var
-  	carousels = document.querySelectorAll('.circle-carousel');
+    {{#if_equal award.length 1}}
+    {{else}}
+      window.addEventListener('load', function () {
+        var carousels = document.querySelectorAll('.circle-carousel');
+        for (var i = 0; i < carousels.length; i++) {
+          carousel(carousels[i]);
+        }
+      });
+    {{/if_equal}}
+    function carousel(root) {
+      var figure = root.querySelector('figure'),
+      nav = root.querySelector('nav'),
+      images = figure.children,
+      n = images.length,
+      gap = root.dataset.gap || 0,
+      bfc = 'bfc' in root.dataset,
+      theta = 2 * Math.PI / n,
+      currImage = 0;
+      setupCarousel(n, parseFloat(getComputedStyle(images[0]).width));
+      window.addEventListener('resize', function () {
+        setupCarousel(n, parseFloat(getComputedStyle(images[0]).width));
+      });
+      setupNavigation();
+      function setupCarousel(n, s) {
+        var apothem = s / (2 * Math.tan(Math.PI / n));
+        figure.style.transformOrigin = '50% 50% ' + -apothem + 'px';
+        for (var i = 0; i < n; i++) {
+          images[i].style.padding = gap + 'px';
+        }
+        for (i = 1; i < n; i++) {
+          images[i].style.transformOrigin = '50% 50% ' + -apothem + 'px';
+          images[i].style.transform = 'rotateY(' + i * theta + 'rad)';
+        }
+        if (bfc){
+          for (i = 0; i < n; i++) {
+            images[i].style.backfaceVisibility = 'hidden';
+          }
+        }
+        rotateCarousel(currImage);
+      }
 
-
-  	for (var i = 0; i < carousels.length; i++) {
-  		carousel(carousels[i]);
-  	}
-  });
-  {{/if_equal}}
-  function carousel(root) {
-  	var
-  	figure = root.querySelector('figure'),
-  	nav = root.querySelector('nav'),
-  	images = figure.children,
-  	n = images.length,
-  	gap = root.dataset.gap || 0,
-  	bfc = 'bfc' in root.dataset,
-
-  	theta = 2 * Math.PI / n,
-  	currImage = 0;
-
-
-  	setupCarousel(n, parseFloat(getComputedStyle(images[0]).width));
-  	window.addEventListener('resize', function () {
-  		setupCarousel(n, parseFloat(getComputedStyle(images[0]).width));
-  	});
-
-  	setupNavigation();
-
-  	function setupCarousel(n, s) {
-  		var
-  		apothem = s / (2 * Math.tan(Math.PI / n));
-
-
-  		figure.style.transformOrigin = '50% 50% ' + -apothem + 'px';
-
-  		for (var i = 0; i < n; i++) {
-  			images[i].style.padding = gap + 'px';}
-  		for (i = 1; i < n; i++) {
-  			images[i].style.transformOrigin = '50% 50% ' + -apothem + 'px';
-  			images[i].style.transform = 'rotateY(' + i * theta + 'rad)';
-  		}
-  		if (bfc)
-  		for (i = 0; i < n; i++) {
-  			images[i].style.backfaceVisibility = 'hidden';}
-
-  		rotateCarousel(currImage);
-  	}
-
-  	function setupNavigation() {
-  		nav.addEventListener('click', onClick, true);
-
-  		function onClick(e) {
-  			e.stopPropagation();
-
-  			var t = e.target;
-  			if (t.tagName.toUpperCase() != 'BUTTON')
-  			return;
-
-  			if (t.classList.contains('next')) {
-  				currImage++;
-  			} else
-  			{
-  				currImage--;
-  			}
-
-  			rotateCarousel(currImage);
-  		}
-
-  	}
-
-  	function rotateCarousel(imageIndex) {
-  		figure.style.transform = 'rotateY(' + imageIndex * -theta + 'rad)';
-  	}
-
-  }
+      function setupNavigation() {
+        nav.addEventListener('click', onClick, true);
+        function onClick(e) {
+          e.stopPropagation();
+          var t = e.target;
+          if (t.tagName.toUpperCase() != 'BUTTON')
+          return;
+          if (t.classList.contains('next')) {
+            currImage++;
+          }
+          else{
+            currImage--;
+          }
+          rotateCarousel(currImage);
+        }
+      }
+      function rotateCarousel(imageIndex) {
+        figure.style.transform = 'rotateY(' + imageIndex * -theta + 'rad)';
+      }
+    }
   </script>
 </div>

@@ -1280,3 +1280,195 @@ margin-bottom: 60px;
 .employer-card-container .wrapper .inside .contents p {
   font-size: 13px;
 }
+/* award slide  */
+div#pagepiling .page.page-award {
+  background-image: url(/static/images/award-background.jpg);
+  background-size: cover;
+  background-position-y: 57%;
+  width: 100%;
+}
+div#pagepiling .page-award .circle-carousel {
+  padding: 20px;
+  -webkit-perspective: 500px;
+  perspective: 500px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+div#pagepiling .page-award .circle-carousel > * {
+  flex: 0 0 auto;
+}
+div#pagepiling .page-award .circle-carousel figure {
+  margin: 0;
+  width: 40%;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  transition: -webkit-transform 0.5s;
+  transition: transform 0.5s;
+  transition: transform 0.5s, -webkit-transform 0.5s;
+}
+div#pagepiling .page-award .circle-carousel figure .circle-frame {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 0px;
+}
+div#pagepiling .page-award .circle-carousel figure .circle-frame:not(:first-of-type) {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+div#pagepiling .page-award .circle-carousel nav {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0 0;
+  z-index: 1;
+}
+div#pagepiling .page-award .circle-carousel nav button {
+  flex: 0 0 auto;
+  margin: 0 5px;
+  cursor: pointer;
+  color: #333;
+  background: none;
+  border: 1px solid;
+  letter-spacing: 1px;
+  padding: 5px 10px;
+}
+div#pagepiling .page-award .circle-carousel .with-arrows {
+  width: 100%;
+  background: #fffefa;
+  text-align: center;
+  padding: 35px;
+  height: 300px;
+  min-width: 350px;
+  box-shadow: 0 0 10px 4px #00000033;
+}
+
+.award-pretitle {
+  font-size:  15px;
+}
+
+.award-content {
+  text-transform:  uppercase;
+  display:  table-cell;
+  vertical-align:  middle;
+  color: #808080;
+}
+
+.award-title {
+  font-size:  25px;
+  font-weight:  bold;
+  text-shadow: 0 0px 2px black;
+}
+
+.award-subtitle {
+  font-size:  10px;
+  font-weight:  300;
+}
+
+.award-name {
+  font-size:  20px;
+  font-weight: 600;
+}
+
+.award-description {
+  font-size:  10px;
+  font-weight: 500;
+}
+
+.award-organizer {
+  font-size: 21px;
+  font-family: cursive;
+  text-transform: capitalize;
+  margin: 10px 12%;
+  border-bottom:  1px solid;
+  margin-bottom:  0;
+}
+
+.award-organizer-subtext {
+  font-weight:  bold;
+  font-size: 10px;
+}
+
+.circle-frame {
+  display:  table;
+  vertical-align:  middle;
+}
+
+.circle-frame .with-arrows {
+  display: table;
+}
+.slide-timeline.section > .content > a {
+  padding: 5px;
+  font-size: 10px;
+  color: white;
+}
+.award-graphic {
+  width: 100%;
+  text-align: center;
+  border-bottom: 4px solid #000;
+  line-height: 0.1em;
+  margin: 10px 0 20px;
+}
+span.award-icon {
+  background: #fffefa;
+  padding: 0 10px;
+  font-size:  40px;
+}
+
+.award-icon * {
+  margin-bottom: -27px;
+}
+div#pagepiling .page-award .circle-carousel nav button:hover {
+  background: #1dcead;
+  color: white;
+  border-color: #1dcead;
+}
+.with-arrows {
+  height: 200px;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  width: 400px;
+}
+.arrow-left {
+  background-color: #444;
+  box-shadow: 0 0 3px 2px rgba(0,0,0,0.8);
+  height: 100px;
+  right: -50px;
+  position: absolute;
+  top: -50px;
+  width: 100px;
+  -webkit-transform: rotate(-45deg);
+}
+
+.arrow-right {
+  background-color: #444;
+  box-shadow: 0 0 3px 2px rgba(0,0,0,0.8);
+  height: 100px;
+  left: -50px;
+  position: absolute;
+  top: -50px;
+  width: 100px;
+  -webkit-transform: rotate(-45deg);
+}
+.arrow-right-bottom {
+  background-color: #444;
+  box-shadow: 0 0 3px 2px rgba(0,0,0,0.8);
+  height: 100px;
+  left: -50px;
+  position: absolute;
+  bottom: -50px;
+  width: 100px;
+  -webkit-transform: rotate(-45deg);
+}
+.arrow-left-bottom {
+  background-color: #444;
+  box-shadow: 0 0 3px 2px rgba(0,0,0,0.8);
+  height: 100px;
+  right: -50px;
+  position: absolute;
+  bottom: -50px;
+  width: 100px;
+  -webkit-transform: rotate(-45deg);
+}
