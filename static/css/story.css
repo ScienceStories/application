@@ -1161,6 +1161,9 @@ margin-bottom: 60px;
 }
 .employer-card-container .card-info img {
     max-height: 130px;
+    padding: 5px;
+    border-radius: 10px;
+    background: #bebebeba;
 }
 .employer-card-container .card-info .content {
   opacity: 0;
