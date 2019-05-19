@@ -648,7 +648,7 @@ OPTIONAL{
     return appFetch(wikidataUrl).then((wdresponse) => {
       let wikidata_date = _._parseWikimediaAPIRevision(wdresponse);
       let wikipediaUrl = 'https://en.wikipedia.org/w/api.php'+url_params+wikipedia_name;
-      return appFetch(wikipediaUrl).then((wpresponse) => {
+      return appFetch(encodeURI(wikipediaUrl)).then((wpresponse) => {
         let wikipedia_date = _._parseWikimediaAPIRevision(wpresponse);
         return callback(wikidata_date, wikipedia_date);
       })
