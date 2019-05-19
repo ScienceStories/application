@@ -2,10 +2,6 @@ body{
   display: inherit;
   background: #696969;
 }
-/* div#pagepiling * {
-    transition: none;
-} */
-
 button#favoriteBtn, button#favoriteBtn.favorited:hover {
     color: #ffffff9e;
     background: none;
@@ -184,6 +180,10 @@ div#conent_panel {
 
 div.pp-section {
     padding-top: 50px;
+    opacity: 0;
+}
+div.pp-section.active {
+    opacity: 1;
 }
 
 /*  pagepile */
