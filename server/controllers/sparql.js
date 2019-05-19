@@ -97,7 +97,7 @@ const _ = module.exports = {
      OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
    }
   OPTIONAL{
-    ?ps_ wdt:P50|wdt:P112 ?isperson . # check that the person's contribution matches the main person (i.e. both authors)
+    ?ps_ wdt:P50|wdt:P112|wdt:P1029 ?isperson . # check that the person's contribution matches the main person (i.e. both authors)
     ?ps_ ?tval ?person .
     ?person wdt:P31 wd:Q5 .
     ?personProp wikibase:directClaim ?tval.

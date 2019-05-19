@@ -733,18 +733,23 @@ OPTIONAL{
                   getValue(statement.personDeath)),
         inverse: inverse
       }
+      let person_prop = getValue(statement.personPropLabel);
       let relation_prop = getValue(statement.ps);
       if (relation_prop == "http://www.wikidata.org/prop/statement/P50"){
         let person_prop = getValue(statement.personPropLabel);
         if (person_prop == 'author'){
           tempval.relation = "Co-Author";
         }
-        else{
-          // TODO: Handle other relations besides co-author when P50 is used
+      }
+      else if (relation_prop == "http://www.wikidata.org/prop/statement/P1029"){
+        if (person_prop == 'crew member'){
+          tempval.relation = "Crew Member";
+          if (inverse && statement.ps_Label){
+            tempval.relation += " ("+getValue(statement.ps_Label)+")";
+          }
         }
       }
       else if (relation_prop == "http://www.wikidata.org/prop/statement/P112"){
-        let person_prop = getValue(statement.personPropLabel);
         if (person_prop == 'founded by'){
           tempval.relation = `${tempval.title} co-founded "${getValue(statement.ps_Label)}" with ${name}`;
         }
