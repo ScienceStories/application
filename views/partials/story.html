@@ -62,7 +62,6 @@
       17. Employers
    -->
   <script type="text/javascript">
-    var wikititle = '{{wikipedia}}'.replace(" ", "_")
     var addthis_share = {
      url: "http://www.sciencestories.io/{{row.qid}}",
      title: "{{title}}",
@@ -95,6 +94,26 @@
             <i class="fas fa-images"></i>
           {{else if_equal this.type 'google_book'}}
             <i class="fas fa-book-reader"></i>
+          {{else if_equal this.type 'education'}}
+            <i class="fas fa-user-graduate"></i>
+          {{else if_equal this.type 'employer'}}
+            <i class="fas fa-id-badge"></i>
+          {{else if_equal this.type 'timeline'}}
+            <i class="far fa-calendar-alt"></i>
+          {{else if_equal this.type 'people'}}
+            <i class="fas fa-users"></i>
+          {{else if_equal this.type 'map'}}
+            <i class="fas fa-map-marked-alt"></i>
+          {{else if_equal this.type 'library'}}
+            <i class="fas fa-archive"></i>
+          {{else if_equal this.type 'award'}}
+            <i class="fas fa-medal"></i>
+          {{else if_equal this.type 'wikidata'}}
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo">
+          {{else if_equal this.type 'wikipedia'}}
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikipedia Logo">
+          {{else if_equal this.type 'index'}}
+            <i class="far fa-comments"></i>
           {{else}}
             <i class="fas fa-info-circle"></i>
           {{/if_equal}}
@@ -108,32 +127,7 @@
           {{/if}}
         </div>
       {{/each}}
-      {{#if education}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-user-graduate"></i> Education of {{name}}</div>
-      {{/if}}
-      {{#if employer}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-id-badge"></i> Where {{name}} Worked</div>
-      {{/if}}
-      {{#if timeline}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="far fa-calendar-alt"></i> Timeline</div>
-      {{/if}}
-      {{#if people}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-users"></i> People Relevant to {{name}}</div>
-      {{/if}}
-      {{#if map}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-map-marked-alt"></i> Significant Places</div>
-      {{/if}}
-      {{#if library}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-archive"></i> Library of {{name}}</div>
-      {{/if}}
-      {{#if award}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><i class="fas fa-medal"></i> Award Room</div>
-      {{/if}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo"> Wikidata Statements</div>
-      {{#if wikipedia}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikidata Logo"> Wikipedia Article</div>
-      {{/if}}
-        <div class="sidebar-tooltip" onclick="sidebarNavigate(this)"> <i class="far fa-comments"></i> Learn More</div>
+
     </div>
     </div>
     </div>
@@ -141,15 +135,6 @@
     {{#each data}}
       {{loadMoment this.type this}}
     {{/each}}
-    {{#if education}} {{> education }} {{/if}}
-    {{#if employer}} {{> employer }} {{/if}}
-    {{#if timeline}} {{> timeline }} {{/if}}
-    {{#if people}} {{> people }} {{/if}}
-    {{#if map}} {{> map }} {{/if}}
-    {{#if library}} {{> library }} {{/if}}
-    {{#if award}} {{> award }} {{/if}}
-    {{> wikidata }}
-    {{#if wikipedia}} {{> wikipedia }} {{/if}}
     {{> index }}
 
   </div>
@@ -165,8 +150,6 @@
       tooltips.push((data[x].tooltip) ? data[x].tooltip : (data[x].title) ? data[x].title : data[x].description);
       colors.push(data[x].color);
     }
-    tooltips = tooltips.concat([{{#if education}}'Education',{{/if}} {{#if employer}}'Employers',{{/if}} {{#if timeline}}'Timeline',{{/if}} {{#if people}}'People',{{/if}} {{#if map}}'Map',{{/if}} {{#if library}}'Library',{{/if}} {{#if award}}'Awards',{{/if}} 'Wikidata Statements', {{#if wikipedia}}'Wikipedia Article',{{/if}} 'Learn More About {{name}}']);
-    colors = colors.concat([{{#if education}}'#337399',{{/if}} {{#if employer}}'#91ac99',{{/if}} {{#if timeline}}'#1dc7ce',{{/if}}{{#if people}}'#8d6fe6',{{/if}} {{#if map}}'rgb(29, 206, 173)',{{/if}} {{#if library}}'rgb(220, 132, 83)',{{/if}}  {{#if award}}'rgb(76, 76, 76)',{{/if}}  'rgb(255, 131, 148)', {{#if wikipedia}} 'rgb(129, 130, 160)',{{/if}} 'rgb(255, 185, 125)']);
     lastSlide = tooltips.length;
     for (x=1; x <= lastSlide; x++){
       anchors.push(x)

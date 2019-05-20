@@ -14,6 +14,7 @@
 
 <script>
 $(document).ready(function(){
+    var wikititle = '{{wikipedia}}'.replace(" ", "_");
     var wikipedia_api = `http://en.wikipedia.org/w/api.php?action=parse&format=json&prop=text&page=${wikititle}&callback=?`
     var wikipedia_link = `https://en.wikipedia.org/wiki/${wikititle}`
     $('#article').html(`<iframe id="wikiframe" src="https://en.m.wikipedia.org/wiki/${wikititle}" />`)

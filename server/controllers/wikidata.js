@@ -234,8 +234,95 @@ OPTIONAL{
                                 "category": commonsCategory,
                                 "tooltip": "Wikimedia Gallery",
                                 "color": "#530244",
-                              })
+                              });
                             }
+                            if (educationData){
+                              jsonData.push({
+                                "type": "education",
+                                "education": educationData,
+                                "tooltip": "Education of " + name,
+                                "color": "#337399",
+                                "name": name
+                              });
+                            }
+                            if (employerData){
+                              jsonData.push({
+                                "type": "employer",
+                                "employer": employerData,
+                                "tooltip": "Where " + name + " Worked",
+                                "color": "#91ac99",
+                                "name": name,
+                              });
+                            }
+                            if (timelineData){
+                              jsonData.push({
+                                "type": "timeline",
+                                "timeline": timelineData,
+                                "tooltip": "Timeline",
+                                "color": "#1dc7ce",
+                                "name": name,
+                              });
+                            }
+                            if (peopleData){
+                              jsonData.push({
+                                "type": "people",
+                                "people": peopleData,
+                                "tooltip": "People Relevant to " + name,
+                                "color": "#8d6fe6",
+                                "name": name,
+                              });
+                            }
+                            if (mapData){
+                              jsonData.push({
+                                "type": "map",
+                                "map": mapData,
+                                "tooltip": "Significant Places",
+                                "color": "rgb(29, 206, 173)",
+                                "name": name,
+                              });
+                            }
+                            if (libraryData){
+                              jsonData.push({
+                                "type": "library",
+                                "library": libraryData,
+                                "tooltip": "Library of " + name,
+                                "color": "#dc8453",
+                                "name": name,
+                              });
+                            }
+                            if (awardData){
+                              jsonData.push({
+                                "type": "award",
+                                "award": awardData,
+                                "tooltip": "Award Room",
+                                "color": "#4c4c4c",
+                                "name": name,
+                              });
+                            }
+                            jsonData.push({
+                              "type": "wikidata",
+                              "qid": qid,
+                              "tooltip": "Wikidata Statements",
+                              "color": "#ff8394",
+                              "name": name,
+                            })
+                            if (wikipedia){
+                              jsonData.push({
+                                "type": "wikipedia",
+                                "wikipedia": wikipedia,
+                                "tooltip": "Wikipedia Article",
+                                "color": "#8182a0",
+                              });
+                            }
+
+                            let indexMoment = {
+                              "type": "index",
+                              "content": itemStatements,
+                              "tooltip": "Learn More",
+                              "color": "#ffb97d",
+                              "name": name,
+                              "row": row
+                            };
 
                             // return res.send(jsonData)
                             let storyRenderData = {
@@ -245,22 +332,12 @@ OPTIONAL{
                               title: name +" - Story",
                               nav: "Story",
                               urlPath: getURLPath(req),
-                              content: itemStatements,
-                              wikipedia: wikipedia,
                               name: name,
                               qid: qid,
-                              data: jsonData,
                               image: storyImage,
                               row: row,
                               isPreview: isPreview,
                               meta: meta,
-                              people: peopleData,
-                              education: educationData,
-                              employer: employerData,
-                              map: mapData,
-                              library: libraryData,
-                              timeline: timelineData,
-                              award: awardData,
                             }
                             if (req.session.user && !isPreview) {
                               return StoryActivity
@@ -275,12 +352,16 @@ OPTIONAL{
                                 })
                                 .then(output => {
                                   storyRenderData.storyActivity = output.dataValues;
-                                  storyRenderData.user = req.session.user;
+                                  storyRenderData.user = indexMoment.user = req.session.user;
+                                  jsonData.push(indexMoment);
+                                  storyRenderData.data = jsonData;
                                   return res.render('full', storyRenderData);
                                 })
                               })
                               .catch(error => res.renderError());
                             }
+                            jsonData.push(indexMoment);
+                            storyRenderData.data = jsonData;
                             return res.render('full', storyRenderData);
                           })
                         })
