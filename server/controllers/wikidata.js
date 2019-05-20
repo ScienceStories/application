@@ -227,6 +227,17 @@ OPTIONAL{
                             jsonData = jsonData.concat(wikidataManifestData);
                             let commonsCategory = _.getCommonsCategory(req, qid, itemStatements);
                             var isPreview = (req.url.indexOf('/preview') > -1);
+                            if (commonsCategory){
+                              jsonData.push({
+                                "type": "wikicat",
+                                "title": "Media Gallery",
+                                "category": commonsCategory,
+                                "tooltip": "Wikimedia Gallery",
+                                "color": "#530244",
+                              })
+                            }
+
+                            // return res.send(jsonData)
                             let storyRenderData = {
                               page: function(){ return 'story'},
                               scripts: function(){ return 'story_scripts'},
@@ -250,7 +261,6 @@ OPTIONAL{
                               library: libraryData,
                               timeline: timelineData,
                               award: awardData,
-                              commonsCategory: commonsCategory
                             }
                             if (req.session.user && !isPreview) {
                               return StoryActivity
