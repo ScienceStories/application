@@ -1,6 +1,7 @@
 body{
   display: inherit;
   background: #696969;
+  font-size: 14px;
 }
 button#favoriteBtn, button#favoriteBtn.favorited:hover {
     color: #ffffff9e;
@@ -700,6 +701,7 @@ div#pagepiling {
     bottom: 0;
 }
 .sidebar-tooltip {
+    font-size: 13px;
     padding: 20px 5px 10px 5rem;
     text-indent: -2rem;
     font-weight: 300;
@@ -1471,4 +1473,68 @@ div#pagepiling .page-award .circle-carousel nav button:hover {
   bottom: -50px;
   width: 100px;
   -webkit-transform: rotate(-45deg);
+}
+/* membership slide */
+.membership-badge .membership-panel {
+  display: none;
+}
+.membership-badge * {
+  max-width: 100%;
+}
+.page.page-membership {
+  padding: 0;
+  text-align: center;
+  background: #ffebec;
+}
+.page-membership .col {
+  overflow-y: scroll;
+  padding: 20px;
+  height: 80vh;
+}
+.page-membership .row {
+margin: 0;
+}
+.page-membership .col * {
+  max-width: 100%;
+}
+
+.page-membership .membership-panel img {
+  max-width: 50%;
+}
+.page-membership a {
+  border: 1px solid;
+  padding: 10px;
+  font-size: xx-large;
+  color: #9b6e72;
+  font-weight: 300;
+}
+.page-membership svg {
+    opacity: .85;
+}
+.page-membership .membership-badge-scroller {
+  background: #9b6e72;
+}
+
+.page-membership > .container {
+  margin-right: 0;
+  padding: 0;
+}
+
+div#membershipDetails {
+  padding-top: 50px;
+  padding-bottom: 100px;
+  border-radius: 20px;
+}
+.membership-image{
+  opacity: .9;
+  border-radius: 10px;
+}
+.membership-badge.active svg path, .membership-badge.active svg foreignObject {
+  fill: #865b5e;
+  color: #634446!important;
+}
+.membership-badge:not(.active) svg:hover {
+  cursor: pointer;
+  filter: drop-shadow(5px 10px 3px rgba(0, 0, 0, 0.4));
+  opacity: 1;
 }

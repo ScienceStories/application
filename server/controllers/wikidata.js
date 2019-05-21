@@ -217,152 +217,162 @@ OPTIONAL{
             return _.getPeopleData(name, itemStatements, inverseStatements, (peopleData) => {
               return _.getEducationData(itemStatements, (educationData) => {
                 return _.getEmployerData(itemStatements, (employerData) => {
-                  return _.getAwardData(name, itemStatements, (awardData) => {
-                    return _.getLibraryData(name, inverseStatements, (libraryData) => {
-                      return _.getMapData(name, itemStatements, inverseStatements, (mapData) => {
-                        return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
-                          let ss_string = (row.createdAt) ? row.createdAt.toISOString() : null;
-                          let timelineData =  _.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, ss_string);
-                          return _.getWikidataManifestData(name, itemStatements, inverseStatements, (wikidataManifestData) => {
-                            jsonData = jsonData.concat(wikidataManifestData);
-                            let commonsCategory = _.getCommonsCategory(req, qid, itemStatements);
-                            var isPreview = (req.url.indexOf('/preview') > -1);
-                            if (commonsCategory){
+                  return _.getMembershipData(itemStatements, (membershipData) => {
+                    return _.getAwardData(name, itemStatements, (awardData) => {
+                      return _.getLibraryData(name, inverseStatements, (libraryData) => {
+                        return _.getMapData(name, itemStatements, inverseStatements, (mapData) => {
+                          return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
+                            let ss_string = (row.createdAt) ? row.createdAt.toISOString() : null;
+                            let timelineData =  _.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, ss_string);
+                            return _.getWikidataManifestData(name, itemStatements, inverseStatements, (wikidataManifestData) => {
+                              jsonData = jsonData.concat(wikidataManifestData);
+                              let commonsCategory = _.getCommonsCategory(req, qid, itemStatements);
+                              var isPreview = (req.url.indexOf('/preview') > -1);
+                              if (commonsCategory){
+                                jsonData.push({
+                                  "type": "wikicat",
+                                  "title": "Media Gallery",
+                                  "category": commonsCategory,
+                                  "tooltip": "Wikimedia Gallery",
+                                  "color": "#530244",
+                                });
+                              }
+                              if (educationData){
+                                jsonData.push({
+                                  "type": "education",
+                                  "education": educationData,
+                                  "tooltip": "Education of " + name,
+                                  "color": "#337399",
+                                  "name": name
+                                });
+                              }
+                              if (employerData){
+                                jsonData.push({
+                                  "type": "employer",
+                                  "employer": employerData,
+                                  "tooltip": "Where " + name + " Worked",
+                                  "color": "#91ac99",
+                                  "name": name,
+                                });
+                              }
+                              if (membershipData){
+                                jsonData.push({
+                                  "type": "membership",
+                                  "membership": membershipData,
+                                  "tooltip": "Organizations",
+                                  "color": "#de8389",
+                                  "name": name,
+                                });
+                              }
+                              // return res.send(membershipData)
+                              if (timelineData){
+                                jsonData.push({
+                                  "type": "timeline",
+                                  "timeline": timelineData,
+                                  "tooltip": "Timeline",
+                                  "color": "#1dc7ce",
+                                  "name": name,
+                                });
+                              }
+                              if (peopleData){
+                                jsonData.push({
+                                  "type": "people",
+                                  "people": peopleData,
+                                  "tooltip": "People Relevant to " + name,
+                                  "color": "#8d6fe6",
+                                  "name": name,
+                                });
+                              }
+                              if (mapData){
+                                jsonData.push({
+                                  "type": "map",
+                                  "map": mapData,
+                                  "tooltip": "Significant Places",
+                                  "color": "rgb(29, 206, 173)",
+                                  "name": name,
+                                });
+                              }
+                              if (libraryData){
+                                jsonData.push({
+                                  "type": "library",
+                                  "library": libraryData,
+                                  "tooltip": "Library of " + name,
+                                  "color": "#dc8453",
+                                  "name": name,
+                                });
+                              }
+                              if (awardData){
+                                jsonData.push({
+                                  "type": "award",
+                                  "award": awardData,
+                                  "tooltip": "Award Room",
+                                  "color": "#4c4c4c",
+                                  "name": name,
+                                });
+                              }
                               jsonData.push({
-                                "type": "wikicat",
-                                "title": "Media Gallery",
-                                "category": commonsCategory,
-                                "tooltip": "Wikimedia Gallery",
-                                "color": "#530244",
-                              });
-                            }
-                            if (educationData){
-                              jsonData.push({
-                                "type": "education",
-                                "education": educationData,
-                                "tooltip": "Education of " + name,
-                                "color": "#337399",
-                                "name": name
-                              });
-                            }
-                            if (employerData){
-                              jsonData.push({
-                                "type": "employer",
-                                "employer": employerData,
-                                "tooltip": "Where " + name + " Worked",
-                                "color": "#91ac99",
+                                "type": "wikidata",
+                                "qid": qid,
+                                "tooltip": "Wikidata Statements",
+                                "color": "#ff8394",
                                 "name": name,
-                              });
-                            }
-                            if (timelineData){
-                              jsonData.push({
-                                "type": "timeline",
-                                "timeline": timelineData,
-                                "tooltip": "Timeline",
-                                "color": "#1dc7ce",
-                                "name": name,
-                              });
-                            }
-                            if (peopleData){
-                              jsonData.push({
-                                "type": "people",
-                                "people": peopleData,
-                                "tooltip": "People Relevant to " + name,
-                                "color": "#8d6fe6",
-                                "name": name,
-                              });
-                            }
-                            if (mapData){
-                              jsonData.push({
-                                "type": "map",
-                                "map": mapData,
-                                "tooltip": "Significant Places",
-                                "color": "rgb(29, 206, 173)",
-                                "name": name,
-                              });
-                            }
-                            if (libraryData){
-                              jsonData.push({
-                                "type": "library",
-                                "library": libraryData,
-                                "tooltip": "Library of " + name,
-                                "color": "#dc8453",
-                                "name": name,
-                              });
-                            }
-                            if (awardData){
-                              jsonData.push({
-                                "type": "award",
-                                "award": awardData,
-                                "tooltip": "Award Room",
-                                "color": "#4c4c4c",
-                                "name": name,
-                              });
-                            }
-                            jsonData.push({
-                              "type": "wikidata",
-                              "qid": qid,
-                              "tooltip": "Wikidata Statements",
-                              "color": "#ff8394",
-                              "name": name,
-                            })
-                            if (wikipedia){
-                              jsonData.push({
-                                "type": "wikipedia",
-                                "wikipedia": wikipedia,
-                                "tooltip": "Wikipedia Article",
-                                "color": "#8182a0",
-                              });
-                            }
-
-                            let indexMoment = {
-                              "type": "index",
-                              "content": itemStatements,
-                              "tooltip": "Learn More",
-                              "color": "#ffb97d",
-                              "name": name,
-                              "row": row
-                            };
-
-                            // return res.send(jsonData)
-                            let storyRenderData = {
-                              page: function(){ return 'story'},
-                              scripts: function(){ return 'story_scripts'},
-                              links: function(){ return 'story_links'},
-                              title: name +" - Story",
-                              nav: "Story",
-                              urlPath: getURLPath(req),
-                              name: name,
-                              qid: qid,
-                              image: storyImage,
-                              row: row,
-                              isPreview: isPreview,
-                              meta: meta,
-                            }
-                            if (req.session.user && !isPreview) {
-                              return StoryActivity
-                              .findOrCreate({where: {
-                                memberId: req.session.user.id,
-                                storyId: row.id
-                              }})
-                              .spread((found, created) => {
-                                found.update({
-                                  views: found.views+1,
-                                  lastViewed: sequelize.fn('NOW')
-                                })
-                                .then(output => {
-                                  storyRenderData.storyActivity = output.dataValues;
-                                  storyRenderData.user = indexMoment.user = req.session.user;
-                                  jsonData.push(indexMoment);
-                                  storyRenderData.data = jsonData;
-                                  return res.render('full', storyRenderData);
-                                })
                               })
-                              .catch(error => res.renderError());
-                            }
-                            jsonData.push(indexMoment);
-                            storyRenderData.data = jsonData;
-                            return res.render('full', storyRenderData);
+                              if (wikipedia){
+                                jsonData.push({
+                                  "type": "wikipedia",
+                                  "wikipedia": wikipedia,
+                                  "tooltip": "Wikipedia Article",
+                                  "color": "#8182a0",
+                                });
+                              }
+                              let indexMoment = {
+                                "type": "index",
+                                "content": itemStatements,
+                                "tooltip": "Learn More",
+                                "color": "#ffb97d",
+                                "name": name,
+                                "row": row
+                              };
+
+                              let storyRenderData = {
+                                page: function(){ return 'story'},
+                                scripts: function(){ return 'story_scripts'},
+                                links: function(){ return 'story_links'},
+                                title: name +" - Story",
+                                nav: "Story",
+                                urlPath: getURLPath(req),
+                                name: name,
+                                qid: qid,
+                                image: storyImage,
+                                row: row,
+                                isPreview: isPreview,
+                                meta: meta,
+                              }
+                              if (req.session.user && !isPreview) {
+                                return StoryActivity
+                                .findOrCreate({where: {
+                                  memberId: req.session.user.id,
+                                  storyId: row.id
+                                }})
+                                .spread((found, created) => {
+                                  found.update({
+                                    views: found.views+1,
+                                    lastViewed: sequelize.fn('NOW')
+                                  })
+                                  .then(output => {
+                                    storyRenderData.storyActivity = output.dataValues;
+                                    storyRenderData.user = indexMoment.user = req.session.user;
+                                    jsonData.push(indexMoment);
+                                    storyRenderData.data = jsonData;
+                                    return res.render('full', storyRenderData);
+                                  })
+                                })
+                                .catch(error => res.renderError());
+                              }
+                              jsonData.push(indexMoment);
+                              storyRenderData.data = jsonData;
+                              return res.render('full', storyRenderData);
+                            })
                           })
                         })
                       })
@@ -565,6 +575,27 @@ OPTIONAL{
       }
     }
   },
+  processMembershipData(input){
+    for (let s=0; s < input.length; s++){
+      let tempEmpItem = _.checkMembershipStatement(input[s]);
+      if (tempEmpItem){
+        if (!employerOutput[tempEmpItem.qid]) employerOutput[tempEmpItem.qid] = {}
+        let tempList = employerOutput[tempEmpItem.qid]
+        let overwriteKeys = ['qid', 'title', 'description', 'image', 'logo',
+                             'website', 'location', 'acronym'];
+        safeOverwrite(tempList, tempEmpItem, overwriteKeys);
+        if (!tempList.quals && tempEmpItem.qual_value) tempList.quals = [{prop:tempEmpItem.qual_prop, value: tempEmpItem.qual_value}]
+        else if (tempEmpItem.qual_value && tempList.quals.map(e => e.prop.concat(e.value)).indexOf(tempEmpItem.qual_prop.concat(tempEmpItem.qual_value)) == -1){
+          tempList.quals.push({prop:tempEmpItem.qual_prop, value: tempEmpItem.qual_value})
+        }
+        // Take the smallest date to sort employers
+        if (!tempList.year && tempEmpItem.year) tempList.year = tempEmpItem.year;
+        else if (tempList.year && tempEmpItem.year){
+          tempList.year = Math.min(tempList.year, tempEmpItem.year)
+        }
+      }
+    }
+  },
   getWikidataManifestData(name, wdData, inverseData, callback){
     let output = [];
     let manifestFound = {};
@@ -652,6 +683,33 @@ OPTIONAL{
       // Create items array
       var employerArray = Object.keys(employerOutput).map(function(key) {
         return employerOutput[key];
+      });
+
+      // Sort the array based on the second element
+      employerArray.sort(function(second, first) {
+        if (!first.year) return 0
+        else if (!second.year) return 1
+        return second.year - first.year;
+      });
+      return callback(employerArray)
+    }
+    return callback(employerOutput)
+  },
+  getMembershipData(wdData, callback){
+    employerOutput = {}
+    _.processMembershipData(wdData)
+
+    // employerOutput = {'new': employerOutput, 'wd':wdData }
+    if (!Object.keys(employerOutput).length) employerOutput = false
+    else {
+      var employerArray = []
+      let BADGE_GRAPHIC_COUNT = 4;
+      var employerArray = Object.keys(employerOutput).map((key, index) => {
+        let i = employerOutput[key];
+        i.color_light = randomColor({luminosity: 'light'});
+        i.color_dark = randomColor({luminosity: 'dark', hue: i.color_light});
+        i.partial = "badge_" + (index % BADGE_GRAPHIC_COUNT);
+        return i;
       });
 
       // Sort the array based on the second element
@@ -999,6 +1057,66 @@ OPTIONAL{
         logo: false,
         qual_prop: false,
         qual_value: false,
+      }
+      if(statement.ps_Description && statement.ps_Description.value){
+        tempval.description = statement.ps_Description.value
+      }
+
+      if(statement.img && statement.img.value){
+        tempval.image = statement.img.value
+      }
+      else if (statement.locationImage && statement.locationImage.value){
+        tempval.image = statement.locationImage.value;
+      }
+      if(statement.objWebsite && statement.objWebsite.value){
+        tempval.website = statement.objWebsite.value
+      }
+      if(statement.logo && statement.logo.value){
+        tempval.logo = statement.logo.value
+      }
+      if (statement.objLocationEntityLabel){
+        tempval.location = statement.objLocationEntityLabel.value;
+      }
+      if (statement.wdpqLabel){
+        if (statement.pq_Label){
+          tempval.qual_prop = statement.wdpqLabel.value;
+          tempval.qual_value = statement.pq_Label.value;
+        } else if (statement.pq_) {
+          tempval.qual_label = statement.wdpqLabel.value;
+          tempval.qual_value = statement.pq_.value;
+        }
+      }
+      // Year
+      if (statement.wdpq
+        && ((statement.wdpq.value == "http://www.wikidata.org/entity/P580")
+          || (statement.wdpq.value == "http://www.wikidata.org/entity/P582")
+          || (statement.wdpq.value == "http://www.wikidata.org/entity/P585")))
+      {
+        tempval.year = parseInt(statement.pq_Label.value.substring(0,4), 10)
+      }
+
+      return tempval
+    }
+    else return false
+
+  },
+  checkMembershipStatement(statement){
+    if (statement.ps.value == "http://www.wikidata.org/prop/statement/P463" && statement.ps_ && statement.ps_Label && statement.ps_Label.value){
+      let title = statement.ps_Label.value;
+      var tempval = {
+        qid : statement.ps_.value,
+        title: title,
+        description: false,
+        location: false,
+        year: false,
+        image: false,
+        website: false,
+        logo: false,
+        qual_prop: false,
+        qual_value: false,
+        acronym: title.replace(' of ',' ').replace(' and ', ' ')
+                      .replace(' the ', ' ').replace(' for ', ' ')
+                      .match(/\b(\w)/g).join('')
       }
       if(statement.ps_Description && statement.ps_Description.value){
         tempval.description = statement.ps_Description.value

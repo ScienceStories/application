@@ -71,6 +71,9 @@ hbs.registerHelper('size', function(obj) {
 	}
 	return size;
 });
+hbs.registerHelper('no_op', obj => obj);
+hbs.registerHelper('trunc_string', (str, len) => str.substring(0, len));
+
 hbs.registerHelper( 'times', function( n, block ) {
     var accum = '',
         i = -1;
@@ -249,8 +252,7 @@ hbs.registerHelper('loadMoment', function(template, data, options) {
     return new hbs.SafeString(loadedPartial(data, options));
 });
 hbs.registerHelper('json', function(data) {
-
-    return JSON.stringify(data)
+  return JSON.stringify(data)
 });
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
