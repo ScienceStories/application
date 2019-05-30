@@ -147,7 +147,9 @@ const _ = module.exports = {
     return statements;
   },
   processStory(req, res, row) {
-    let jsonData = row.data
+    // TODO: Old empty records stored data as a {}, we need to migrate
+    // all story.data to array/list
+    let jsonData = (Array.isArray(row.data)) ? row.data : [];
     const qid = 'Q'+req.params.id;
     const sparql = `
     SELECT ?statement ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?objLocationEntityLabel ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel{
