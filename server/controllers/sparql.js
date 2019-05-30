@@ -73,7 +73,7 @@ const _ = module.exports = {
     `, callback);
   },
   getInverseClaims(qid, lang){
-    var query = `SELECT ?statement ?ps ?ps_Description ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?locationImage ?objDate ?objProp
+    var query = `SELECT ?statement ?ps ?ps_Description ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?objLocationEntityLabel ?locationImage ?objDate ?objProp
       ?objBirth ?objDeath ?objInstance ?objInstanceLabel ?manifest ?manifest_collectionLabel  ?personPropLabel ?person ?personLabel ?personDescription ?personBirth ?personDeath ?personImg ?doi ?handle ?full_work ?website{
       VALUES (?oldps_) {(wd:${qid})}
       ?ps_ ?p ?statement .

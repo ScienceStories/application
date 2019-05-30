@@ -1539,3 +1539,207 @@ div#membershipDetails {
   filter: drop-shadow(5px 10px 3px rgba(0, 0, 0, 0.4));
   opacity: 1;
 }
+/* named after slide */
+.page.page-named_after {
+    background: #a28799;
+}
+#namedAfterGallery {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  -ms-flex-wrap: wrap; /* IE10 */
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+#namedAfterGallery div.grid-item > a {
+  opacity: 0;
+  overflow: hidden;
+  position: relative;
+  color: #000;
+  background-color: #817f7fa1;
+  font: bold 2em "Helvetica";
+  padding: 5rem 2rem;
+  width: 100%;
+  height: 100%;
+  transition: all ease 1s;
+  text-shadow: 3px 2px 0px #ffc7ed9e;
+}
+#namedAfterGallery div.grid-item > img {
+  width: 100%;
+  min-height: 100%;
+  transition: all ease 1s;
+}
+#namedAfterGallery  div.grid-item:hover img {
+  filter: blur(4px);
+}
+#namedAfterGallery  div.grid-item:hover a {
+  opacity: 1;
+}
+#namedAfterGallery  div.grid-item {
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 3px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-top: 8px;
+  vertical-align: middle;
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+}
+/* Create four equal columns that sits next to each other */
+#namedAfterGallery .grid-column {
+  -ms-flex: 25%; /* IE10 */
+  flex: 25%;
+  max-width: 25%;
+  padding: 0 4px;
+}
+#namedAfterGallery .grid-column.grid-column-1 {
+    -ms-flex: 100%;
+    flex: 100%;
+    max-width: 100%;
+}
+#namedAfterGallery .grid-column.grid-column-2 {
+    -ms-flex: 50%;
+    flex: 50%;
+    max-width: 50%;
+}
+#namedAfterGallery .grid-column.grid-column-3 {
+    -ms-flex: 33%;
+    flex: 33%;
+    max-width: 33%;
+}
+
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media screen and (max-width: 800px) {
+  #namedAfterGallery .grid-column {
+    -ms-flex: 50%;
+    flex: 50%;
+    max-width: 50%;
+  }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  #namedAfterGallery .grid-column {
+    -ms-flex: 100%;
+    flex: 100%;
+    max-width: 100%;
+  }
+}
+#namedAfterGallery div.grid-item,
+#namedAfterGallery a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.page-named_after [id^="lightbox-"] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  opacity: 0;
+  transition: opacity 450ms ease-in-out;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.active .page-named_after [id^="lightbox-"].active {
+  opacity: 1;
+  pointer-events: inherit;
+}
+.active .page-named_after [id^="lightbox-"].active img {
+  filter: blur(0);
+}
+.page-named_after [id^="lightbox-"] .content {
+  width: 80%;
+  position: relative;
+  color: #fff;
+  margin-left: 100px;
+  max-height: 80%;
+  text-align: center;
+}
+.page-named_after [id^="lightbox-"] .content:hover > a.close {
+  opacity: 1;
+  transform: scale(1, 1);
+}
+.page-named_after [id^="lightbox-"] .content:hover > .title {
+  opacity: 1;
+  transform: translateY(-3px);
+}
+.page-named_after [id^="lightbox-"] .content:hover > .title::after {
+  opacity: 1;
+}
+.page-named_after [id^="lightbox-"] .content > * {
+  transition: all 450ms ease-in-out;
+}
+.page-named_after [id^="lightbox-"] .title {
+  display: block;
+  margin: 0;
+  padding: 1em;
+  position: absolute;
+  bottom: 25px;
+  left: 60px;
+  max-width: 80%;
+  transform: translateY(50%);
+  font-size: 1.5em;
+  opacity: 0;
+}
+.page-named_after [id^="lightbox-"] .title::after {
+  content: ' ';
+  background-color: rgba(0, 0, 0, 0.4);
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  transition: all 350ms ease-in-out 250ms;
+  opacity: 0;
+  transform-origin: bottom;
+  mix-blend-mode: soft-light;
+}
+.page-named_after [id^="lightbox-"] img {
+  height: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  filter: blur(50px);
+}
+.page-named_after [id^="lightbox-"] a.close {
+  width: 2em;
+  height: 2em;
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0, 0);
+  opacity: 0;
+  transform-origin: right top;
+  text-decoration: none;
+  color: #fff;
+}
+.page-named_after [id^="lightbox-"] a.close::after {
+  content: "X";
+}
+.named-after-lightbox p {
+  font-size: medium;
+  margin: 0;
+  color: #ffc7ed;
+}
+.named-after-lightbox h2 {
+  border-bottom: 1px solid;
+  padding: 10px;
+}
+.named-after-lightbox p b{
+  font-weight: 600;
+  font-size: x-small;
+  text-transform: uppercase;
+  color: white;
+}

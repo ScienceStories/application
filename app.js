@@ -254,6 +254,65 @@ hbs.registerHelper('loadMoment', function(template, data, options) {
 hbs.registerHelper('json', function(data) {
   return JSON.stringify(data)
 });
+hbs.registerHelper('grouped_each', function(every, context, options) {
+    var out = "", subcontext = [], i;
+    if (context && context.length > 0) {
+        for (i = 0; i < context.length; i++) {
+            if (i > 0 && i % every === 0) {
+                out += options.fn(subcontext);
+                subcontext = [];
+            }
+            subcontext.push(context[i]);
+        }
+        out += options.fn(subcontext);
+    }
+    return out;
+});
+hbs.registerHelper('chunk_each', function(every, context, options) {
+    var chunks = chunkify(context, every, true);
+    return chunks.reduce((out, chunk) => out + options.fn({chunks:chunk, count: chunks.length}), "");
+});
+function chunkify(a, n, balanced) {
+
+    if (n < 2)
+        return [a];
+
+    var len = a.length,
+            out = [],
+            i = 0,
+            size;
+
+    if (len % n === 0) {
+        size = Math.floor(len / n);
+        while (i < len) {
+            out.push(a.slice(i, i += size));
+        }
+    }
+
+    else if (balanced) {
+        while (i < len) {
+            size = Math.ceil((len - i) / n--);
+            out.push(a.slice(i, i += size));
+        }
+    }
+
+    else {
+
+        n--;
+        size = Math.floor(len / n);
+        if (len % size === 0)
+            size--;
+        while (i < size * n) {
+            out.push(a.slice(i, i += size));
+        }
+        out.push(a.slice(size * n));
+
+    }
+
+    return out;
+}
+
+
 // Parse incoming requests data (https://github.com/expressjs/body-parser)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));

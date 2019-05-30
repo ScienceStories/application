@@ -227,10 +227,11 @@ OPTIONAL{
               row: row,
               user: req.session.user
             }
+            // return res.send(inverseStatements)
             jsonData = jsonData.concat(wikidataManifestData);
             var isPreview = (req.url.indexOf('/preview') > -1);
             jsonData = new Slide(name, additional_data).getDynamicSlides(jsonData, itemStatements, inverseStatements);
-            // return res.send([storyImage, jsonData])
+            // return res.send(jsonData)
             let storyRenderData = {
               page: function(){ return 'story'},
               scripts: function(){ return 'story_scripts'},

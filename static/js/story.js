@@ -133,10 +133,6 @@ function showPage() {
       $(".post-loader").css('opacity', '').addClass('fade-in');
       lazyload(".index-preview");
       $('.people-list').draggable({axis: "x"});
-      $('.prev-header').click(function() {
-        $(this).next('iframe').slideToggle();
-        lazyload(".index-preview");
-      });
     });
 
   }, 200);

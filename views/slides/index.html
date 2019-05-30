@@ -10,24 +10,11 @@
         <div class="index-header">Helpful External Resources</div>
         <ul>
           {{#each content}}
-          {{#if this.url }}
             <li><span class="prop">{{this.wdLabel.value}}:</span>
               <a href="{{#if_equal this.ps_.type "uri"}}{{this.ps_.value}}{{else}}{{this.url.value}}{{/if_equal}}" target="_blank">{{this.ps_Label.value}}</a>
-
                 <div class="prop-desc">{{this.wdDescription.value}}</div>
-                <div class="prev-box">
-                  <div class="prev-header">
-                    Preview of <a href="{{#if_equal this.ps_.type "uri"}}{{this.ps_.value}}{{else}}{{this.url.value}}{{/if_equal}}" target="_blank">Webpage</a>
-                  </div>
-                  <iframe style="display: none;" class="index-preview"
-                    data-src="{{#if_equal this.ps_.type "uri"}}{{this.ps_.value}}{{else}}{{this.url.value}}{{/if_equal}}"
-                    width = "100%" height = "500px"></iframe>
-              </div>
             </li>
-            {{else}}
-            {{/if}}
           {{/each}}
-
         </ul>
       </div>
       <div id="rightIndex">

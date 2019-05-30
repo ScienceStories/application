@@ -1,5 +1,6 @@
 'use strict';
 const getValue = require('../utils').getValue;
+const getRandomInt = require('../utils').getRandomInt;
 const safeOverwrite = require('../utils').safeOverwrite;
 const randomColor = require('randomcolor');
 
@@ -25,7 +26,7 @@ class Slide {
     if (this.isValidStatement(statement)){
       let title = statement.ps_Label.value;
       let tempval = {
-        qid : statement.ps_.value,
+        qid : statement.ps_.value.replace("http://www.wikidata.org/entity/", ""),
         title: statement.ps_Label.value,
         description: getValue(statement.ps_Description),
         location: getValue(statement.objLocationEntityLabel),
@@ -81,9 +82,10 @@ class Slide {
   }
 
   getSubclasses() {
+    // NOTE: NamedAfterSlide MUST come before AwardSlide or css
     const subclasses = [CommonsCategorySlide, EducationSlide, EmployerSlide,
-      MembershipSlide, TimelineSlide, PeopleSlide, MapSlide, LibrarySlide,
-      AwardSlide, WikidataSlide, WikipediaSlide, IndexSlide];
+      MembershipSlide, TimelineSlide, PeopleSlide, MapSlide, NamedAfterSlide,
+      LibrarySlide, AwardSlide,  WikidataSlide, WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
   }
 
@@ -668,6 +670,41 @@ class EmployerSlide extends Slide {
     }
   }
 }
+
+class NamedAfterSlide extends InverseOnlySlide {
+  isValidStatement(statement){
+    return (getValue(statement.datatype) == "http://wikiba.se/ontology#WikibaseItem"
+     && getValue(statement.ps) == "http://www.wikidata.org/prop/statement/P138")
+  }
+
+  validateStatement(statement){
+    if (this.isValidStatement(statement)){
+      return {
+        qid: statement.ps_.value.replace("http://www.wikidata.org/entity/", ""),
+        title: getValue(statement.ps_Label),
+        description: getValue(statement.ps_Description),
+        website: getValue(statement.website),
+        location: getValue(statement.objLocationEntityLabel),
+        image: getValue(statement.img) || getValue(statement.locationImage)
+          || "/static/images/graphics/texture_"+getRandomInt(1,4)+".jpg"
+      };
+    }
+    return false;
+  }
+
+  storyContext(){
+    let data = this.process();
+    if (!data.length) return false;
+    return {
+      "type": "named_after",
+      "named_after": data,
+      "tooltip": "Named After " + this.name,
+      "color": "#4e0a37",
+      "name": this.name,
+    }
+  }
+}
+
 const award_props = [ "P166", "P825", "P967", "P1411", "P2121", "P4444", "P4622"]
 class AwardSlide extends Slide {
 

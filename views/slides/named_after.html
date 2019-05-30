@@ -1,0 +1,48 @@
+<div class="section pp-scrollable slide-timeline" id="section{{id}}">
+  <div class="content">
+    <div class="header">
+      <h1>Named After {{name}}</h1>
+      <p> {{size named_after}} Instance(s) Are Currently Recorded in Wikidata</p>
+    </div>
+
+    <div class="page page-timeline page-library page-named_after">
+      <div class="employer-card-container">
+        <div id="namedAfterGallery">
+          {{#chunk_each 4 named_after}}
+            <div class="grid-column grid-column-{{this.count}}">
+              {{#each this.chunks }}
+                <div class="grid-item" {{#if image}}style="background-image: url({{this.image}}){{/if}}">
+                  <a onclick="$('#lightbox-{{qid}}').addClass('active')">{{title}}</a>
+                </div>
+              {{/each}}
+            </div>
+          {{/chunk_each}}
+        </div>
+        {{#each named_after}}
+          <div class="lightbox named-after-lightbox" id="lightbox-{{this.qid}}">
+            <div class="content">
+              {{#if this.image}}<img src="{{this.image}}"/>{{/if}}
+              <div class="title">
+                <h2>{{this.title}}</h2>
+                <p>
+                  {{#if this.description}}
+                    {{this.description}}<br>
+                  {{/if}}
+                  {{#if this.location}}
+                    <b>Location:</b> {{this.location}} <br>
+                  {{/if}}
+                  {{#if this.website}}
+                    <b>Website:</b> {{this.website}}<br>
+                  {{/if}}
+                  <b>Reference:</b> Wikidata ({{this.qid}})
+                </p>
+              </div>
+              <a class="close"
+                 onclick="$('.named-after-lightbox').removeClass('active')"></a>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</div>

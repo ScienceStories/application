@@ -10,6 +10,11 @@ module.exports = {
       }
     }
   },
+  getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+  },
   getValue(obj){
     if (obj && obj.value) return obj.value;
     else return null;
@@ -18,7 +23,7 @@ module.exports = {
     try {
       return JSON.parse(fs.readFileSync(path));
     }
-    catch (err) { 
+    catch (err) {
       return null;
     }
   }
