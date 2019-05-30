@@ -9,6 +9,7 @@ const commentController = require('./comment');
 const wikicommonsController = require('./wikicommons');
 const StoryActivity = require('../models').storyactivity;
 const sequelize = require('../models').sequelize;
+const Slide = require('./slide').Slide;
 const moment = require('moment');
 const randomColor = require('randomcolor');
 const iconMap = JSONFile("server/controllers/iconMap.json");
@@ -200,6 +201,7 @@ OPTIONAL{
     appFetch(url).then(itemStatements => {
       itemStatements = _.simplifySparqlFetch(itemStatements)
       itemStatements = _.filterProperties(itemStatements)
+      let storyImage = _.getMainStoryImage(row.data, itemStatements);
       var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
       appFetch(inverseUrl).then(inverseClaimsOutput => {
         inverseStatements = _.simplifySparqlFetch(inverseClaimsOutput);
@@ -213,174 +215,57 @@ OPTIONAL{
           if (labels.entities[qid].sitelinks.enwiki){
             wikipedia = labels.entities[qid].sitelinks.enwiki.title;
           }
-          return _.getMainStoryImage(row.data, itemStatements, (storyImage) => {
-            return _.getPeopleData(name, itemStatements, inverseStatements, (peopleData) => {
-              return _.getEducationData(itemStatements, (educationData) => {
-                return _.getEmployerData(itemStatements, (employerData) => {
-                  return _.getMembershipData(itemStatements, (membershipData) => {
-                    return _.getAwardData(name, itemStatements, (awardData) => {
-                      return _.getLibraryData(name, inverseStatements, (libraryData) => {
-                        return _.getMapData(name, itemStatements, inverseStatements, (mapData) => {
-                          return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
-                            let ss_string = (row.createdAt) ? row.createdAt.toISOString() : null;
-                            let timelineData =  _.getTimelineData(name, itemStatements, inverseStatements, wikidata_date, wikipedia_date, ss_string);
-                            return _.getWikidataManifestData(name, itemStatements, inverseStatements, (wikidataManifestData) => {
-                              jsonData = jsonData.concat(wikidataManifestData);
-                              let commonsCategory = _.getCommonsCategory(req, qid, itemStatements);
-                              var isPreview = (req.url.indexOf('/preview') > -1);
-                              if (commonsCategory){
-                                jsonData.push({
-                                  "type": "wikicat",
-                                  "title": "Media Gallery",
-                                  "category": commonsCategory,
-                                  "tooltip": "Wikimedia Gallery",
-                                  "color": "#530244",
-                                });
-                              }
-                              if (educationData){
-                                jsonData.push({
-                                  "type": "education",
-                                  "education": educationData,
-                                  "tooltip": "Education of " + name,
-                                  "color": "#337399",
-                                  "name": name
-                                });
-                              }
-                              if (employerData){
-                                jsonData.push({
-                                  "type": "employer",
-                                  "employer": employerData,
-                                  "tooltip": "Where " + name + " Worked",
-                                  "color": "#91ac99",
-                                  "name": name,
-                                });
-                              }
-                              if (membershipData){
-                                jsonData.push({
-                                  "type": "membership",
-                                  "membership": membershipData,
-                                  "tooltip": "Organizations",
-                                  "color": "#de8389",
-                                  "name": name,
-                                });
-                              }
-                              // return res.send(membershipData)
-                              if (timelineData){
-                                jsonData.push({
-                                  "type": "timeline",
-                                  "timeline": timelineData,
-                                  "tooltip": "Timeline",
-                                  "color": "#1dc7ce",
-                                  "name": name,
-                                });
-                              }
-                              if (peopleData){
-                                jsonData.push({
-                                  "type": "people",
-                                  "people": peopleData,
-                                  "tooltip": "People Relevant to " + name,
-                                  "color": "#8d6fe6",
-                                  "name": name,
-                                });
-                              }
-                              if (mapData){
-                                jsonData.push({
-                                  "type": "map",
-                                  "map": mapData,
-                                  "tooltip": "Significant Places",
-                                  "color": "rgb(29, 206, 173)",
-                                  "name": name,
-                                });
-                              }
-                              if (libraryData){
-                                jsonData.push({
-                                  "type": "library",
-                                  "library": libraryData,
-                                  "tooltip": "Library of " + name,
-                                  "color": "#dc8453",
-                                  "name": name,
-                                });
-                              }
-                              if (awardData){
-                                jsonData.push({
-                                  "type": "award",
-                                  "award": awardData,
-                                  "tooltip": "Award Room",
-                                  "color": "#4c4c4c",
-                                  "name": name,
-                                });
-                              }
-                              jsonData.push({
-                                "type": "wikidata",
-                                "qid": qid,
-                                "tooltip": "Wikidata Statements",
-                                "color": "#ff8394",
-                                "name": name,
-                              })
-                              if (wikipedia){
-                                jsonData.push({
-                                  "type": "wikipedia",
-                                  "wikipedia": wikipedia,
-                                  "tooltip": "Wikipedia Article",
-                                  "color": "#8182a0",
-                                });
-                              }
-                              let indexMoment = {
-                                "type": "index",
-                                "content": itemStatements,
-                                "tooltip": "Learn More",
-                                "color": "#ffb97d",
-                                "name": name,
-                                "row": row
-                              };
-
-                              let storyRenderData = {
-                                page: function(){ return 'story'},
-                                scripts: function(){ return 'story_scripts'},
-                                links: function(){ return 'story_links'},
-                                title: name +" - Story",
-                                nav: "Story",
-                                urlPath: getURLPath(req),
-                                name: name,
-                                qid: qid,
-                                image: storyImage,
-                                row: row,
-                                isPreview: isPreview,
-                                meta: meta,
-                              }
-                              if (req.session.user && !isPreview) {
-                                return StoryActivity
-                                .findOrCreate({where: {
-                                  memberId: req.session.user.id,
-                                  storyId: row.id
-                                }})
-                                .spread((found, created) => {
-                                  found.update({
-                                    views: found.views+1,
-                                    lastViewed: sequelize.fn('NOW')
-                                  })
-                                  .then(output => {
-                                    storyRenderData.storyActivity = output.dataValues;
-                                    storyRenderData.user = indexMoment.user = req.session.user;
-                                    jsonData.push(indexMoment);
-                                    storyRenderData.data = jsonData;
-                                    return res.render('full', storyRenderData);
-                                  })
-                                })
-                                .catch(error => res.renderError());
-                              }
-                              jsonData.push(indexMoment);
-                              storyRenderData.data = jsonData;
-                              return res.render('full', storyRenderData);
-                            })
-                          })
-                        })
-                      })
-                    })
-                  })
+          let wikidataManifestData = _.getWikidataManifestData(name, itemStatements, inverseStatements);
+          return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
+            let additional_data = {
+              qid: qid,
+              wikipedia_url: wikipedia,
+              wikidata_date: wikidata_date,
+              wikipedia_date: wikipedia_date,
+              science_stories_date: (row.createdAt) ? row.createdAt.toISOString() : null,
+              commons_category: _.getCommonsCategory(req, qid, itemStatements),
+              row: row,
+              user: req.session.user
+            }
+            jsonData = jsonData.concat(wikidataManifestData);
+            var isPreview = (req.url.indexOf('/preview') > -1);
+            jsonData = new Slide(name, additional_data).getDynamicSlides(jsonData, itemStatements, inverseStatements);
+            // return res.send([storyImage, jsonData])
+            let storyRenderData = {
+              page: function(){ return 'story'},
+              scripts: function(){ return 'story_scripts'},
+              links: function(){ return 'story_links'},
+              title: name +" - Story",
+              nav: "Story",
+              urlPath: getURLPath(req),
+              name: name,
+              qid: qid,
+              image: storyImage,
+              row: row,
+              isPreview: isPreview,
+              meta: meta,
+              user: req.session.user,
+              data: jsonData,
+            }
+            if (req.session.user && !isPreview) {
+              return StoryActivity
+              .findOrCreate({where: {
+                memberId: req.session.user.id,
+                storyId: row.id
+              }})
+              .spread((found, created) => {
+                found.update({
+                  views: found.views+1,
+                  lastViewed: sequelize.fn('NOW')
+                })
+                .then(output => {
+                  storyRenderData.storyActivity = output.dataValues;
+                  return res.render('full', storyRenderData);
                 })
               })
-            })
+              .catch(error => res.renderError());
+            }
+            return res.render('full', storyRenderData);
           })
         })
       })
@@ -399,13 +284,13 @@ OPTIONAL{
     return false;
   },
   getMainStoryImage(storyData, wikidata, callback){
-    for (var i = 0; i < storyData.length; i++) {
+    for (let i = 0; i < storyData.length; i++) {
       if (storyData[i].image){
-        return callback(storyData[i].image)
+        return storyData[i].image;
       }
     }
     let img_val = _.getStatementValueByProp(wikidata, 'P18');
-    return (img_val) ? callback(img_val) : callback('http://sciencestories.io/static/images/branding/logo_black.png');
+    return (img_val) ? img_val : 'http://sciencestories.io/static/images/branding/logo_black.png';
   },
   getCommonsCategory(req, qid, statements){
     let category = _.getStatementValueByProp(statements, 'P373');
@@ -492,111 +377,8 @@ OPTIONAL{
       })
 
   },
-  processMapData(input, inverse=false){
-    for (var s=0; s < input.length; s++){
-    var tempMapitem = _.checkMapStatement(name, input[s], inverse)
-    if (tempMapitem){
-      if(mapOutput[tempMapitem.coordinates]) {
-        var tempList = mapOutput[tempMapitem.coordinates]
-        var foundmap = false
-        for (var i = 0; i < mapOutput[tempMapitem.coordinates].length; i++) {
 
-          if (mapOutput[tempMapitem.coordinates][i].title == tempMapitem.title) {
-            foundmap = true
-            i = mapOutput[tempMapitem.coordinates].length
-          }
-        }
-        if (!foundmap) mapOutput[tempMapitem.coordinates].push(tempMapitem)
-      }
-      else mapOutput[tempMapitem.coordinates] = [ tempMapitem ]
-    }}
-  },
-  processPeopleData(input, inverse=false){
-    for (var s=0; s < input.length; s++){
-      var tempPeopleItem = _.checkPeopleStatement(name, input[s], inverse)
-      if (tempPeopleItem){
-        let tempList = peopleOutput[tempPeopleItem.qid];
-        if (!tempList) tempList = {'properties':{}};
-        let overwriteKeys = ['qid', 'title', 'description', 'image', 'years'];
-        safeOverwrite(tempList, tempPeopleItem, overwriteKeys);
-        if (!tempList.relation && tempPeopleItem.relation) tempList.relation = [tempPeopleItem.relation]
-        else if (tempList.relation && tempPeopleItem.relation && !tempList.properties[tempPeopleItem.pid]
-          && tempList.relation.indexOf(tempPeopleItem.relation) == -1){
-          tempList.relation.push(tempPeopleItem.relation)
-        }
-        if (!tempList.qualifier && tempPeopleItem.qualifier) tempList.qualifier = [tempPeopleItem.qualifier]
-        else if (tempList.qualifier && tempPeopleItem.qualifier && tempList.qualifier.indexOf(tempPeopleItem.qualifier) == -1){
-          tempList.qualifier.push(tempPeopleItem.qualifier)
-        }
-        tempList.properties[tempPeopleItem.pid] = true;
-        peopleOutput[tempPeopleItem.qid] = tempList;
-      }
-    }
-  },
-  processEducationData(input){
-    for (var s=0; s < input.length; s++){
-      var tempEduItem = _.checkEducationStatement(input[s])
-      if (tempEduItem){
-        if (!educationOutput[tempEduItem.qid]) educationOutput[tempEduItem.qid] = {}
-        var tempList = educationOutput[tempEduItem.qid]
-        let overwriteKeys = ['qid', 'title', 'description', 'image', 'logo',
-                             'website'];
-        safeOverwrite(tempList, tempEduItem, overwriteKeys);
-        if (!tempList.degree && tempEduItem.degree) tempList.degree = [tempEduItem.degree]
-        else if (tempList.degree && tempEduItem.degree && tempList.degree.indexOf(tempEduItem.degree) == -1){
-          tempList.degree.push(tempEduItem.degree)
-        }
-        if (!tempList.year && tempEduItem.year) tempList.year = [tempEduItem.year]
-        else if (tempList.year && tempEduItem.year && tempList.year.indexOf(tempEduItem.year) == -1){
-          tempList.year.push(tempEduItem.year)
-          tempList.year.sort()
-        }
-      }
-    }
-  },
-  processEmployerData(input){
-    for (let s=0; s < input.length; s++){
-      let tempEmpItem = _.checkEmployerStatement(input[s]);
-      if (tempEmpItem){
-        if (!employerOutput[tempEmpItem.qid]) employerOutput[tempEmpItem.qid] = {}
-        let tempList = employerOutput[tempEmpItem.qid]
-        let overwriteKeys = ['qid', 'title', 'description', 'image', 'logo',
-                             'website', 'location'];
-        safeOverwrite(tempList, tempEmpItem, overwriteKeys);
-        if (!tempList.quals && tempEmpItem.qual_value) tempList.quals = [{prop:tempEmpItem.qual_prop, value: tempEmpItem.qual_value}]
-        else if (tempEmpItem.qual_value && tempList.quals.map(e => e.prop.concat(e.value)).indexOf(tempEmpItem.qual_prop.concat(tempEmpItem.qual_value)) == -1){
-          tempList.quals.push({prop:tempEmpItem.qual_prop, value: tempEmpItem.qual_value})
-        }
-        // Take the smallest date to sort employers
-        if (!tempList.year && tempEmpItem.year) tempList.year = tempEmpItem.year;
-        else if (tempList.year && tempEmpItem.year){
-          tempList.year = Math.min(tempList.year, tempEmpItem.year)
-        }
-      }
-    }
-  },
-  processMembershipData(input){
-    for (let s=0; s < input.length; s++){
-      let tempEmpItem = _.checkMembershipStatement(input[s]);
-      if (tempEmpItem){
-        if (!employerOutput[tempEmpItem.qid]) employerOutput[tempEmpItem.qid] = {}
-        let tempList = employerOutput[tempEmpItem.qid]
-        let overwriteKeys = ['qid', 'title', 'description', 'image', 'logo',
-                             'website', 'location', 'acronym'];
-        safeOverwrite(tempList, tempEmpItem, overwriteKeys);
-        if (!tempList.quals && tempEmpItem.qual_value) tempList.quals = [{prop:tempEmpItem.qual_prop, value: tempEmpItem.qual_value}]
-        else if (tempEmpItem.qual_value && tempList.quals.map(e => e.prop.concat(e.value)).indexOf(tempEmpItem.qual_prop.concat(tempEmpItem.qual_value)) == -1){
-          tempList.quals.push({prop:tempEmpItem.qual_prop, value: tempEmpItem.qual_value})
-        }
-        // Take the smallest date to sort employers
-        if (!tempList.year && tempEmpItem.year) tempList.year = tempEmpItem.year;
-        else if (tempList.year && tempEmpItem.year){
-          tempList.year = Math.min(tempList.year, tempEmpItem.year)
-        }
-      }
-    }
-  },
-  getWikidataManifestData(name, wdData, inverseData, callback){
+  getWikidataManifestData(name, wdData, inverseData){
     let output = [];
     let manifestFound = {};
     for (var i = 0; i < inverseData.length; i++) {
@@ -633,163 +415,7 @@ OPTIONAL{
         output.push(manifest);
       }
     }
-    return callback(output);
-  },
-  getMapData(name, wdData, inverseData, callback){
-    mapOutput = {}
-    _.processMapData(wdData)
-    _.processMapData(inverseData, true)
-    if (!Object.keys(mapOutput).length) mapOutput = false
-    return callback(mapOutput)
-  },
-  getPeopleData(name, wdData, inverseData, callback){
-    peopleOutput = {}
-    _.processPeopleData(wdData)
-    _.processPeopleData(inverseData, true)
-    if (!Object.keys(peopleOutput).length) peopleOutput = false
-    return callback(peopleOutput)
-  },
-  getEducationData(wdData, callback){
-    educationOutput = {}
-    _.processEducationData(wdData)
-
-    // educationOutput = {'new': educationOutput, 'wd':wdData }
-    if (!Object.keys(educationOutput).length) educationOutput = false
-    else {
-      var educationArray = []
-      // Create items array
-      var educationArray = Object.keys(educationOutput).map(function(key) {
-        return educationOutput[key];
-      });
-
-      // Sort the array based on the second element
-      educationArray.sort(function(second, first) {
-        if (!first.year) return 0
-        else if (!second.year) return 1
-        return second.year[0] - first.year[0];
-      });
-      return callback(educationArray)
-    }
-    return callback(educationOutput)
-  },
-  getEmployerData(wdData, callback){
-    employerOutput = {}
-    _.processEmployerData(wdData)
-
-    // employerOutput = {'new': employerOutput, 'wd':wdData }
-    if (!Object.keys(employerOutput).length) employerOutput = false
-    else {
-      var employerArray = []
-      // Create items array
-      var employerArray = Object.keys(employerOutput).map(function(key) {
-        return employerOutput[key];
-      });
-
-      // Sort the array based on the second element
-      employerArray.sort(function(second, first) {
-        if (!first.year) return 0
-        else if (!second.year) return 1
-        return second.year - first.year;
-      });
-      return callback(employerArray)
-    }
-    return callback(employerOutput)
-  },
-  getMembershipData(wdData, callback){
-    employerOutput = {}
-    _.processMembershipData(wdData)
-
-    // employerOutput = {'new': employerOutput, 'wd':wdData }
-    if (!Object.keys(employerOutput).length) employerOutput = false
-    else {
-      var employerArray = []
-      let BADGE_GRAPHIC_COUNT = 4;
-      var employerArray = Object.keys(employerOutput).map((key, index) => {
-        let i = employerOutput[key];
-        i.color_light = randomColor({luminosity: 'light'});
-        i.color_dark = randomColor({luminosity: 'dark', hue: i.color_light});
-        i.partial = "badge_" + (index % BADGE_GRAPHIC_COUNT);
-        return i;
-      });
-
-      // Sort the array based on the second element
-      employerArray.sort(function(second, first) {
-        if (!first.year) return 0
-        else if (!second.year) return 1
-        return second.year - first.year;
-      });
-      return callback(employerArray)
-    }
-    return callback(employerOutput)
-  },
-  processTimelineData(timelineMap, timelineOutput, input, inverse=false){
-    for (var s=0; s < input.length; s++){
-      let item = _.checkTimelineStatement(name, input[s], inverse);
-      if (!item) continue;
-      let uuid = String(item.title) + String(item.date);
-      if (!timelineMap[uuid]){
-        timelineOutput.push(item);
-        timelineMap[uuid] = true;
-      }
-    }
-  },
-  processLibraryData(input){
-    let libraryOutput =  {'book': [], 'article': [], 'other': []};
-    for (var s=0; s < input.length; s++){
-      var tempTLitem = _.checkLibraryStatement(name, input[s])
-      if (tempTLitem){
-        var foundLib = false
-        for (var i = 0; i < libraryOutput[tempTLitem.type].length && !foundLib; i++) {
-          var checkOutput = libraryOutput[tempTLitem.type][i]
-          if (tempTLitem.qid == checkOutput.qid){
-            foundLib = true
-            // take lowest date
-            if (tempTLitem.date < checkOutput.date) checkOutput.date = tempTLitem.date
-            // loop through contribution
-            if (!checkOutput.contribution.includes(tempTLitem.contribution[0])){
-              // console.log('added contrib to ', tempTLitem.qid)
-              checkOutput.contribution.push(tempTLitem.contribution[0])
-            }
-            // loop through instance
-            if (!checkOutput.instance.includes(tempTLitem.instance[0])){
-              // console.log('added contrib to ', tempTLitem.qid)
-              checkOutput.instance.push(tempTLitem.instance[0])
-            }
-          }
-        }
-        if (!foundLib) libraryOutput[tempTLitem.type].push(tempTLitem)
-      }
-    }
-    return libraryOutput;
-  },
-  processAwardData(input){
-    for (var s=0; s < input.length; s++){
-      var tempTLitem = _.checkAwardStatement(name, input[s])
-      if (tempTLitem){
-        var foundLib = false
-        for (var i = 0; i < awardOutput.length && !foundLib; i++) {
-          var checkOutput = awardOutput[i]
-          if (tempTLitem.id == checkOutput.id ){
-            foundLib = true
-            // loop through conferred
-            if (tempTLitem.conferred.length && !checkOutput.conferred.includes(tempTLitem.conferred[0])){
-              checkOutput.conferred.push(tempTLitem.conferred[0])
-            }
-            // Check Date
-            if (!checkOutput.date) checkOutput.date = tempTLitem.date;
-            // Change type if the current is otherContent
-            if (tempTLitem.type != checkOutput.type && checkOutput.type == 'other' ){
-              checkOutput.type = tempTLitem.type
-            }
-          }
-        }
-        if (!foundLib) {
-          tempTLitem.color_light = randomColor({luminosity: 'light'})
-          tempTLitem.color_dark = randomColor({luminosity: 'dark', hue: tempTLitem.color_light})
-          awardOutput.push(tempTLitem)
-        }
-      }
-    }
+    return output;
   },
   getWikiCreationDates(qid, wikipedia_name, callback){
     let url_params = '?action=query&prop=revisions&rvlimit=1&rvprop=timestamp&rvdir=newer&format=json&titles='
@@ -811,564 +437,4 @@ OPTIONAL{
       return null;
     }
   },
-  getTimelineData(name, wdData, inverseData, wikidata_date, wikipedia_date, ss_date){
-    let timelineOutput = [];
-    let timelineMap = {};
-    if (wikidata_date){
-      timelineOutput.push({
-          date: wikidata_date,
-          title: name + " Gets Added To Wikidata",
-          image: "https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg"
-      })
-    }
-    if (wikipedia_date){
-      timelineOutput.push({
-          date: wikipedia_date,
-          title: name + " Gets Added To English Wikipedia",
-          image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg"
-      })
-    }
-    if (ss_date){
-      timelineOutput.push({
-          date: ss_date,
-          title: name + " Gets a Science Story",
-          image: "/static/images/branding/logo_black.png"
-      })
-    }
-    _.processTimelineData(timelineMap, timelineOutput, wdData);
-    _.processTimelineData(timelineMap, timelineOutput, inverseData, true);
-    return timelineOutput;
-  },
-  getLibraryData(name, inverseData, callback){
-    let libraryOutput = _.processLibraryData(inverseData);
-    for (let val in libraryOutput) {
-      if (libraryOutput[val].length) return callback(libraryOutput);
-    }
-    return callback(false)
-  },
-  getAwardData(name, wdData, callback){
-    awardOutput = []
-    _.processAwardData(wdData)
-    // awardOutput = {'new': awardOutput, 'wd':wdData }
-
-    return callback(awardOutput)
-  },
-
-  wdCoordinatesToArray(point){
-    // Example: Point(-77.070795 38.876806)"
-    var temp =  JSON.parse( point.substr(point.indexOf('Point'), point.length).substr(5).replace(' ', ',').replace(/\(/g, "[").replace(/\)/g, "]"));
-    return [temp[1], temp[0]]
-  },
-  getYears(birthVal, deathVal){
-    if(birthVal){
-      let year_string = parseInt(birthVal.substring(0,4), 10) + '-';
-      if(deathVal) year_string += parseInt(deathVal.substring(0,4), 10);
-      return year_string;
-    }
-    return null;
-  },
-  checkPeopleStatement(name, statement, inverse = false){
-    if (statement.person){
-      let tempval = {
-        qid: getValue(statement.person),
-        pid: getValue(statement.ps),
-        title: getValue(statement.personLabel),
-        description: getValue(statement.personDescription),
-        relation: false,
-        image: getValue(statement.personImg),
-        qualifier: false,
-        years: _.getYears(
-                  getValue(statement.personBirth),
-                  getValue(statement.personDeath)),
-        inverse: inverse
-      }
-      let person_prop = getValue(statement.personPropLabel);
-      let relation_prop = getValue(statement.ps);
-      if (relation_prop == "http://www.wikidata.org/prop/statement/P50"){
-        let person_prop = getValue(statement.personPropLabel);
-        if (person_prop == 'author'){
-          tempval.relation = "Co-Author";
-        }
-      }
-      else if (relation_prop == "http://www.wikidata.org/prop/statement/P1029"){
-        if (person_prop == 'crew member'){
-          tempval.relation = "Crew Member";
-          if (inverse && statement.ps_Label){
-            tempval.relation += " ("+getValue(statement.ps_Label)+")";
-          }
-        }
-      }
-      else if (relation_prop == "http://www.wikidata.org/prop/statement/P112"){
-        if (person_prop == 'founded by'){
-          tempval.relation = `${tempval.title} co-founded "${getValue(statement.ps_Label)}" with ${name}`;
-        }
-        else {
-          tempval.relation = `${name} founded "${getValue(statement.ps_Label)}" \n ${person_prop}: ${tempval.title}`;
-        }
-      }
-      return tempval;
-    }
-    if (getValue(statement.objInstance) == "http://www.wikidata.org/entity/Q5"){
-      var tempval = {
-        qid: statement.ps_.value,
-        pid: statement.ps.value,
-        title: statement.ps_Label.value,
-        description: false,
-        relation: false,
-        image: false,
-        qualifier: false,
-        years: _.getYears(
-                  getValue(statement.objBirth),
-                  getValue(statement.objDeath)),
-        inverse: inverse
-      }
-      if(statement.img && statement.img.value){
-        tempval.image = statement.img.value
-      }
-      if (statement.ps_Label && statement.ps_Label.value) {
-        if (inverse) tempval.relation = statement.wdLabel.value + ": "+name
-        else tempval.relation = statement.wdLabel.value
-      }
-      if(statement.ps_Description && statement.ps_Description.value){
-        tempval.description = statement.ps_Description.value
-      }
-      if (statement.wdpqLabel && statement.pq_Label){
-        if (inverse) tempval.qualifier = statement.wdpqLabel.value + " (for "+tempval.title+"): " + statement.pq_Label.value
-        else tempval.qualifier = statement.wdpqLabel.value + ': ' + statement.pq_Label.value
-      }
-      return tempval;
-    }
-    return false;
-  },
-  checkMapStatement(name, statement, inverse = false){
-    var tempval = {
-      qid : false,
-      pid : statement.ps.value,
-      title: false,
-      image: false,
-      locationImage: false,
-      coordinates: false,
-      location: false,
-    }
-    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
-      tempval.qid = statement.ps_.value
-    }
-    if(statement.img && statement.img.value){
-      tempval.image = statement.img.value
-    }
-    if(statement.locationImage && statement.locationImage.value){
-      tempval.locationImage = statement.locationImage.value
-    }
-    if (statement.locationLabel && statement.locationLabel.value) {
-      tempval.location = statement.locationLabel.value
-    }
-    if (statement.ps_Label && statement.ps_Label.value) {
-      tempval.location = statement.ps_Label.value
-    }
-
-    if (statement.location){
-      // Check if birth place
-      if (statement.ps.value == "http://www.wikidata.org/prop/statement/P19"){
-        tempval.title = name+" was born"
-        if (statement.ps_Label.value) {
-          tempval.title += " in " +statement.ps_Label.value
-        }
-        tempval.coordinates = _.wdCoordinatesToArray(statement.location.value)
-        return tempval
-      }
-      // Check if death place
-      if (statement.ps.value == "http://www.wikidata.org/prop/statement/P20"){
-        tempval.title = name+" died"
-        if (statement.ps_Label.value) {
-          tempval.title += " in " +statement.ps_Label.value
-        }
-        tempval.coordinates = _.wdCoordinatesToArray(statement.location.value)
-        return tempval
-      }
-      else{
-        tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
-        if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
-        tempval.coordinates = _.wdCoordinatesToArray(statement.location.value)
-        return tempval
-      }
-    }
-    else if (statement.objLocation){
-      tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
-      if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
-      tempval.coordinates = _.wdCoordinatesToArray(statement.objLocation.value)
-      return tempval
-    }
-    return false
-  },
-  checkEducationStatement(statement){
-    if (statement.ps.value == "http://www.wikidata.org/prop/statement/P69" && statement.ps_ && statement.ps_Label && statement.ps_Label.value){
-      var tempval = {
-        qid : statement.ps_.value,
-        title: statement.ps_Label.value,
-        description: false,
-        degree: false,
-        year: false,
-        image: false,
-        website: false,
-        logo: false,
-      }
-      if(statement.ps_Description && statement.ps_Description.value){
-        tempval.description = statement.ps_Description.value
-      }
-
-      if(statement.img && statement.img.value){
-        tempval.image = statement.img.value
-      }
-      if(statement.objWebsite && statement.objWebsite.value){
-        tempval.website = statement.objWebsite.value
-      }
-      if(statement.logo && statement.logo.value){
-        tempval.logo = statement.logo.value
-      }
-      // Degree
-      if (statement.wdpq && statement.wdpq.value == "http://www.wikidata.org/entity/P512")
-      {
-        tempval.degree = statement.pq_Label.value
-      }
-      // Year
-      if (statement.wdpq
-        && ((statement.wdpq.value == "http://www.wikidata.org/entity/P580")
-          || (statement.wdpq.value == "http://www.wikidata.org/entity/P582")
-          || (statement.wdpq.value == "http://www.wikidata.org/entity/P585")))
-      {
-        tempval.year = parseInt(statement.pq_Label.value.substring(0,4), 10)
-      }
-
-      return tempval
-    }
-    else return false
-
-  },
-  checkEmployerStatement(statement){
-    if (statement.ps.value == "http://www.wikidata.org/prop/statement/P108" && statement.ps_ && statement.ps_Label && statement.ps_Label.value){
-      var tempval = {
-        qid : statement.ps_.value,
-        title: statement.ps_Label.value,
-        description: false,
-        location: false,
-        year: false,
-        image: false,
-        website: false,
-        logo: false,
-        qual_prop: false,
-        qual_value: false,
-      }
-      if(statement.ps_Description && statement.ps_Description.value){
-        tempval.description = statement.ps_Description.value
-      }
-
-      if(statement.img && statement.img.value){
-        tempval.image = statement.img.value
-      }
-      else if (statement.locationImage && statement.locationImage.value){
-        tempval.image = statement.locationImage.value;
-      }
-      if(statement.objWebsite && statement.objWebsite.value){
-        tempval.website = statement.objWebsite.value
-      }
-      if(statement.logo && statement.logo.value){
-        tempval.logo = statement.logo.value
-      }
-      if (statement.objLocationEntityLabel){
-        tempval.location = statement.objLocationEntityLabel.value;
-      }
-      if (statement.wdpqLabel){
-        if (statement.pq_Label){
-          tempval.qual_prop = statement.wdpqLabel.value;
-          tempval.qual_value = statement.pq_Label.value;
-        } else if (statement.pq_) {
-          tempval.qual_label = statement.wdpqLabel.value;
-          tempval.qual_value = statement.pq_.value;
-        }
-      }
-      // Year
-      if (statement.wdpq
-        && ((statement.wdpq.value == "http://www.wikidata.org/entity/P580")
-          || (statement.wdpq.value == "http://www.wikidata.org/entity/P582")
-          || (statement.wdpq.value == "http://www.wikidata.org/entity/P585")))
-      {
-        tempval.year = parseInt(statement.pq_Label.value.substring(0,4), 10)
-      }
-
-      return tempval
-    }
-    else return false
-
-  },
-  checkMembershipStatement(statement){
-    if (statement.ps.value == "http://www.wikidata.org/prop/statement/P463" && statement.ps_ && statement.ps_Label && statement.ps_Label.value){
-      let title = statement.ps_Label.value;
-      var tempval = {
-        qid : statement.ps_.value,
-        title: title,
-        description: false,
-        location: false,
-        year: false,
-        image: false,
-        website: false,
-        logo: false,
-        qual_prop: false,
-        qual_value: false,
-        acronym: title.replace(' of ',' ').replace(' and ', ' ')
-                      .replace(' the ', ' ').replace(' for ', ' ')
-                      .match(/\b(\w)/g).join('')
-      }
-      if(statement.ps_Description && statement.ps_Description.value){
-        tempval.description = statement.ps_Description.value
-      }
-
-      if(statement.img && statement.img.value){
-        tempval.image = statement.img.value
-      }
-      else if (statement.locationImage && statement.locationImage.value){
-        tempval.image = statement.locationImage.value;
-      }
-      if(statement.objWebsite && statement.objWebsite.value){
-        tempval.website = statement.objWebsite.value
-      }
-      if(statement.logo && statement.logo.value){
-        tempval.logo = statement.logo.value
-      }
-      if (statement.objLocationEntityLabel){
-        tempval.location = statement.objLocationEntityLabel.value;
-      }
-      if (statement.wdpqLabel){
-        if (statement.pq_Label){
-          tempval.qual_prop = statement.wdpqLabel.value;
-          tempval.qual_value = statement.pq_Label.value;
-        } else if (statement.pq_) {
-          tempval.qual_label = statement.wdpqLabel.value;
-          tempval.qual_value = statement.pq_.value;
-        }
-      }
-      // Year
-      if (statement.wdpq
-        && ((statement.wdpq.value == "http://www.wikidata.org/entity/P580")
-          || (statement.wdpq.value == "http://www.wikidata.org/entity/P582")
-          || (statement.wdpq.value == "http://www.wikidata.org/entity/P585")))
-      {
-        tempval.year = parseInt(statement.pq_Label.value.substring(0,4), 10)
-      }
-
-      return tempval
-    }
-    else return false
-
-  },
-  checkTimelineStatement(name, statement, inverse=false){
-
-    // Skip Author Statements (Data is recoreded in the library)
-    if (getValue(statement.wdLabel) == "author"){
-      return false;
-    }
-    var tempval = {
-      qid : false,
-      pid : statement.ps.value,
-      date: false,
-      title: false,
-      image: getValue(statement.img)
-    }
-    let statement_prop = getValue(statement.ps);
-    let statement_val = getValue(statement.ps_);
-    let statement_type = getValue(statement.datatype);
-    let qual_prop = getValue(statement.wdpq);
-
-    if (statement_type == "http://wikiba.se/ontology#WikibaseItem"){
-      tempval.qid = statement_val;
-    }
-    // Check if birth date
-    if (statement_prop == "http://www.wikidata.org/prop/statement/P569"){
-      tempval.title = name+" is Born"
-      tempval.date = statement_val;
-      return tempval
-    }
-    // Check if death date
-    else if (statement_prop == "http://www.wikidata.org/prop/statement/P570"){
-      tempval.title = name+" Passes"
-      tempval.date = statement_val;
-      return tempval
-    }
-    // Start Time
-    else if (qual_prop == "http://www.wikidata.org/entity/P580"){
-      tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Begins"
-      if (inverse) tempval.title = statement.ps_Label.value + "- Begins ("+ statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.pq_Label.value;
-      return tempval
-    }
-    // End Time
-    else if (qual_prop ==  "http://www.wikidata.org/entity/P582"){
-      tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Ends"
-      if (inverse) tempval.title = statement.ps_Label.value + "- Ends ("+ statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.pq_Label.value;
-      return tempval
-    }
-    // Check if point in time
-    else if (qual_prop == "http://www.wikidata.org/entity/P585"){
-      tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
-      if (inverse) tempval.title = statement.ps_Label.value + " ("+ statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.pq_Label.value
-      return tempval;
-    }
-    // If datetime value of statement
-    else if (statement_type == "http://wikiba.se/ontology#Time"
-      || statement.ps_.datatype ==  "http://www.w3.org/2001/XMLSchema#dateTime"){
-      tempval.title = statement.wdLabel.value;
-      if (inverse) tempval.title = statement.ps_Label.value + " ("+ statement.wdLabel.value + ": "+name+")";
-      tempval.date = statement.ps_Label.value;
-      return tempval;
-    }
-    // If datetime value of statement
-    else if (statement.objDate){
-      tempval.title = statement.wdLabel.value;
-      if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
-      tempval.date = statement.objDate.value;
-      return tempval;
-    }
-    return false;
-  },
-  checkLibraryStatement(name, statement){
-    var tempval = {
-      qid : false,
-      pid : statement.ps.value,
-      contribution: [],
-      date: false,
-      title: false,
-      type: 'other',
-      instance: [],
-      url: false,
-    }
-    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
-      tempval.qid = statement.ps_.value;
-      tempval.url = tempval.qid;
-    }
-    if (statement.objDate){
-      tempval.date =  parseInt(statement.objDate.value.substring(0,4), 10)
-    }
-    if (statement.objInstanceLabel){
-      tempval.instance = [statement.objInstanceLabel.value]
-    }
-    if (statement.website) {
-      tempval.url = statement.website.value;
-    }
-    if (statement.full_work) {
-      tempval.url = statement.full_work.value;
-    }
-    if (statement.handle) {
-      tempval.url = 'http://hdl.handle.net/'+statement.handle.value;
-    }
-    if (statement.doi) {
-      tempval.url = 'https://doi.org/'+statement.doi.value;
-    }
-    if (statement.wdLabel){
-      tempval.contribution = [statement.wdLabel.value]
-    }
-    if (statement.ps_Label){
-      tempval.title = statement.ps_Label.value
-    }
-
-    if (statement.objInstance){
-      // Check if Scholarly article, conference paper, article
-      if ((statement.objInstance.value == "http://www.wikidata.org/entity/Q13442814")
-      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q23927052")
-      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q191067")){
-        tempval.type = 'article'
-        return tempval
-      }
-      // Check if book, novel, textbook
-      else if ((statement.objInstance.value == "http://www.wikidata.org/entity/Q571")
-      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q8261")
-      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q83790")){
-      tempval.type = 'book'
-      return tempval
-      }
-      // Check if property is "author","editor", "illustrator", "designed by", "developer", "copyright owner", "founder", "creator", "attributed to", "inventor"
-      else if ((tempval.pid == "http://www.wikidata.org/prop/statement/P50")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P98")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P110")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P287")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P178")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P3931")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P112")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P170")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P1773")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P61")
-      ){
-        tempval.type = 'other'
-        return tempval
-      }
-    }
-    return false
-  },
-  checkAwardStatement(name, statement){
-    var tempval = {
-      id: getValue(statement.statement),
-      qid : false,
-      pid : statement.ps.value,
-      conferred: [],
-      date: false,
-      title: false,
-      type: 'other',
-      description: false,
-      instance: false,
-      action: false
-    }
-    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
-      tempval.qid = statement.ps_.value
-    }
-    if (statement.objInstanceLabel){
-      tempval.instance = statement.objInstanceLabel.value
-    }
-    let qual_prop = getValue(statement.wdpq);
-    // Check if point in time
-    if (qual_prop == "http://www.wikidata.org/entity/P585"){
-      tempval.date =  parseInt(statement.pq_Label.value.substring(0,4), 10)
-    }
-    if (statement.ps_Label){
-      tempval.title = statement.ps_Label.value.toLowerCase()
-    }
-    if (statement.conferredLabel){
-      tempval.conferred = [statement.conferredLabel.value]
-    }
-    if (qual_prop == "http://www.wikidata.org/entity/P1027"){
-      tempval.conferred.push(getValue(statement.pq_Label))
-    }
-    if (statement.ps_Description){
-      tempval.description = statement.ps_Description.value
-    }
-    //If a property related to winning an award
-    if (wikidataMap.properties.awards.includes(tempval.pid.substr(39))){
-      tempval.action = statement.wdLabel.value
-      if (!statement.objInstance) statement.objInstance = {value: false}
-      // Check if medal
-      if ( (tempval.title.includes('medal')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q131647"){
-        tempval.type = 'medal'
-      }
-      // Check if Certificate
-      else if ((tempval.title.includes('certificate')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q196756"){
-        tempval.type = 'certificate'
-      }
-      // Check if Trophy
-      else if ((tempval.title.includes('trophy')) ||statement.objInstance.value == "http://www.wikidata.org/entity/Q381165"){
-        tempval.type = 'trophy'
-      }
-      else if ((tempval.title.includes('hall of fame')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q1046088"){
-        tempval.type = 'hall'
-      }
-      else if (((tempval.title.includes('honor') || tempval.title.includes('honour'))&& tempval.title.includes('docto'))
-      || statement.objInstance.value == "http://www.wikidata.org/entity/Q11415564"){
-        tempval.type = 'edu'
-      }
-      // Check if award
-      else if ((tempval.title.includes('award')) || statement.objInstance.value == "http://www.wikidata.org/entity/Q618779"){
-        tempval.type = 'award'
-      }
-      return tempval
-    }
-    return false
-  }
 };

@@ -43,15 +43,15 @@
   {{/ifUserType}}
   <!-- slide types:
 
-    * 1. Intro (background pic + name and 1-line description)
-    ! 2. Universal viewer (pdf, video) [Can't do until Mirador updates OpenSeaDragon]
-    # 3. Mirador
-    # 4. youtube
-      5. Side-By-Side
-    * 6. Timeline
-    * 7. Wikipedia
-    * 8. Wikidata
-      9. Conclusion (Wikidata, all other resources)
+    *  1. Intro (background pic + name and 1-line description)
+    !  2. Universal viewer (pdf, video) [Can't do until Mirador updates OpenSeaDragon]
+    #  3. Mirador
+    #  4. Youtube
+       5. PDF
+    *  6. Timeline
+    *  7. Wikipedia
+    *  8. Wikidata
+       9. Index (Wikidata, all other resources)
       10. Map
       11. Library
       12. award
@@ -137,7 +137,6 @@
     {{#each data}}
       {{loadMoment this.type this}}
     {{/each}}
-    {{> index }}
 
   </div>
   <!-- Go to www.addthis.com/dashboard to customize your tools -->

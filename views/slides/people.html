@@ -12,8 +12,8 @@
               <span>{{this.title}}</span>
               {{#if this.image}}<span class="person-image"><img src="{{this.image}}" alt="image of {{this.title}}"></span>{{/if}}
             </div>
-            {{#if this.years}}
-              <button>{{this.years}}</button>
+            {{#if this.date_range}}
+              <button>{{this.date_range}}</button>
             {{/if}}
             <span class="price">
               {{#each this.relation}}

@@ -2,7 +2,8 @@
   <div class="content">
     <div class="header"  style="color:{{contrastColor color true}};">
       <h1>Learn More About {{name}} </h1>
-      <p>Browse through resource links, contribution/attributions, and forum comments to find other places on the web that describe {{name}}</p>
+      <p>Browse through resource links, contribution/attributions, and forum
+        comments to find other places on the web that describe {{name}}</p>
     </div>
     <div class="page page-index">
       <div id="leftIndex">
@@ -18,7 +19,9 @@
                   <div class="prev-header">
                     Preview of <a href="{{#if_equal this.ps_.type "uri"}}{{this.ps_.value}}{{else}}{{this.url.value}}{{/if_equal}}" target="_blank">Webpage</a>
                   </div>
-                  <iframe class="index-preview" data-src="{{#if_equal this.ps_.type "uri"}}{{this.ps_.value}}{{else}}{{this.url.value}}{{/if_equal}}" width = "100%" height = "500px"></iframe>
+                  <iframe style="display: none;" class="index-preview"
+                    data-src="{{#if_equal this.ps_.type "uri"}}{{this.ps_.value}}{{else}}{{this.url.value}}{{/if_equal}}"
+                    width = "100%" height = "500px"></iframe>
               </div>
             </li>
             {{else}}
@@ -42,49 +45,11 @@
             </div>
           </a>
           {{/each}}
-
         </div>
-        <a href="/donate" style="
-    color: orange;
-    text-shadow: 0 0 7px black;
-"><i class="fas fa-seedling"></i> Help Us Tell More Stories</a>
+        <a href="/donate" style="color: orange;text-shadow: 0 0 7px black;"><i class="fas fa-seedling"></i> Help Us Tell More Stories</a>
         <div class="index-header">Discussion</div>
         <div class="comments-list">
-          <!-- {{#each comments}}
-            <div class="comment-container depth{{this.depth}}" data-id={{this.id}} data-order={{this.order}} data-parent={{this.parentId}}>
-              <a class="comment-avatar">
-                <div class="comment-image-container">
-                  <img src="{{this.image}}">
-                </div>
-
-              </a>
-              <div class="comment-content" >
-                <a class="comment-name">{{this.name}}</a>
-                <div class="comment-metadata">
-                  <span class="comment-date">{{dateFormat this.createdAt 'calendar' false}}</span>
-                </div>
-                <div class="comment-message">
-                  {{this.message}}
-                </div>
-                <div class="actions">
-                  <a class="reply" onclick="replyToggle(this)">Reply</a>
-                </div>
-                <div class="reply-container" style="display:none">
-                  <a class="comment-avatar">
-                    <div class="comment-image-container">
-                      <img src="{{#if ../user.image}}{{../user.image}}{{else}}https://upload.wikimedia.org/wikipedia/commons/a/ad/Placeholder_no_text.svg{{/if}}">
-                    </div>
-                  </a>
-                  <textarea onkeyup="textAreaAdjust(this)" style="overflow:hidden" class="reply-input parent{{#if_equal depth 1}}{{this.id}}{{else}}{{this.parentId}}{{/if_equal}}" name="" placeholder="Leave a comment..." id="" rows="1"></textarea>
-                  <button class="send-reply" data-parent='{{#if_equal depth 1}}{{this.id}}{{else}}{{this.parentId}}{{/if_equal}}' onclick="sendComment(this)">Send</button>
-                </div>
-              </div>
-            </div>
-
-          {{/each}} -->
-
-
-</div>
+        </div>
       {{#ifUserType user.type 'user'}}
         <div class="reply-container">
           <a class="comment-avatar">
@@ -109,11 +74,5 @@
       </div>
     </div>
   </div>
-
-
-
-
-
-
   <!-- end of slide -->
 </div>

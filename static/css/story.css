@@ -740,6 +740,7 @@ div#pp-nav {
   width: calc(100% - 100px);
   margin: 50px;
   margin-top: 10px;
+  cursor: pointer;
 }
 .prev-header {
     background: #ffe3cb;

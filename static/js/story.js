@@ -125,17 +125,18 @@ function reloadComments(story_id){
 
 $(document).ready(function(){
   showPage();
-
-
 });
 
 function showPage() {
   setTimeout(function () {
     $(".loader-container").fadeOut('slow', 'swing', function(){
       $(".post-loader").css('opacity', '').addClass('fade-in');
-      $('.slide-index').scroll(function(){lazyload(".index-preview")});
       lazyload(".index-preview");
       $('.people-list').draggable({axis: "x"});
+      $('.prev-header').click(function() {
+        $(this).next('iframe').slideToggle();
+        lazyload(".index-preview");
+      });
     });
 
   }, 200);
