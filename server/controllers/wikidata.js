@@ -138,76 +138,19 @@ const _ = module.exports = {
       return callback(false);
     })
   },
-  filterProperties(statements){
-    for (var i=0; i < statements.length; i++){
-      if (statements[i].ps.value == "http://www.wikidata.org/prop/statement/P1889"){
-        statements.splice(i, 1);
-      }
-    }
-    return statements;
-  },
   processStory(req, res, row) {
     // TODO: Old empty records stored data as a {}, we need to migrate
     // all story.data to array/list
+    let isPreview = (req.url.indexOf('/preview') > -1);
     let jsonData = (Array.isArray(row.data)) ? row.data : [];
     const qid = 'Q'+req.params.id;
-    const sparql = `
-    SELECT ?statement ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?objLocationEntityLabel ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel{
-    VALUES (?company) {(wd:${qid})}
-    ?company ?p ?statement .
-    ?statement ?ps ?ps_ .
-    ?wd wikibase:claim ?p.
-    ?wd wikibase:statementProperty ?ps.
-    ?wd wikibase:propertyType  ?datatype.
-    OPTIONAL {
-    ?statement ?pq ?pq_ .
-    ?wdpq wikibase:qualifier ?pq .
-    }
-OPTIONAL{
-   ?ps_ wdt:P31 ?objInstance .
- }
-    OPTIONAL {
-      ?wd wdt:P1630 ?url  .
-      }
-  OPTIONAL {
-  ?ps_ wdt:P856 ?objWebsite .
-  }
-      OPTIONAL{
- ?ps_ wdt:P18 ?img .
- }
-      OPTIONAL{
- ?ps_ wdt:P154 ?logo .
- }
-        OPTIONAL{
- ?ps_ wdt:P569 ?objBirth .
- }
-  OPTIONAL{
- ?ps_ wdt:P570 ?objDeath .
- }
- OPTIONAL{
-   ?ps_ wdt:P276|wdt:P159 ?objLocationEntity .
-   ?objLocationEntity wdt:P625 ?objLocation.
-   OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
- }
- OPTIONAL{
-   ?ps_ wdt:P1027 ?conferred.
-   }
- OPTIONAL{
- ?ps_ wdt:P625 ?location .
- }
-    SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
-  } ORDER BY ?wd ?statement ?ps_
-
-    `
-    const url = wdk.sparqlQuery(sparql);
+    const url = sparqlController.getStoryClaims(qid);
     appFetch(url).then(itemStatements => {
       itemStatements = _.simplifySparqlFetch(itemStatements)
-      itemStatements = _.filterProperties(itemStatements)
       let storyImage = _.getMainStoryImage(row.data, itemStatements);
       var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
       appFetch(inverseUrl).then(inverseClaimsOutput => {
         inverseStatements = _.simplifySparqlFetch(inverseClaimsOutput);
-        inverseStatements = _.filterProperties(inverseStatements);
         let labelURL = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`
         appFetch(labelURL).then(labels => {
           name = labels.entities[qid].labels.en.value;
@@ -229,11 +172,9 @@ OPTIONAL{
               row: row,
               user: req.session.user
             }
-            // return res.send(inverseStatements)
             jsonData = jsonData.concat(wikidataManifestData);
-            var isPreview = (req.url.indexOf('/preview') > -1);
-            jsonData = new Slide(name, additional_data).getDynamicSlides(jsonData, itemStatements, inverseStatements);
-            // return res.send(jsonData)
+            jsonData = new Slide(name, additional_data)
+              .getDynamicSlides(jsonData, itemStatements, inverseStatements);
             let storyRenderData = {
               page: function(){ return 'story'},
               scripts: function(){ return 'story_scripts'},
