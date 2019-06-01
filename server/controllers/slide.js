@@ -789,9 +789,8 @@ class MembershipSlide extends Slide {
   validateStatement(statement){
     let validatedStatement = super.validateStatement(statement);
     if (validatedStatement){
-      validatedStatement.acronym = validatedStatement.title.replace(' of ',' ')
-        .replace(' and ', ' ').replace(' the ', ' ').replace(' for ', ' ')
-        .match(/\b(\w)/g).join('')
+      validatedStatement.acronym = validatedStatement.title.match(/\b([A-Z])/g)
+                                     .join('')
     }
     return validatedStatement;
   }
