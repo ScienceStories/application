@@ -10,9 +10,9 @@
         <div class="index-header">Helpful External Resources</div>
         <ul>
           {{#each content}}
-            <li><span class="prop">{{this.wdLabel.value}}:</span>
-              <a href="{{#if_equal this.ps_.type "uri"}}{{this.ps_.value}}{{else}}{{this.url.value}}{{/if_equal}}" target="_blank">{{this.ps_Label.value}}</a>
-                <div class="prop-desc">{{this.wdDescription.value}}</div>
+            <li><span class="prop">{{this.prop}}:</span>
+              <a href="{{this.url}}" target="_blank">{{this.value}}</a>
+                <div class="prop-desc">{{this.description}}</div>
             </li>
           {{/each}}
         </ul>

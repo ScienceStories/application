@@ -73,7 +73,11 @@ const _ = module.exports = {
   },
   getStoryClaims(qid, lang){
     const query = `
-    SELECT ?statement ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location ?objLocation ?objLocationEntityLabel ?locationImage ?objInstance ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel{
+    SELECT ?statement ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label
+    ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location
+    ?objLocation ?objLocationEntityLabel ?locationImage ?objInstance
+    ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel
+    (STRAFTER(STR(?refProp), 'reference/') as ?ref_prop) ?ref_val{
     VALUES (?company) {(wd:${qid})}
     ?company ?p ?statement .
     ?statement ?ps ?ps_ .
@@ -84,6 +88,10 @@ const _ = module.exports = {
     OPTIONAL {
     ?statement ?pq ?pq_ .
     ?wdpq wikibase:qualifier ?pq .
+    }
+    OPTIONAL {
+     ?statement prov:wasDerivedFrom ?ref .
+      ?ref ?refProp ?ref_val.
     }
 OPTIONAL{
    ?ps_ wdt:P31 ?objInstance .

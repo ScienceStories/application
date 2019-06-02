@@ -168,7 +168,23 @@ class IndexSlide extends Slide {
   setStatement(input){
     let url_val = getValue(input.url);
     if (url_val){
-      this._data[url_val] = input;
+      this._data[url_val] = {
+        prop: getValue(input.wdLabel),
+        url: (input.ps_.type == 'url') ? getValue(input.ps_) : url_val,
+        value: getValue(input.ps_Label),
+        description: getValue(input.wdDescription)
+      };
+    }
+    if (getValue(input.ref_prop) == 'P854') {
+      let ref_url = getValue(input.ref_val);
+      if (!this._data[ref_url]) {
+        this._data[ref_url] = {
+          prop: 'Reference Link',
+          url: ref_url,
+          value: ref_url,
+          description: "This source was used to derive statements made in Wikidata that describe " + this.name
+        }
+      }
     }
     return this._data;
   }
