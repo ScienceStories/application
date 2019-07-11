@@ -199,17 +199,27 @@
     <img src="/static/images/screenshots/youtube.png" alt="">
   </div>
   <div class="spacer"></div>
-    <div class="feature-icon">
-      <i class="fas fa-user-graduate faa-float animated"></i>
-    </div>
-    <h2 class="section-header">Reseach Re-imagined</h2>
-    <p class="section-subheader">Science Stories offers a new approach for discovering resources in print and on the web. Because we use content collections from leading institutions and museums along with data sources from accessible re-usable data stores, we are able to provide researchers with embeded external webpages, scanned books and manuscripts, and even Wikipedia articles. </p>
+  <div class="feature-icon">
+    <i class="fas fa-user-graduate faa-float animated"></i>
+  </div>
+  <h2 class="section-header">Reseach Re-imagined</h2>
+  <p class="section-subheader">Science Stories offers a new approach for discovering resources in print and on the web. Because we use content collections from leading institutions and museums along with data sources from accessible re-usable data stores, we are able to provide researchers with embeded external webpages, scanned books and manuscripts, and even Wikipedia articles. </p>
 
   <div class="research-images bottom">
     <img src="/static/images/screenshots/book.png" alt="">
     <img src="/static/images/screenshots/wikipedia.png" alt="">
     <img src="/static/images/screenshots/external.png" alt="">
   </div>
+</section>
+
+<section class="home-section" id="faq">
+  <h2 class="section-header">Frequently Asked Questions</h2>
+  {{#each faq}}
+    <p class="section-subheader">
+      <strong>{{question}}</strong><br>
+      {{answer}}
+    </p>
+  {{/each}}
 </section>
 {{> footer}}
 <script>

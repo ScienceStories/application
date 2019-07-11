@@ -7,7 +7,11 @@ const appFetch =  require('../../app').appFetch;
 const sparqlController = require('./sparql');
 const wikidataController = require('./wikidata');
 const sequelize = require('../models').sequelize;
-const featuredStories =  JSON.parse(fs.readFileSync("server/controllers/featuredStories.json"));
+const JSONFile = require('../utils').JSONFile;
+const faq =  JSONFile("server/constants/faq.json");
+const featuredStories =  JSONFile("server/controllers/featuredStories.json");
+
+
 const _ = module.exports = {
   create(req, res) {
     qid = 'Q' + req.body.qid
@@ -50,7 +54,8 @@ const _ = module.exports = {
           story_count: count,
           meta: {description: "Science Stories brings scientific work into social spaces where users discover information about underrepresented scientists — creating starting points for further exploration. For institutions with cultural heritage resources in libraries, archives, museums and galleries that are not yet available on the web, we provide a web application that leverages Wikidata, IIIF, and semantic web technologies to demonstrate a vision of what getting scientific work products into social spaces can do."},
           featured_stories: _.getFeaturedList(),
-          birthdays: birthdays
+          birthdays: birthdays,
+          faq: faq
         }
         return res.renderFullPage('home', pageData);
       });
