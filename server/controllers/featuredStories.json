@@ -1,50 +1,42 @@
 [
   {
-    "name": "Mahaletchumy Arujunan",
-    "qid": "Q23542654",
-    "date_range": "1969-",
-    "occupation": "Biochemist and Microbiologist",
-    "description": "Malaysian-Indian Biologist currently serving as the executive director of the Malaysian Biotechnology Information Centre, the founding editor-in-chief of the first Malaysian science newspaper, and social advocate for gender equity in STEM research and education",
-    "image": "https://ci5.googleusercontent.com/proxy/dKTfZ-uLRce7qh2LT_M_dR4eKFrOqJjtvQRCt65Ga-WcfexW-qOZpl5n1rswR8h_almS2sVwRCdW5inSV6MDR9vjZxgKf48ytylax4AVOQN6sQ8Kkrpc2IMmJApZ7Q=s0-d-e1-ft#http://images.says.com/uploads/story_source/source_image/417330/f62d.jpg"
+    "name": "Katharine Jeannette Bush",
+    "qid": "Q6376201",
+    "date_range": "1855-1937",
+    "occupation": "Zoologist & Researcher",
+    "description": "One of the First women to receive a Ph.D. in the sciences at Yale University",
+    "image": "http://peabody.yale.edu/sites/default/files/images/archives/Bush_KJ.jpg"
   },
   {
-    "name": "Chien-Shiung Wu",
-    "qid": "Q450317",
-    "date_range": "1912-1997",
-    "occupation": "Nuclear Physics.",
-    "description": "Chinese-American experimental physicist who made significant contributions in the field of nuclear physics. Known as 'the First Lady of Physics' and 'Queen of Nuclear Research', and won the National Medal of Science in 1975",
-    "image": "https://upload.wikimedia.org/wikipedia/commons/e/e6/Chien-Shiung_Wu_%281912-1997%29_in_1958.jpg"
+    "name": "Grace Hopper",
+    "qid": "Q11641",
+    "date_range": "1906-1992",
+    "occupation": "Computer Scientist & U.S. Navy Rear Admiral",
+    "description": "Early leader of computer programming and inventor of foundational compiler tools that have shaped the future of modern computing",
+    "image": "https://stories.vassar.edu/2017/assets/images/170706-legacy-of-grace-hopper-hopper-militarypportrait.jpeg"
   },
   {
-    "name": "Kalpana Chawla",
-    "qid": "Q237879",
-    "date_range": "1962-2003",
-    "occupation": "NASA Astronaut and Engineer",
-    "description": "The first woman of Indian descent to go to space. Member of the Columbia Space Shuttle crew STS-107. Posthumously awarded the Congressional Space Medal of Honor",
-    "image": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Kalpana_Chawla%2C_NASA_photo_portrait_in_orange_suit.jpg"
+    "name": "Dorrit Hoffleit",
+    "qid": "Q451538",
+    "date_range": "1907-2007",
+    "occupation": "Research Astronomer",
+    "description": "Inventor of the Bright Star Catalog",
+    "image": "http://www.encyclopediaofalabama.org/images/m-6968.jpg"
   },
   {
-    "name": "Tomoko Ohta",
-    "qid": "Q275103",
-    "date_range": "1933-",
-    "occupation": "Molecular Biologist and Geneticist",
-    "description": "Japanese Biologist working on population genetics and molecular evolution. Her work has awarded her the Crafoord Prize (2015) and an induction into the National Academy of Sciences",
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Tomoko_Harada_cropped_1_Tomoko_Harada_201611.png/1024px-Tomoko_Harada_cropped_1_Tomoko_Harada_201611.png"
+    "name": "Maxine Singer",
+    "qid": "Q7309",
+    "date_range": "1931-",
+    "occupation": "Molecular Biologist",
+    "description": "Contributor to research on solving the genetic code in DNA",
+    "image": "https://profiles.nlm.nih.gov/ps/access/DJBBLB.jpg"
   },
   {
-    "name": "Deborah S. Jin",
-    "qid": "Q1181574",
-    "date_range": "1968-2016",
-    "occupation": "Physicist and Professor",
-    "description": "Considered an innovator in polar molecular quantum chemistry and fellow of the National Institute of Standards and Technology",
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Deborah_Jin_%288116054200%29.jpg/1920px-Deborah_Jin_%288116054200%29.jpg"
-  },
-  {
-    "name": "Roseli Ocampo-Friedman",
-    "qid": "Q13562573",
-    "date_range": "1937-2005",
-    "occupation": "Microbiologist and Botanist",
-    "description": "Filipino-American specialized in the study of cyanobacteria and extremophiles. Her work has been cited in work exploring the terraforming of Mars",
-    "image": "https://alchetron.com/cdn/roseli-ocampo-friedmann-601f8388-d390-49b9-8178-d6cb41b766a-resize-750.jpeg"
+    "name": "Dorothy Horstmann",
+    "qid": "Q5298518",
+    "date_range": "1911-2001",
+    "occupation": "Epidemiologist, Virologist and Pediatrician",
+    "description": "First woman appointed as a professor at the Yale School of Medicine",
+    "image": "http://www.polioplace.org/sites/default/files/person/horstmann-yale.jpg"
   }
 ]
