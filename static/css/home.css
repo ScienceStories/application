@@ -230,3 +230,13 @@ span.odometer-value {
   overflow-y: scroll;
   margin: 100px 100px 100px 50px;
 }
+section#faq {
+    padding: 100px 10%;
+    text-align: left !important;
+}
+
+section#faq p {
+    padding-top: 20px;
+    padding-bottom: 50px;
+    text-align: left;
+}
