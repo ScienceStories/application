@@ -1198,7 +1198,7 @@ margin-bottom: 60px;
 
 .employer-card-container .card-info h1 {
   font-family: "Playfair Display";
-  font-size: 34px;
+  font-size: 30px;
   hyphens: auto;
   word-break: break-word;
   font-weight: 700;
@@ -1283,6 +1283,9 @@ margin-bottom: 60px;
 }
 .employer-card-container .wrapper .inside .contents p {
   font-size: 13px;
+}
+.employer-card-container .employer-card-logo-caption {
+    font-size: 16px;
 }
 /* award slide  */
 div#pagepiling .page.page-award {
