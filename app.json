@@ -12,6 +12,30 @@
   ],
   "description": "Science Stories Application",
   "env": {
+    "AWS_ACCESS_KEY_ID": {
+      "required": true
+    },
+    "AWS_SECRET_ACCESS_KEY": {
+      "required": true
+    },
+    "DATABASE_URL": {
+      "required": true
+    },
+    "GOOGLE_API_KEY": {
+      "required": true
+    },
+    "GOOGLE_CLIENT_EMAIL": {
+      "required": true
+    },
+    "GOOGLE_PRIVATE_KEY": {
+      "required": true
+    },
+    "GOOGLE_VIEW_ID": {
+      "required": true
+    },
+    "PYPATH": {
+      "required": true
+    },
   },
   "formation": {
   },

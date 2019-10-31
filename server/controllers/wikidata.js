@@ -19,11 +19,26 @@ const wikidataMap = JSONFile("server/controllers/wikidataMap.json");
 
 const _ = module.exports = {
   bibliography(req, res) {
+<<<<<<< HEAD
     return storiesAPI.get('bibliography', data => {
       const works = data.map(work => {
         work.icon = iterMap(work.instances, BIBLIOGRAPHY_INSTANCE_TO_ICON_MAP)
         return work;
       });
+=======
+    return sparqlController.getBibliography('en', output => {
+      let works = {};
+      for(i=0; i < output.length; i++){
+        let record = output[i];
+        let qid = record.item.value;
+        if (!works[qid]){
+          works[qid] = record;
+        }
+        else if(works[qid] && works[qid].author && works[qid].author.indexOf(record.author) == -1 ) {
+          works[qid].author += ' | ' + record.author;
+        }
+      }
+>>>>>>> origin/ss-2.0
       let pageData = {title:'Bibliography', works: works};
       return res.renderPage('base', 'bibliography', pageData);
     });
