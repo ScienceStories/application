@@ -1,0 +1,22 @@
+{
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "description": "Science Stories Application",
+  "env": {
+  },
+  "formation": {
+  },
+  "name": "application",
+  "scripts": {
+  },
+  "stack": "heroku-18"
+}
