@@ -26,7 +26,7 @@ const _ = module.exports = {
         if (!works[qid]){
           works[qid] = record;
         }
-        else if(works[qid] && works[qid].author.indexOf(record.author) == -1 ) {
+        else if(works[qid] && works[qid].author && works[qid].author.indexOf(record.author) == -1 ) {
           works[qid].author += ' | ' + record.author;
         }
       }
