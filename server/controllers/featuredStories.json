@@ -24,19 +24,19 @@
     "image": "http://www.encyclopediaofalabama.org/images/m-6968.jpg"
   },
   {
-    "name": "Maxine Singer",
-    "qid": "Q7309",
-    "date_range": "1931-",
-    "occupation": "Molecular Biologist",
-    "description": "Contributor to research on solving the genetic code in DNA",
-    "image": "https://profiles.nlm.nih.gov/ps/access/DJBBLB.jpg"
-  },
-  {
     "name": "Dorothy Horstmann",
     "qid": "Q5298518",
     "date_range": "1911-2001",
     "occupation": "Epidemiologist, Virologist and Pediatrician",
     "description": "First woman appointed as a professor at the Yale School of Medicine",
     "image": "http://www.polioplace.org/sites/default/files/person/horstmann-yale.jpg"
+  },
+  {
+    "name": "Maxine Singer",
+    "qid": "Q7309",
+    "date_range": "1931-",
+    "occupation": "Molecular Biologist",
+    "description": "Contributor to research on solving the genetic code in DNA",
+    "image": "https://web.archive.org/web/20190829003824if_/https://profiles.nlm.nih.gov/ps/access/DJBBLB.jpg"
   }
 ]
