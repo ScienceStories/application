@@ -1,9 +1,9 @@
 const wdk = require('wikidata-sdk');
 const getURLPath = require('../../app').getURLPath;
 const appFetch = require('../../app').appFetch;
-const safeOverwrite = require('../utils').safeOverwrite;
-const JSONFile = require('../utils').JSONFile;
-const getValue = require('../utils').getValue;
+const { BIBLIOGRAPHY_INSTANCE_TO_ICON_MAP } = require('../constants');
+const storiesAPI = require('../stories_api');
+const { getValue, iterMap, JSONFile, safeOverwrite } = require('../utils');
 const sparqlController = require('./sparql');
 const commentController = require('./comment');
 const wikicommonsController = require('./wikicommons');
@@ -16,20 +16,14 @@ const iconMap = JSONFile("server/controllers/iconMap.json");
 const itemTypeMap = JSONFile("server/controllers/itemTypeMap.json");
 const wikidataMap = JSONFile("server/controllers/wikidataMap.json");
 
+
 const _ = module.exports = {
   bibliography(req, res) {
-    return sparqlController.getBibliography('en', output => {
-      let works = {};
-      for(i=0; i < output.length; i++){
-        let record = output[i];
-        let qid = record.item.value;
-        if (!works[qid]){
-          works[qid] = record;
-        }
-        else if(works[qid] && works[qid].author && works[qid].author.indexOf(record.author) == -1 ) {
-          works[qid].author += ' | ' + record.author;
-        }
-      }
+    return storiesAPI.get('bibliography', data => {
+      const works = data.map(work => {
+        work.icon = iterMap(work.instances, BIBLIOGRAPHY_INSTANCE_TO_ICON_MAP)
+        return work;
+      });
       let pageData = {title:'Bibliography', works: works};
       return res.renderPage('base', 'bibliography', pageData);
     });

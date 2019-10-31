@@ -26,6 +26,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.439.0",
+    "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "biiif-cli": "0.0.13",
     "body-parser": "^1.18.3",

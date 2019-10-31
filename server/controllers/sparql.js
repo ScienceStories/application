@@ -228,21 +228,6 @@ OPTIONAL{
       }
     `, callback);
   },
-  getBibliography(lang, callback){
-    return _.execute(`
-      SELECT ?item ?itemLabel ?itemDescription ?instance ?instanceLabel ?author
-      WHERE{
-        {?item wdt:P31 wd:Q13442814}
-        UNION {?item wdt:P31 wd:Q571}
-        UNION {?item wdt:P31 wd:Q10870555}.
-        ?item wdt:P921 wd:Q113616.
-        ?item wdt:P31 ?instance.
-        optional {?item wdt:P2093 ?author.}
-        SERVICE wikibase:label
-        { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
-      }
-    `, callback);
-  },
   getNamedAfter(item, lang){
     var query = `#defaultView:Map
     SELECT ?truc ?presLabel ?trucLabel ?coord ?layer WHERE {

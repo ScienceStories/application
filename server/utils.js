@@ -26,5 +26,14 @@ module.exports = {
     catch (err) {
       return null;
     }
+  },
+  iterMap(array, map, default_value) {
+    // Iterate through array and apply the first value found in the map
+    for (let i=0; i < array.length; i++) {
+      const key = array[i];
+      const value = map[key];
+      if (value) return value;
+    }
+    return (default_value === undefined) ? map.default : default_value;
   }
 }

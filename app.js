@@ -222,6 +222,7 @@ hbs.registerHelper('dateFormat', function dateFormat(date, format, utc) {
       return (utc === true) ?  moment(date).utc().calendar() :moment(date).calendar()
     return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
 });
+hbs.registerHelper('wikidataURL', qid => "https://wikidata.org/wiki/" + qid);
 hbs.registerHelper('wikiDateTime', function dateFormat(date, format, utc) {
   date = date.substr(1,)
     return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
