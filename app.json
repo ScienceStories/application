@@ -35,6 +35,9 @@
     },
     "PYPATH": {
       "required": true
+    },
+    "STORIES_API_URL": {
+      "required": true
     }
   },
   "formation": {
