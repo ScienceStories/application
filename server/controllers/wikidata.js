@@ -2,7 +2,7 @@ const wdk = require('wikidata-sdk');
 const getURLPath = require('../../app').getURLPath;
 const appFetch = require('../../app').appFetch;
 const { BIBLIOGRAPHY_INSTANCE_TO_ICON_MAP } = require('../constants');
-const storiesAPI = require('../stories_api');
+const StoriesAPI = require('../stories_api');
 const { getValue, iterMap, JSONFile, safeOverwrite } = require('../utils');
 const sparqlController = require('./sparql');
 const commentController = require('./comment');
@@ -19,7 +19,7 @@ const wikidataMap = JSONFile("server/controllers/wikidataMap.json");
 
 const _ = module.exports = {
   bibliography(req, res) {
-    return storiesAPI.get('bibliography', data => {
+    return StoriesAPI.get('bibliography', data => {
       const works = data.map(work => {
         work.icon = iterMap(work.instances, BIBLIOGRAPHY_INSTANCE_TO_ICON_MAP)
         return work;
@@ -138,76 +138,82 @@ const _ = module.exports = {
     let isPreview = (req.url.indexOf('/preview') > -1);
     let jsonData = (Array.isArray(row.data)) ? row.data : [];
     const qid = 'Q'+req.params.id;
-    const url = sparqlController.getStoryClaims(qid);
-    appFetch(url).then(itemStatements => {
-      itemStatements = _.simplifySparqlFetch(itemStatements)
-      let storyImage = _.getMainStoryImage(row.data, itemStatements);
-      var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
-      appFetch(inverseUrl).then(inverseClaimsOutput => {
-        inverseStatements = _.simplifySparqlFetch(inverseClaimsOutput);
-        let labelURL = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`
-        appFetch(labelURL).then(labels => {
-          name = labels.entities[qid].labels.en.value;
-          meta = {};
-          meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
-          wikipedia = '';
-          if (labels.entities[qid].sitelinks.enwiki){
-            wikipedia = labels.entities[qid].sitelinks.enwiki.title;
-          }
-          let wikidataManifestData = _.getWikidataManifestData(name, itemStatements, inverseStatements);
-          return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
-            let additional_data = {
-              qid: qid,
-              wikipedia_url: wikipedia,
-              wikidata_date: wikidata_date,
-              wikipedia_date: wikipedia_date,
-              science_stories_date: (row.createdAt) ? row.createdAt.toISOString() : null,
-              commons_category: _.getCommonsCategory(req, qid, itemStatements),
-              row: row,
-              user: req.session.user
+    return StoriesAPI.get(qid, story => {
+      const name = story.label;
+      jsonData = jsonData.concat(story.moments);
+      const url = sparqlController.getStoryClaims(qid);
+
+      appFetch(url).then(itemStatements => {
+        itemStatements = _.simplifySparqlFetch(itemStatements)
+        let storyImage = _.getMainStoryImage(row.data, itemStatements);
+        var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
+        appFetch(inverseUrl).then(inverseClaimsOutput => {
+          inverseStatements = _.simplifySparqlFetch(inverseClaimsOutput);
+          let labelURL = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`
+          appFetch(labelURL).then(labels => {
+            meta = {};
+            meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
+            wikipedia = '';
+            if (labels.entities[qid].sitelinks.enwiki){
+              wikipedia = labels.entities[qid].sitelinks.enwiki.title;
             }
-            jsonData = jsonData.concat(wikidataManifestData);
-            jsonData = new Slide(name, additional_data)
-              .getDynamicSlides(jsonData, itemStatements, inverseStatements);
-            let storyRenderData = {
-              page: function(){ return 'story'},
-              scripts: function(){ return 'story_scripts'},
-              links: function(){ return 'story_links'},
-              title: name +" - Story",
-              nav: "Story",
-              urlPath: getURLPath(req),
-              name: name,
-              qid: qid,
-              image: storyImage,
-              row: row,
-              isPreview: isPreview,
-              meta: meta,
-              user: req.session.user,
-              data: jsonData,
-            }
-            if (req.session.user && !isPreview) {
-              return StoryActivity
-              .findOrCreate({where: {
-                memberId: req.session.user.id,
-                storyId: row.id
-              }})
-              .spread((found, created) => {
-                found.update({
-                  views: found.views+1,
-                  lastViewed: sequelize.fn('NOW')
+            let wikidataManifestData = _.getWikidataManifestData(name, itemStatements, inverseStatements);
+            return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
+              let additional_data = {
+                qid: qid,
+                wikipedia_url: wikipedia,
+                wikidata_date: wikidata_date,
+                wikipedia_date: wikipedia_date,
+                science_stories_date: (row.createdAt) ? row.createdAt.toISOString() : null,
+                commons_category: _.getCommonsCategory(req, qid, itemStatements),
+                row: row,
+                user: req.session.user,
+                story
+              }
+              jsonData = jsonData.concat(wikidataManifestData);
+              jsonData = new Slide(name, additional_data)
+                .getDynamicSlides(jsonData, itemStatements, inverseStatements);
+              let storyRenderData = {
+                page: function(){ return 'story'},
+                scripts: function(){ return 'story_scripts'},
+                links: function(){ return 'story_links'},
+                title: name +" - Story",
+                nav: "Story",
+                urlPath: getURLPath(req),
+                name: name,
+                qid: qid,
+                image: storyImage,
+                row: row,
+                isPreview: isPreview,
+                meta: meta,
+                user: req.session.user,
+                data: jsonData,
+              }
+              if (req.session.user && !isPreview) {
+                return StoryActivity
+                .findOrCreate({where: {
+                  memberId: req.session.user.id,
+                  storyId: row.id
+                }})
+                .spread((found, created) => {
+                  found.update({
+                    views: found.views+1,
+                    lastViewed: sequelize.fn('NOW')
+                  })
+                  .then(output => {
+                    storyRenderData.storyActivity = output.dataValues;
+                    return res.render('full', storyRenderData);
+                  })
                 })
-                .then(output => {
-                  storyRenderData.storyActivity = output.dataValues;
-                  return res.render('full', storyRenderData);
-                })
-              })
-              .catch(error => res.renderError());
-            }
-            return res.render('full', storyRenderData);
+                .catch(error => res.renderError());
+              }
+              return res.render('full', storyRenderData);
+            })
           })
         })
       })
     })
+
   },
   getStatementValueByProp(statements, prop_id){
     for (let i = 0; i < statements.length; i++) {

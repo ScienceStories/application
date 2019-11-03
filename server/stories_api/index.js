@@ -1,10 +1,11 @@
 const axios = require('axios');
 const STORIES_API_URL = process.env.STORIES_API_URL;
+const STORIES_API_CLIENT_NAME = process.env.STORIES_API_CLIENT_NAME;
 const storyAPIRequest = axios.create();
 
 storyAPIRequest.interceptors.request.use(config => {
   // Parse slug with base url
-  config.url = STORIES_API_URL+"api/"+config.url;
+  config.url = `${STORIES_API_URL}/api/story/${STORIES_API_CLIENT_NAME}/${config.url}`;
   return config;
 });
 

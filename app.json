@@ -38,6 +38,9 @@
     },
     "STORIES_API_URL": {
       "required": true
+    },
+    "STORIES_API_CLIENT_NAME": {
+      "required": true
     }
   },
   "formation": {

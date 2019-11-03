@@ -74,7 +74,9 @@
       <div class="sidebar-list">
       {{#each data}}
         <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">
-          {{#if_equal this.type 'intro'}}
+          {{#if_equal this.icon.source 'img'}}
+            <img src="{{this.icon.url}}" alt="{{this.icon.name}}">
+          {{else if_equal this.type 'intro'}}
             <i class="far fa-bookmark"></i>
           {{else if_equal this.type 'mirador'}}
             {{#if_equal this.config.data.0.viewType "BookView"}}
@@ -112,8 +114,6 @@
             <i class="fas fa-trophy"></i>
           {{else if_equal this.type 'membership'}}
             <i class="fas fa-medal"></i>
-          {{else if_equal this.type 'wikidata'}}
-            <img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg" alt="Wikidata Logo">
           {{else if_equal this.type 'wikipedia'}}
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikipedia Logo">
           {{else if_equal this.type 'index'}}
@@ -150,8 +150,9 @@
     colors = [];
     anchors = [];
     for (x=0; x < lastSlide; x++){
-      tooltips.push((data[x].tooltip) ? data[x].tooltip : (data[x].title) ? data[x].title : data[x].description);
-      colors.push(data[x].color);
+      const moment = data[x];
+      tooltips.push(moment.tooltip || moment.title || moment.description);
+      colors.push(moment.color.background || moment.color);
     }
     lastSlide = tooltips.length;
     for (x=1; x <= lastSlide; x++){
