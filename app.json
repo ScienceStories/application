@@ -5,9 +5,6 @@
   "buildpacks": [
     {
       "url": "heroku/nodejs"
-    },
-    {
-      "url": "heroku/python"
     }
   ],
   "description": "Science Stories Application",

@@ -1,4 +1,0 @@
-html-sanitizer==1.7.0
-html2text==2018.1.9
-iiif-prezi==0.2.9
-requests==2.21.0
