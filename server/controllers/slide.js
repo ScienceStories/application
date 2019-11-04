@@ -83,7 +83,7 @@ class Slide {
 
   getSubclasses() {
     // NOTE: NamedAfterSlide MUST come before AwardSlide or css
-    const subclasses = [CommonsCategorySlide, EducationSlide, EmployerSlide,
+    const subclasses = [EducationSlide, EmployerSlide,
       MembershipSlide, TimelineSlide, PeopleSlide, MapSlide, NamedAfterSlide,
       LibrarySlide, AwardSlide, WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
@@ -125,19 +125,6 @@ class NoStatementSlide extends Slide {
   }
 }
 
-class CommonsCategorySlide extends NoStatementSlide {
-  storyContext(){
-    let cat = this.additional_data.commons_category;
-    if (!cat) return false;
-    return {
-      "type": "wikicat",
-      "title": "Media Gallery",
-      "category": cat,
-      "tooltip": "Wikimedia Gallery",
-      "color": "#530244",
-    }
-  }
-}
 
 class WikipediaSlide extends NoStatementSlide {
   storyContext(){

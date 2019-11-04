@@ -6,7 +6,6 @@ const StoriesAPI = require('../stories_api');
 const { getValue, iterMap, JSONFile, safeOverwrite } = require('../utils');
 const sparqlController = require('./sparql');
 const commentController = require('./comment');
-const wikicommonsController = require('./wikicommons');
 const StoryActivity = require('../models').storyactivity;
 const sequelize = require('../models').sequelize;
 const Slide = require('./slide').Slide;
@@ -132,11 +131,46 @@ const _ = module.exports = {
       return callback(false);
     })
   },
+  _tempCovertWikicatToStoriesAPIShape(wikicatMoment){
+    // Commons Category is supported by Stories-API for dynamic categories
+    // Keeping this here for user submitted categories until Stories-API can
+    // host/support them.
+    const base_url = process.env.STORIES_API_URL.replace("https", "http");
+    const manifestUri = base_url + "/api/iiif/wikimedia/commons/category/" + wikicatMoment.category;
+    return {
+      "type": "commons_category_iiif",
+      "title": wikicatMoment.title,
+      "subtitle": wikicatMoment.description,
+      "icon": {
+        "name": "far fa-images",
+        "source": "fa"
+      },
+      "color": {
+        "type": "hex",
+        "background": wikicatMoment.color,
+        "text": "#fff"
+      },
+      "tooltip": wikicatMoment.tooltip,
+      "reference": {
+        "title": "Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/Category:"+wikicatMoment.category,
+        "description": "Online repository of free-use images, sound and other media files, part of the Wikimedia ecosystem",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Commons-logo.svg"
+      },
+      "manifest_uri": manifestUri,
+      "url": base_url
+              + "/api/iiif/viewer/universal_viewer?manifest_uri="
+              + manifestUri
+    }
+  },
   processStory(req, res, row) {
     // TODO: Old empty records stored data as a {}, we need to migrate
     // all story.data to array/list
     let isPreview = (req.url.indexOf('/preview') > -1);
     let jsonData = (Array.isArray(row.data)) ? row.data : [];
+    // Temporary step: translate wikicat to commons_category_iiif
+    jsonData = jsonData.map(m => (m.type == "wikicat") ? _._tempCovertWikicatToStoriesAPIShape(m) : m)
+    // return res.send(jsonData)
     const qid = 'Q'+req.params.id;
     return StoriesAPI.get(qid, story => {
       const name = story.label;
@@ -165,7 +199,6 @@ const _ = module.exports = {
                 wikidata_date: wikidata_date,
                 wikipedia_date: wikipedia_date,
                 science_stories_date: (row.createdAt) ? row.createdAt.toISOString() : null,
-                commons_category: _.getCommonsCategory(req, qid, itemStatements),
                 row: row,
                 user: req.session.user,
                 story
@@ -235,13 +268,6 @@ const _ = module.exports = {
     }
     let img_val = _.getStatementValueByProp(wikidata, 'P18');
     return (img_val) ? img_val : 'http://sciencestories.io/static/images/branding/logo_black.png';
-  },
-  getCommonsCategory(req, qid, statements){
-    let category = _.getStatementValueByProp(statements, 'P373');
-    if (category) {
-      return category;
-    }
-    return false;
   },
   processAnnotation(req, res){
     qid = req.params.qid;

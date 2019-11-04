@@ -246,6 +246,7 @@ fs.readdirSync(partials).forEach(function (file) {
 });
 
 hbs.registerHelper('loadMoment', function(template, data, options) {
+  console.log("LOADING ", template, data, options)
     var loadedPartial = hbs.partials[template];
     if (typeof loadedPartial !== 'function') {
       loadedPartial = hbs.compile(loadedPartial);

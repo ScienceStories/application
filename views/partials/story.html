@@ -76,6 +76,8 @@
         <div class="sidebar-tooltip" onclick="sidebarNavigate(this)">
           {{#if_equal this.icon.source 'img'}}
             <img src="{{this.icon.url}}" alt="{{this.icon.name}}">
+          {{else if_equal this.icon.source 'fa'}}
+            <i class="{{this.icon.name}}"></i>
           {{else if_equal this.type 'intro'}}
             <i class="far fa-bookmark"></i>
           {{else if_equal this.type 'mirador'}}
@@ -92,8 +94,6 @@
             <i class="fab fa-youtube"></i>
           {{else if_equal this.type 'pdf'}}
             <i class="fas fa-file-pdf"></i>
-          {{else if_equal this.type 'wikicat'}}
-            <i class="fas fa-images"></i>
           {{else if_equal this.type 'google_book'}}
             <i class="fas fa-book-reader"></i>
           {{else if_equal this.type 'education'}}
