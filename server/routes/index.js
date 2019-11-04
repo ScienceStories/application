@@ -1,7 +1,6 @@
 const membersController = require('../controllers').members;
 const storyController = require('../controllers').story;
 const wikidataController = require('../controllers').wikidata;
-const wikicommonsController = require('../controllers').wikicommons;
 const annotationController = require('../controllers').annotation;
 const commentController = require('../controllers').comment;
 const sitemapController = require('../controllers').sitemap;
@@ -109,8 +108,6 @@ module.exports = (app, sessionChecker) => {
   app.post('/api/iiif/loadFromUri', annotationController.loadFromUri);
   app.post('/api/iiif/loadFromManifest', annotationController.loadFromManifest);
   app.post('/api/iiif/update', annotationController.update);
-  app.get('/api/iiif/wikicat/:category/manifest.json', wikicommonsController.generateCommonsCategoryManifest);
-  app.get('/api/iiif/:qid/wikicat/manifest.json', wikicommonsController.generateCommonsManifestFromWikidataItem);
   app.get('/api/iiif/:manifest', (req, res) => {
     var content = fs.readFileSync("manifests/"+req.params.manifest+'/index.json');
     res.status(200).send(JSON.parse(content));

@@ -2,11 +2,10 @@ const wdk = require('wikidata-sdk');
 const getURLPath = require('../../app').getURLPath;
 const appFetch = require('../../app').appFetch;
 const { BIBLIOGRAPHY_INSTANCE_TO_ICON_MAP } = require('../constants');
-const storiesAPI = require('../stories_api');
+const StoriesAPI = require('../stories_api');
 const { getValue, iterMap, JSONFile, safeOverwrite } = require('../utils');
 const sparqlController = require('./sparql');
 const commentController = require('./comment');
-const wikicommonsController = require('./wikicommons');
 const StoryActivity = require('../models').storyactivity;
 const sequelize = require('../models').sequelize;
 const Slide = require('./slide').Slide;
@@ -19,7 +18,7 @@ const wikidataMap = JSONFile("server/controllers/wikidataMap.json");
 
 const _ = module.exports = {
   bibliography(req, res) {
-    return storiesAPI.get('bibliography', data => {
+    return StoriesAPI.get('bibliography', data => {
       const works = data.map(work => {
         work.icon = iterMap(work.instances, BIBLIOGRAPHY_INSTANCE_TO_ICON_MAP)
         return work;
@@ -132,82 +131,122 @@ const _ = module.exports = {
       return callback(false);
     })
   },
+  _tempCovertWikicatToStoriesAPIShape(wikicatMoment){
+    // Commons Category is supported by Stories-API for dynamic categories
+    // Keeping this here for user submitted categories until Stories-API can
+    // host/support them.
+    const base_url = process.env.STORIES_API_URL.replace("https", "http");
+    const manifestUri = base_url + "/api/iiif/wikimedia/commons/category/" + wikicatMoment.category;
+    return {
+      "type": "commons_category_iiif",
+      "title": wikicatMoment.title,
+      "subtitle": wikicatMoment.description,
+      "icon": {
+        "name": "far fa-images",
+        "source": "fa"
+      },
+      "color": {
+        "type": "hex",
+        "background": wikicatMoment.color,
+        "text": "#fff"
+      },
+      "tooltip": wikicatMoment.tooltip,
+      "reference": {
+        "title": "Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/wiki/Category:"+wikicatMoment.category,
+        "description": "Online repository of free-use images, sound and other media files, part of the Wikimedia ecosystem",
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Commons-logo.svg"
+      },
+      "manifest_uri": manifestUri,
+      "url": base_url
+              + "/api/iiif/viewer/universal_viewer?manifest_uri="
+              + manifestUri
+    }
+  },
   processStory(req, res, row) {
     // TODO: Old empty records stored data as a {}, we need to migrate
     // all story.data to array/list
     let isPreview = (req.url.indexOf('/preview') > -1);
     let jsonData = (Array.isArray(row.data)) ? row.data : [];
+    // Temporary step: translate wikicat to commons_category_iiif
+    jsonData = jsonData.map(m => (m.type == "wikicat") ? _._tempCovertWikicatToStoriesAPIShape(m) : m)
+    // return res.send(jsonData)
     const qid = 'Q'+req.params.id;
-    const url = sparqlController.getStoryClaims(qid);
-    appFetch(url).then(itemStatements => {
-      itemStatements = _.simplifySparqlFetch(itemStatements)
-      let storyImage = _.getMainStoryImage(row.data, itemStatements);
-      var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
-      appFetch(inverseUrl).then(inverseClaimsOutput => {
-        inverseStatements = _.simplifySparqlFetch(inverseClaimsOutput);
-        let labelURL = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`
-        appFetch(labelURL).then(labels => {
-          name = labels.entities[qid].labels.en.value;
-          meta = {};
-          meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
-          wikipedia = '';
-          if (labels.entities[qid].sitelinks.enwiki){
-            wikipedia = labels.entities[qid].sitelinks.enwiki.title;
-          }
-          let wikidataManifestData = _.getWikidataManifestData(name, itemStatements, inverseStatements);
-          return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
-            let additional_data = {
-              qid: qid,
-              wikipedia_url: wikipedia,
-              wikidata_date: wikidata_date,
-              wikipedia_date: wikipedia_date,
-              science_stories_date: (row.createdAt) ? row.createdAt.toISOString() : null,
-              commons_category: _.getCommonsCategory(req, qid, itemStatements),
-              row: row,
-              user: req.session.user
+    return StoriesAPI.get(qid, story => {
+      const name = story.label;
+      jsonData = jsonData.concat(story.moments);
+      const url = sparqlController.getStoryClaims(qid);
+
+      appFetch(url).then(itemStatements => {
+        itemStatements = _.simplifySparqlFetch(itemStatements)
+        let storyImage = _.getMainStoryImage(row.data, itemStatements);
+        var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
+        appFetch(inverseUrl).then(inverseClaimsOutput => {
+          inverseStatements = _.simplifySparqlFetch(inverseClaimsOutput);
+          let labelURL = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`
+          appFetch(labelURL).then(labels => {
+            meta = {};
+            meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
+            wikipedia = '';
+            if (labels.entities[qid].sitelinks.enwiki){
+              wikipedia = labels.entities[qid].sitelinks.enwiki.title;
             }
-            jsonData = jsonData.concat(wikidataManifestData);
-            jsonData = new Slide(name, additional_data)
-              .getDynamicSlides(jsonData, itemStatements, inverseStatements);
-            let storyRenderData = {
-              page: function(){ return 'story'},
-              scripts: function(){ return 'story_scripts'},
-              links: function(){ return 'story_links'},
-              title: name +" - Story",
-              nav: "Story",
-              urlPath: getURLPath(req),
-              name: name,
-              qid: qid,
-              image: storyImage,
-              row: row,
-              isPreview: isPreview,
-              meta: meta,
-              user: req.session.user,
-              data: jsonData,
-            }
-            if (req.session.user && !isPreview) {
-              return StoryActivity
-              .findOrCreate({where: {
-                memberId: req.session.user.id,
-                storyId: row.id
-              }})
-              .spread((found, created) => {
-                found.update({
-                  views: found.views+1,
-                  lastViewed: sequelize.fn('NOW')
+            let wikidataManifestData = _.getWikidataManifestData(name, itemStatements, inverseStatements);
+            return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
+              let additional_data = {
+                qid: qid,
+                wikipedia_url: wikipedia,
+                wikidata_date: wikidata_date,
+                wikipedia_date: wikipedia_date,
+                science_stories_date: (row.createdAt) ? row.createdAt.toISOString() : null,
+                row: row,
+                user: req.session.user,
+                story
+              }
+              jsonData = jsonData.concat(wikidataManifestData);
+              jsonData = new Slide(name, additional_data)
+                .getDynamicSlides(jsonData, itemStatements, inverseStatements);
+              let storyRenderData = {
+                page: function(){ return 'story'},
+                scripts: function(){ return 'story_scripts'},
+                links: function(){ return 'story_links'},
+                title: name +" - Story",
+                nav: "Story",
+                urlPath: getURLPath(req),
+                name: name,
+                qid: qid,
+                image: storyImage,
+                row: row,
+                isPreview: isPreview,
+                meta: meta,
+                user: req.session.user,
+                data: jsonData,
+              }
+              if (req.session.user && !isPreview) {
+                return StoryActivity
+                .findOrCreate({where: {
+                  memberId: req.session.user.id,
+                  storyId: row.id
+                }})
+                .spread((found, created) => {
+                  found.update({
+                    views: found.views+1,
+                    lastViewed: sequelize.fn('NOW')
+                  })
+                  .then(output => {
+                    storyRenderData.storyActivity = output.dataValues;
+                    return res.render('full', storyRenderData);
+                  })
                 })
-                .then(output => {
-                  storyRenderData.storyActivity = output.dataValues;
-                  return res.render('full', storyRenderData);
-                })
-              })
-              .catch(error => res.renderError());
-            }
-            return res.render('full', storyRenderData);
+                .catch(error => res.renderError());
+              }
+              return res.render('full', storyRenderData);
+            })
           })
         })
       })
     })
+
   },
   getStatementValueByProp(statements, prop_id){
     for (let i = 0; i < statements.length; i++) {
@@ -229,13 +268,6 @@ const _ = module.exports = {
     }
     let img_val = _.getStatementValueByProp(wikidata, 'P18');
     return (img_val) ? img_val : 'http://sciencestories.io/static/images/branding/logo_black.png';
-  },
-  getCommonsCategory(req, qid, statements){
-    let category = _.getStatementValueByProp(statements, 'P373');
-    if (category) {
-      return category;
-    }
-    return false;
   },
   processAnnotation(req, res){
     qid = req.params.qid;
