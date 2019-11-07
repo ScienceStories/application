@@ -83,7 +83,7 @@ class Slide {
 
   getSubclasses() {
     // NOTE: NamedAfterSlide MUST come before AwardSlide or css
-    const subclasses = [EducationSlide, EmployerSlide,
+    const subclasses = [EmployerSlide,
       MembershipSlide, TimelineSlide, PeopleSlide, MapSlide, NamedAfterSlide,
       LibrarySlide, AwardSlide, WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
@@ -605,44 +605,6 @@ class TimelineSlide extends IncludeInverseSlide{
   }
 }
 
-class EducationSlide extends Slide {
-  isValidStatement(statement){
-    return (super.isValidStatement(statement) && statement.ps.value == "http://www.wikidata.org/prop/statement/P69")
-  }
-
-  validateStatement(statement){
-    let validatedStatement = super.validateStatement(statement);
-    if (validatedStatement && getValue(statement.wdpq) == "http://www.wikidata.org/entity/P512"){
-      validatedStatement.degree = getValue(statement.pq_Label);
-    }
-    return validatedStatement;
-  }
-
-  setStatement(input){
-    let statement = this.validateStatement(input);
-    if (statement){
-      let qid = statement.qid;
-      let newStatement = this.mergeStatement(qid, statement);
-      safeAppend(newStatement, statement, 'degree');
-      safeAppend(newStatement, statement, 'year', true);
-      this._data[qid] = newStatement
-    }
-    return this._data;
-  }
-
-
-  storyContext(){
-    let data = this.process();
-    if (!data.length) return false;
-    return {
-      "type": "education",
-      "education": data,
-      "tooltip": "Education of " + this.name,
-      "color": "#337399",
-      "name": this.name
-    }
-  }
-}
 
 class EmployerSlide extends Slide {
   isValidStatement(statement){
