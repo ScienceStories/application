@@ -85,7 +85,7 @@ class Slide {
     // NOTE: NamedAfterSlide MUST come before AwardSlide or css
     const subclasses = [EmployerSlide,
       MembershipSlide, TimelineSlide, PeopleSlide, MapSlide, NamedAfterSlide,
-      LibrarySlide, AwardSlide, WikipediaSlide, IndexSlide];
+      LibrarySlide, WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
   }
 
@@ -658,81 +658,6 @@ class NamedAfterSlide extends InverseOnlySlide {
   }
 }
 
-const award_props = [ "P166", "P825", "P967", "P1411", "P2121", "P4444", "P4622"]
-class AwardSlide extends Slide {
-
-  isValidStatement(statement){
-    return (super.isValidStatement(statement)
-      && award_props.includes(statement.ps.value.substr(39)))
-  }
-
-  validateStatement(statement){
-    let validatedStatement = super.validateStatement(statement);
-    if (validatedStatement){
-      validatedStatement.date = getYearFromStatement(statement);
-      validatedStatement.instance = getValue(statement.objInstanceLabel);
-      let conferred = getValue(statement.conferredLabel);
-      validatedStatement.conferred = (conferred) ? [conferred] : [];
-      if (getValue(statement.wdpq) == "http://www.wikidata.org/entity/P1027")
-        validatedStatement.conferred.push(getValue(statement.pq_Label));
-        validatedStatement.action = getValue(statement.wdLabel);
-        let objInstance = getValue(statement.objInstance);
-        let title = validatedStatement.title.toLowerCase();
-        if (validatedStatement.description)
-          title += validatedStatement.description.toLowerCase();
-
-        if (title.includes('medal') || objInstance == "http://www.wikidata.org/entity/Q131647"){
-          validatedStatement.type = 'medal'
-        }
-        else if (title.includes('certificate') || objInstance == "http://www.wikidata.org/entity/Q196756"){
-          validatedStatement.type = 'certificate'
-        }
-        else if (title.includes('trophy') ||objInstance == "http://www.wikidata.org/entity/Q381165"){
-          validatedStatement.type = 'trophy'
-        }
-        else if (title.includes('hall of fame') || objInstance == "http://www.wikidata.org/entity/Q1046088"){
-          validatedStatement.type = 'hall'
-        }
-        else if (((title.includes('honor') || title.includes('honour')) && title.includes('docto'))
-        || objInstance == "http://www.wikidata.org/entity/Q11415564"){
-          validatedStatement.type = 'edu'
-        }
-        else if (title.includes('award') || objInstance == "http://www.wikidata.org/entity/Q618779"){
-          validatedStatement.type = 'award'
-        }
-    }
-    return validatedStatement;
-  }
-
-  setStatement(input){
-    let statement = this.validateStatement(input);
-    if (statement){
-      let qid = statement.qid;
-      let newStatement = this.mergeStatement(qid, statement);
-      newStatement.color_light = randomColor({luminosity: 'light'})
-      newStatement.color_dark = randomColor({luminosity: 'dark',
-                                             hue: newStatement.color_light})
-
-      if (newStatement.conferred) newStatement.conferred.concat(statement.conferred)
-      else newStatement.conferred = statement.conferred;
-      this._data[qid] = newStatement;
-
-    }
-    return this._data;
-  }
-
-  storyContext() {
-    let data = this.process();
-    if (!data.length) return false;
-    return {
-      "type": "award",
-      "award": data,
-      "tooltip": "Award Room",
-      "color": "#4c4c4c",
-      "name": this.name,
-    }
-  }
-}
 
 class MembershipSlide extends Slide {
   isValidStatement(statement){

@@ -1,55 +1,60 @@
 <div class="section pp-scrollable slide-timeline slide-award" id="section{{id}}">
   <div class="content">
-    <div class="header" style="color:{{contrastColor color true}};background-color: {{color}}">
-      <h1>Awards of {{name}}</h1>
-      <p> {{award.length}} Awards & Honors Recieved By {{name}} Are Currently Recorded in Wikidata</p>
+    <div class="header" style="color:{{color.text}};background-color: {{color.background}}">
+      <h1>{{title}}</h1>
+      <p> {{subtitle}}</p>
     </div>
 
     <div class="page page-award">
       <div id="award">
-
         <div class="circle-carousel" data-gap="80">
           <figure>
-            {{#each award}}
+            {{#each data}}
               <div class="circle-frame">
                 <div class="with-arrows">
                   <div class="award-content" >
-                    <div class="award-graphic" style="border-color:{{this.color_dark}}">
+                    <div class="award-graphic"
+                         style="border-color:{{this.color.dark}}">
                       <span class="award-icon" >
-                        {{#if_equal this.type 'medal'}}<i class="fas fa-medal"></i>
-                        {{else if_equal this.type 'trophy'}}<i class="fas fa-trophy"></i>
-                        {{else if_equal this.type 'ribbon'}}<i class="fas fa-ribbon"></i>
-                        {{else if_equal this.type 'certificate'}}<i class="fas fa-certificate"></i>
-                        {{else if_equal this.type 'hall'}}<i class="fas fa-archway"></i>
-                        {{else if_equal this.type 'edu'}}<i class="fas fa-graduation-cap"></i>
-                        {{else}} <i class="fas fa-award"></i>
-                        {{/if_equal}}
+                        <i class="{{this.icon.name}}"></i>
                       </span>
                     </div>
-                    <div class="award-pretitle" style="color:{{this.color_dark}}">{{#if this.date}}{{this.date}}{{/if}} {{this.action}}</div>
-                    <div class="award-title" style="color:{{this.color_light}}">{{this.title}}</div>
-                     <div class="award-subtitle">This {{#if this.instance}}{{this.instance}}{{else}}award{{/if}} is presented to</div>
-                     <div class="award-name" style="color:{{this.color_dark}}">{{../name}}</div>
-                     <div class="award-description">{{#if this.description}}{{this.description}}{{/if}}</div>
-                     {{#if this.conferred}}
-                     <div class="award-organizer" style="border-color:{{this.color_dark}}">{{#truncate 60}}{{arrayToString this.conferred 'comma'}}{{/truncate}}</div>
-                     <div class="award-organizer-subtext">Conferred By</div>
-                     {{else}}
-                     {{/if}}
+                    <div class="award-pretitle"
+                         style="color:{{this.color.dark}}">
+                      {{this.year}}
+                    </div>
+                    <div class="award-title" style="color:{{this.color.light}}">
+                      {{this.label}}
+                    </div>
+                    <div class="award-subtitle">{{this.subtitle}}</div>
+                    <div class="award-name" style="color:{{this.color.dark}}">
+                      {{../label}}
+                    </div>
+                    <div class="award-description">
+                      {{#if this.description}}{{this.description}}{{/if}}
+                    </div>
+                    {{#if this.conferred_by}}
+                      <div class="award-organizer"
+                           style="border-color:{{this.color.dark}}">
+                        {{this.conferred_by.title}}
+                      </div>
+                      <div class="award-organizer-subtext">Conferred By</div>
+                    {{else}}
+                    {{/if}}
                   </div>
-                  <div class="arrow-right" style="background:{{this.color_light}}"></div>
-                  <div class="arrow-left"  style="background:{{this.color_dark}}"></div>
-                  <div class="arrow-left-bottom"  style="background:{{this.color_light}}"></div>
-                  <div class="arrow-right-bottom" style="background:{{this.color_dark}}"></div>
+                  <div class="arrow-right" style="background:{{this.color.light}}"></div>
+                  <div class="arrow-left"  style="background:{{this.color.dark}}"></div>
+                  <div class="arrow-left-bottom"  style="background:{{this.color.light}}"></div>
+                  <div class="arrow-right-bottom" style="background:{{this.color.dark}}"></div>
                 </div>
               </div>
             {{/each}}
-            {{#if_equal award.length 2}}
+            {{#if_equal data.length 2}}
               <!-- Add a blank node when only two awards -->
               <div class="circle-frame"></div>
             {{/if_equal}}
           </figure>
-          {{#if_equal award.length 1}}
+          {{#if_equal data.length 1}}
           {{else}}
           <nav>
             <button class="nav prev">Prev</button>
