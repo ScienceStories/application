@@ -13,7 +13,6 @@ const moment = require('moment');
 const randomColor = require('randomcolor');
 const iconMap = JSONFile("server/controllers/iconMap.json");
 const itemTypeMap = JSONFile("server/controllers/itemTypeMap.json");
-const wikidataMap = JSONFile("server/controllers/wikidataMap.json");
 
 
 const _ = module.exports = {
