@@ -1,29 +1,31 @@
 <div class="section pp-scrollable slide-timeline slide-employer" id="section{{id}}">
   <div class="content">
     <div class="header">
-      <h1>Where {{name}} Worked</h1>
-      <p> {{size employer}} Employers of {{name}} Are Currently Recorded in Wikidata</p>
+      <h1>{{title}}</h1>
+      <p> {{subtitle}}</p>
     </div>
 
     <div class="page page-timeline page-library page-employer">
       <div id="employerCards" class="employer-card-container">
-        {{#each employer}}
+        {{#each data}}
           <employercard {{#if this.image}} data-image="{{this.image}}" {{/if}}>
             <h1 slot="header">
               {{#if this.logo}}
-                <img src="{{this.logo}}" alt="Logo of {{this.title}}">
-                <p class="employer-card-logo-caption">{{this.title}}</p>
+                <img src="{{this.logo}}" alt="Logo of {{this.label}}">
+                <p class="employer-card-logo-caption">{{this.label}}</p>
               {{else}}
-                {{this.title}}
+                {{this.label}}
               {{/if}}
             </h1>
-            {{#if this.quals}}
+            {{#if this.qualifiers}}
               <div slot="content" class="content">
                 <ul class="content-ul">
-                  {{#each this.quals}}
+                  {{#each this.qualifiers}}
                     <li>
-                      <span class="card-field-prop">{{this.prop}}:</span><br>
-                      {{this.value}}
+                      <span class="card-field-prop">{{this.label}}:</span><br>
+                      {{#each this.values}}
+                        {{this.label}} <br />
+                      {{/each}}
                     </li>
                   {{/each}}
                 </ul>
@@ -31,21 +33,21 @@
             {{/if}}
             <div slot="employer-info">
               <span class="card-field-prop">Company Name:</span><br>
-              <h6>{{this.title}}</h6>
+              <h6>{{this.label}}</h6>
               {{#if this.description}}
                 <span class="card-field-prop">Description:</span><br>
                 {{this.description}} <br />
               {{/if}}
               {{#if this.location}}
-                <span class="card-field-prop">Location:</span><br>
-                {{this.location}} <br>
+                {{#if this.location.label}}
+                  <span class="card-field-prop">Location:</span><br>
+                  {{this.location.label}} <br>
+                {{/if}}
               {{/if}}
               {{#if this.website}}
                 <span class="card-field-prop">Website:</span><br>
                 <a href="{{this.website}}" target="_blank">{{this.website}}</a><br>
               {{/if}}
-              <span class="card-field-prop">Reference:</span><br>
-              <a href="http://www.wikidata.org/entity/{{this.qid}}" target="_blank">Wikidata</a>
             </div>
           </employercard>
         {{/each}}

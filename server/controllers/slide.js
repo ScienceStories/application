@@ -83,7 +83,7 @@ class Slide {
 
   getSubclasses() {
     // NOTE: NamedAfterSlide MUST come before AwardSlide or css
-    const subclasses = [EmployerSlide,
+    const subclasses = [
       MembershipSlide, TimelineSlide, PeopleSlide, MapSlide, NamedAfterSlide,
       LibrarySlide, WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
@@ -605,24 +605,6 @@ class TimelineSlide extends IncludeInverseSlide{
   }
 }
 
-
-class EmployerSlide extends Slide {
-  isValidStatement(statement){
-    return (super.isValidStatement(statement) && statement.ps.value == "http://www.wikidata.org/prop/statement/P108")
-  }
-
-  storyContext(){
-    let data = this.process();
-    if (!data.length) return false;
-    return {
-      "type": "employer",
-      "employer": data,
-      "tooltip": "Where " + this.name + " Worked",
-      "color": "#91ac99",
-      "name": this.name,
-    }
-  }
-}
 
 class NamedAfterSlide extends InverseOnlySlide {
   isValidStatement(statement){
