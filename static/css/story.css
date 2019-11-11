@@ -1554,7 +1554,7 @@ div#membershipDetails {
   padding: 0 4px;
 }
 #namedAfterGallery div.grid-item > a {
-  opacity: 0;
+  opacity: 1;
   overflow: hidden;
   position: relative;
   color: #000;
@@ -1570,12 +1570,13 @@ div#membershipDetails {
   width: 100%;
   min-height: 100%;
   transition: all ease 1s;
-}
-#namedAfterGallery  div.grid-item:hover img {
   filter: blur(4px);
 }
+#namedAfterGallery  div.grid-item:hover img {
+  filter: blur(0px);
+}
 #namedAfterGallery  div.grid-item:hover a {
-  opacity: 1;
+  opacity: 0;
 }
 #namedAfterGallery  div.grid-item {
   overflow: hidden;
