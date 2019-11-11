@@ -82,9 +82,8 @@ class Slide {
   }
 
   getSubclasses() {
-    // NOTE: NamedAfterSlide MUST come before AwardSlide or css
     const subclasses = [
-      TimelineSlide, PeopleSlide, MapSlide, NamedAfterSlide,
+      TimelineSlide, PeopleSlide, MapSlide,
       LibrarySlide, WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
   }
@@ -600,41 +599,6 @@ class TimelineSlide extends IncludeInverseSlide{
       "timeline": data,
       "tooltip": "Timeline",
       "color": "#1dc7ce",
-      "name": this.name,
-    }
-  }
-}
-
-
-class NamedAfterSlide extends InverseOnlySlide {
-  isValidStatement(statement){
-    return (getValue(statement.datatype) == "http://wikiba.se/ontology#WikibaseItem"
-     && getValue(statement.ps) == "http://www.wikidata.org/prop/statement/P138")
-  }
-
-  validateStatement(statement){
-    if (this.isValidStatement(statement)){
-      return {
-        qid: statement.ps_.value.replace("http://www.wikidata.org/entity/", ""),
-        title: getValue(statement.ps_Label),
-        description: getValue(statement.ps_Description),
-        website: getValue(statement.website),
-        location: getValue(statement.objLocationEntityLabel),
-        image: getValue(statement.img) || getValue(statement.locationImage)
-          || "/static/images/graphics/texture_"+getRandomInt(1,4)+".jpg"
-      };
-    }
-    return false;
-  }
-
-  storyContext(){
-    let data = this.process();
-    if (!data.length) return false;
-    return {
-      "type": "named_after",
-      "named_after": data,
-      "tooltip": "Named After " + this.name,
-      "color": "#4e0a37",
       "name": this.name,
     }
   }
