@@ -1,9 +1,8 @@
 <div class="section pp-scrollable slide-timeline slide-membership" id="section{{id}}">
   <div class="content">
     <div class="header">
-      <h1>Memberships of {{name}}</h1>
-      <p> {{size membership}} Organizations that {{name}} is a Member of Are
-        Currently Recorded in Wikidata</p>
+      <h1>{{title}}</h1>
+      <p> {{subtitle}}</p>
     </div>
 
     <div class="page page-timeline page-library page-membership">
@@ -13,11 +12,12 @@
             <div id="membershipInfo"></div>
           </div>
           <div class="col col-lg-3 membership-badge-scroller">
-            {{#each membership}}
+            {{#each data}}
               <div class="membership-badge">
-                {{> (no_op this.partial) bg_color=this.color_light
-                    fg_color=this.color_dark text=(trunc_string this.acronym 4)
-                    name=(trunc_string ../name 20)}}
+                <div class="membership-badge-graphic">
+                  <object style="pointer-events: none;" type="image/svg+xml" data="{{this.graphic.url}}"></object>
+                </div>
+
                 <div class="membership-panel">
                   {{#if this.logo}}
                     <img src="{{this.logo}}" alt=""><br>
@@ -49,11 +49,10 @@
     $('.membership-badge').click(function(){
       let $this = $(this);
       $('.membership-badge').removeClass('active');
-      $membershipDetails.fadeOut('slow');
-      $this.addClass('active');
-      $membershipInfo.fadeOut();
-      $membershipInfo.html($this.html()).fadeIn();
-      $membershipDetails.fadeIn(900);
+      $membershipInfo.fadeOut('slow', function(){
+        $this.addClass('active');
+        $membershipInfo.html($this.html()).fadeIn('slow');
+      });
     })
     $('.membership-badge:first').click();
   </script>

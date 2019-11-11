@@ -1513,7 +1513,7 @@ margin: 0;
   color: #9b6e72;
   font-weight: 300;
 }
-.page-membership svg {
+.page-membership .membership-badge-graphic {
     opacity: .85;
 }
 .page-membership .membership-badge-scroller {
@@ -1534,11 +1534,10 @@ div#membershipDetails {
   opacity: .9;
   border-radius: 10px;
 }
-.membership-badge.active svg path, .membership-badge.active svg foreignObject {
-  fill: #865b5e;
-  color: #634446!important;
+.membership-badge.active .membership-badge-graphic {
+  opacity: .15;
 }
-.membership-badge:not(.active) svg:hover {
+.membership-badge:not(.active) .membership-badge-graphic:hover {
   cursor: pointer;
   filter: drop-shadow(5px 10px 3px rgba(0, 0, 0, 0.4));
   opacity: 1;

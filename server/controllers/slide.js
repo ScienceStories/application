@@ -84,7 +84,7 @@ class Slide {
   getSubclasses() {
     // NOTE: NamedAfterSlide MUST come before AwardSlide or css
     const subclasses = [
-      MembershipSlide, TimelineSlide, PeopleSlide, MapSlide, NamedAfterSlide,
+      TimelineSlide, PeopleSlide, MapSlide, NamedAfterSlide,
       LibrarySlide, WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
   }
@@ -640,44 +640,6 @@ class NamedAfterSlide extends InverseOnlySlide {
   }
 }
 
-
-class MembershipSlide extends Slide {
-  isValidStatement(statement){
-    return (super.isValidStatement(statement) && statement.ps.value == "http://www.wikidata.org/prop/statement/P463")
-  }
-
-  validateStatement(statement){
-    let validatedStatement = super.validateStatement(statement);
-    if (validatedStatement){
-      validatedStatement.acronym = validatedStatement.title.match(/\b([A-Z])/g)
-                                     .join('')
-    }
-    return validatedStatement;
-  }
-
-  process(){
-    let data = super.process();
-    let BADGE_GRAPHIC_COUNT = 4;
-    return data.map((m, index) => {
-      m.color_light = randomColor({luminosity: 'light'});
-      m.color_dark = randomColor({luminosity: 'dark', hue: m.color_light});
-      m.partial = "badge_" + (index % BADGE_GRAPHIC_COUNT);
-      return m;
-    });
-  }
-
-  storyContext(){
-    let data = this.process();
-    if (!data.length) return false;
-    return {
-      "type": "membership",
-      "membership": data,
-      "tooltip": "Organizations",
-      "color": "#de8389",
-      "name": this.name,
-    }
-  }
-}
 
 function safeAppend(obj, element, key, sort=false){
   let old_val = obj[key];
