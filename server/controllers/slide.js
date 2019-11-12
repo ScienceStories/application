@@ -84,7 +84,7 @@ class Slide {
   getSubclasses() {
     const subclasses = [
       TimelineSlide, PeopleSlide, MapSlide,
-      LibrarySlide, WikipediaSlide, IndexSlide];
+      WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
   }
 
@@ -107,13 +107,6 @@ class IncludeInverseSlide extends Slide {
   constructor(name, additional_data) {
     super(name, additional_data);
     this.include_inverse = true;
-  }
-}
-
-class InverseOnlySlide extends IncludeInverseSlide {
-  constructor(name, additional_data) {
-    super(name, additional_data);
-    this.include_item_statements = false;
   }
 }
 
@@ -176,122 +169,6 @@ class IndexSlide extends Slide {
   }
 }
 
-class LibrarySlide extends InverseOnlySlide {
-  constructor(name, additional_data) {
-    super(name, additional_data);
-    this._data = {'book': [], 'article': [], 'other': []};
-    this.empty = true;
-  }
-
-  validateStatement(statement){
-    let name = this.name;
-    var tempval = {
-      qid : false,
-      pid : statement.ps.value,
-      contribution: [],
-      date: false,
-      title: false,
-      type: 'other',
-      instance: [],
-      url: false,
-    }
-    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
-      tempval.qid = statement.ps_.value;
-      tempval.url = tempval.qid;
-    }
-    if (statement.objDate){
-      tempval.date =  parseInt(statement.objDate.value.substring(0,4), 10)
-    }
-    if (statement.objInstanceLabel){
-      tempval.instance = [statement.objInstanceLabel.value]
-    }
-    if (statement.website) {
-      tempval.url = statement.website.value;
-    }
-    if (statement.full_work) {
-      tempval.url = statement.full_work.value;
-    }
-    if (statement.handle) {
-      tempval.url = 'http://hdl.handle.net/'+statement.handle.value;
-    }
-    if (statement.doi) {
-      tempval.url = 'https://doi.org/'+statement.doi.value;
-    }
-    if (statement.wdLabel){
-      tempval.contribution = [statement.wdLabel.value]
-    }
-    if (statement.ps_Label){
-      tempval.title = statement.ps_Label.value
-    }
-
-    if (statement.objInstance){
-      // Check if Scholarly article, conference paper, article
-      if ((statement.objInstance.value == "http://www.wikidata.org/entity/Q13442814")
-      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q23927052")
-      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q191067")){
-        tempval.type = 'article'
-        return tempval
-      }
-      // Check if book, novel, textbook
-      else if ((statement.objInstance.value == "http://www.wikidata.org/entity/Q571")
-      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q8261")
-      || (statement.objInstance.value == "http://www.wikidata.org/entity/Q83790")){
-      tempval.type = 'book'
-      return tempval
-      }
-      // Check if property is "author","editor", "illustrator", "designed by", "developer", "copyright owner", "founder", "creator", "attributed to", "inventor"
-      else if ((tempval.pid == "http://www.wikidata.org/prop/statement/P50")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P98")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P110")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P287")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P178")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P3931")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P112")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P170")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P1773")
-      || (tempval.pid == "http://www.wikidata.org/prop/statement/P61")
-      ){
-        tempval.type = 'other'
-        return tempval
-      }
-    }
-    return false
-  }
-
-  setStatement(input){
-    let statement = this.validateStatement(input);
-    if (statement){
-      let foundLib = false;
-      let old_val = this._data[statement.type];
-      for (let i = 0; i < old_val.length && !foundLib; i++) {
-        let checkOutput = old_val[i];
-        if (statement.qid == checkOutput.qid){
-          foundLib = true
-          checkOutput.date = Math.min(statement.date, checkOutput.date);
-          if (!checkOutput.contribution.includes(statement.contribution[0])){
-            checkOutput.contribution.concat(statement.contribution)
-          }
-          if (!checkOutput.instance.includes(statement.instance[0])){
-            checkOutput.instance.concat(statement.instance);
-          }
-        }
-      }
-      if (!foundLib) this._data[statement.type].push(statement)
-      this.empty = false;
-    }
-  }
-
-  storyContext() {
-    if (this.empty) return false;
-    return {
-      "type": "library",
-      "library": this._data,
-      "tooltip": "Library of " + this.name,
-      "color": "#dc8453",
-      "name": this.name,
-    }
-  }
-}
 
 class MapSlide extends IncludeInverseSlide {
   validateStatement(statement, inverse=false){

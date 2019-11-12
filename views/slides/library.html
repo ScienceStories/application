@@ -1,19 +1,18 @@
 <div class="section pp-scrollable slide-timeline slide-library" id="section{{id}}">
   <div class="content">
-    <div class="header" style="color:{{contrastColor color true}};background-color: {{color}}">
-      <h1>Library of {{name}}</h1>
-      <p> <span id="totalWorks"></span> Works By and About {{name}} Are Currently Recorded in Wikidata</p>
+    <div class="header" style="color:{{color.text}};background-color: {{color.background}}">
+      <h1>{{title}}</h1>
+      <p>{{subtitle}}</p>
     </div>
 
     <div class="page page-timeline page-library">
       <div id="library">
-        {{#each library}}
-        {{#if this}}
+        {{#each data}}
         <div class="library-section" id="library{{@key}}">
-          <div class="library-section-header">
-            {{#if_equal @key 'other'}}Other Works{{else}}{{@key}}s{{/if_equal}} that {{../name}} Contributed To
-          </div>
+          <div class="library-section-header">{{this.title}}</div>
+          {{#grouped_each 10 this.items}}
           <div class="library-collection-div">
+
             {{#each this}}
               <div class="library-item-div">
                 <a href="{{this.url}}" target="_blank">
@@ -21,37 +20,27 @@
                   <div class="library-cover" >
                     <div class="vert-middle-container" style="background: {{randomColor '.5' 'dark'}}">
                       <div class="library-cover-content">
-                      <div class="library-cover-title">
-                        {{#truncate 35}}
-                          {{this.title}}
-                        {{/truncate}}
-                      </div>
-                      <div class="library-cover-authors">
-                        {{#truncate 50}}
-                        {{arrayToString this.instance 'pipe'}}
-                        {{/truncate}}
-                      </div>
-                      <div class="library-cover-instance">
-                        {{#truncate 50}}
-                        Contribution: {{arrayToString this.contribution 'comma'}}
-                        {{/truncate}}
-                      </div>
+                        <div class="library-cover-title">{{this.title}}</div>
+                        <div class="library-cover-authors">
+                          {{this.instance}}
+                        </div>
+                        <div class="library-cover-instance">
+                          Contribution: {{this.contribution}}
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 </a>
               </div>
-
             {{/each}}
           </div>
 
           <div class="library-shelf-div">
-            <img src="/static/images/graphics/shelf_{{#if_equal @key 'book'}}wood{{else if_equal @key 'article'}}glass{{else}}metal{{/if_equal}}.png" alt="">
+            <img src="{{../graphic.url}}" alt="">
           </div>
-
+          {{/grouped_each}}
         </div>
-        {{/if}}
         {{/each}}
       </div>
           <style>
@@ -226,7 +215,6 @@ div#pagepiling .page-library .book::before {
     </div>
   </div>
   <script>
-  $('.slide-library #totalWorks').html($('.page-library .library-item-div').length)
   $('.library-collection-div').slick({
     arrows: true,
     slidesToShow: 6,
