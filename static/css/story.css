@@ -860,7 +860,6 @@ div#timeline {
     font-size: 180%;
     border-bottom:  1px solid;
     font-weight:  200;
-    text-transform:  lowercase;
 }
 
 .map-popup-item {
