@@ -1,32 +1,33 @@
 <div class="section pp-scrollable slide-people" id="section{{id}}">
   <div class="content">
     <div class="header">
-      <h1>People Relevant to {{name}}</h1>
-      <p> {{size people}} People are currently recorded in Wikidata connected to {{name}}</p>
+      <h1>{{title}}</h1>
+      <p> {{subtitle}}</p>
     </div>
     <div class="page page-people">
       <div class="people-list">
-        {{#each people}}
+        {{#each data}}
           <div class="people-item">
             <div class="deal">
-              <span>{{this.title}}</span>
-              {{#if this.image}}<span class="person-image"><img src="{{this.image}}" alt="image of {{this.title}}"></span>{{/if}}
+              <span>{{this.label}}</span>
+              {{#if this.image}}
+                <span class="person-image"><img src="{{this.image}}" alt="image of {{this.label}}"></span>
+              {{/if}}
             </div>
-            {{#if this.date_range}}
-              <button>{{this.date_range}}</button>
+            {{#if this.years}}
+              <button>{{this.years}}</button>
             {{/if}}
             <span class="price">
-              {{#each this.relation}}
+              {{#each this.relations}}
                 <div class="person-relation">
                   {{this}}
                 </div>
               {{/each}}
             </span>
             <ul class="features">
-              {{#if this.description}} <li class="people-item-description">{{this.description}}</li> {{/if}}
-              {{#each this.qualifier}}
-              <li>{{this}}</li>
-              {{/each}}
+              {{#if this.description}}
+                <li class="people-item-description">{{this.description}}</li>
+              {{/if}}
             </ul>
 
           </div>

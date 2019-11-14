@@ -83,7 +83,7 @@ class Slide {
 
   getSubclasses() {
     const subclasses = [
-      TimelineSlide, PeopleSlide, MapSlide,
+      TimelineSlide, MapSlide,
       WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
   }
@@ -263,107 +263,6 @@ class MapSlide extends IncludeInverseSlide {
   }
 }
 
-class PeopleSlide extends IncludeInverseSlide {
-
-  validateStatement(statement, inverse=false){
-    let name = this.name;
-    if (statement.person){
-      let tempval = {
-        qid: getValue(statement.person),
-        pid: getValue(statement.ps),
-        title: getValue(statement.personLabel),
-        description: getValue(statement.personDescription),
-        relation: false,
-        image: getValue(statement.personImg),
-        qualifier: false,
-        date_range: getYears(
-                  getValue(statement.personBirth),
-                  getValue(statement.personDeath)),
-        inverse: inverse
-      }
-      let person_prop = getValue(statement.personPropLabel);
-      let relation_prop = getValue(statement.ps);
-      if (relation_prop == "http://www.wikidata.org/prop/statement/P50"){
-        let person_prop = getValue(statement.personPropLabel);
-        if (person_prop == 'author'){
-          tempval.relation = "Co-Author";
-        }
-      }
-      else if (relation_prop == "http://www.wikidata.org/prop/statement/P1029"){
-        if (person_prop == 'crew member'){
-          tempval.relation = "Crew Member";
-          if (inverse && statement.ps_Label){
-            tempval.relation += " ("+getValue(statement.ps_Label)+")";
-          }
-        }
-      }
-      else if (relation_prop == "http://www.wikidata.org/prop/statement/P112"){
-        if (person_prop == 'founded by'){
-          tempval.relation = `${tempval.title} co-founded "${getValue(statement.ps_Label)}" with ${name}`;
-        }
-        else {
-          tempval.relation = `${name} founded "${getValue(statement.ps_Label)}" \n ${person_prop}: ${tempval.title}`;
-        }
-      }
-      return tempval;
-    }
-    if (getValue(statement.objInstance) == "http://www.wikidata.org/entity/Q5"){
-      var tempval = {
-        qid: statement.ps_.value,
-        pid: statement.ps.value,
-        title: statement.ps_Label.value,
-        description: false,
-        relation: false,
-        image: false,
-        qualifier: false,
-        date_range: getYears(
-                  getValue(statement.objBirth),
-                  getValue(statement.objDeath)),
-        inverse: inverse
-      }
-      if(statement.img && statement.img.value){
-        tempval.image = statement.img.value
-      }
-      if (statement.ps_Label && statement.ps_Label.value) {
-        if (inverse) tempval.relation = statement.wdLabel.value + ": "+name
-        else tempval.relation = statement.wdLabel.value
-      }
-      if(statement.ps_Description && statement.ps_Description.value){
-        tempval.description = statement.ps_Description.value
-      }
-      if (statement.wdpqLabel && statement.pq_Label){
-        if (inverse) tempval.qualifier = statement.wdpqLabel.value + " (for "+tempval.title+"): " + statement.pq_Label.value
-        else tempval.qualifier = statement.wdpqLabel.value + ': ' + statement.pq_Label.value
-      }
-      return tempval;
-    }
-    return false;
-  }
-
-  setStatement(input, inverse=false){
-    let statement = this.validateStatement(input, inverse);
-    if (statement){
-      let qid = statement.qid;
-      let newStatement = this.mergeStatement(qid, statement);
-      safeAppend(newStatement, statement, 'relation');
-      safeAppend(newStatement, statement, 'qualifier', true);
-      this._data[qid] = newStatement
-    }
-    return this._data;
-  }
-
-  storyContext(){
-    let data = this.process();
-    if (!data.length) return false;
-    return {
-      "type": "people",
-      "people": data,
-      "tooltip": "People Relevant to " + this.name,
-      "color": "#8d6fe6",
-      "name": this.name,
-    }
-  }
-}
 
 class TimelineSlide extends IncludeInverseSlide{
 
