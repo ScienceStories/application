@@ -83,7 +83,7 @@ class Slide {
 
   getSubclasses() {
     const subclasses = [
-      TimelineSlide, MapSlide,
+      TimelineSlide,
       WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
   }
@@ -165,100 +165,6 @@ class IndexSlide extends Slide {
       "name": this.name,
       "row": this.additional_data.row,
       "user": this.additional_data.user
-    }
-  }
-}
-
-
-class MapSlide extends IncludeInverseSlide {
-  validateStatement(statement, inverse=false){
-    let name = this.name;
-    var tempval = {
-      qid : false,
-      pid : statement.ps.value,
-      title: false,
-      image: false,
-      locationImage: false,
-      coordinates: false,
-      location: false,
-    }
-    if (statement.datatype.value == "http://wikiba.se/ontology#WikibaseItem"){
-      tempval.qid = statement.ps_.value
-    }
-    if(statement.img && statement.img.value){
-      tempval.image = statement.img.value
-    }
-    if(statement.locationImage && statement.locationImage.value){
-      tempval.locationImage = statement.locationImage.value
-    }
-    if (statement.locationLabel && statement.locationLabel.value) {
-      tempval.location = statement.locationLabel.value
-    }
-    if (statement.ps_Label && statement.ps_Label.value) {
-      tempval.location = statement.ps_Label.value
-    }
-
-    if (statement.location){
-      // Check if birth place
-      if (statement.ps.value == "http://www.wikidata.org/prop/statement/P19"){
-        tempval.title = name+" was born"
-        if (statement.ps_Label.value) {
-          tempval.title += " in " +statement.ps_Label.value
-        }
-        tempval.coordinates = wdCoordinatesToArray(statement.location.value)
-        return tempval
-      }
-      // Check if death place
-      if (statement.ps.value == "http://www.wikidata.org/prop/statement/P20"){
-        tempval.title = name+" died"
-        if (statement.ps_Label.value) {
-          tempval.title += " in " +statement.ps_Label.value
-        }
-        tempval.coordinates = wdCoordinatesToArray(statement.location.value)
-        return tempval
-      }
-      else{
-        tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
-        if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
-        tempval.coordinates = wdCoordinatesToArray(statement.location.value)
-        return tempval
-      }
-    }
-    else if (statement.objLocation){
-      tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
-      if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
-      tempval.coordinates = wdCoordinatesToArray(statement.objLocation.value)
-      return tempval
-    }
-    return false
-  }
-
-  setStatement(input, inverse=false){
-    let statement = this.validateStatement(input, inverse);
-    if (statement){
-      let old_val = this._data[statement.coordinates];
-      if(old_val) {
-        let foundmap = false;
-        for (var i = 0; i < old_val.length; i++) {
-          if (old_val[i].title == statement.title) {
-            foundmap = true;
-            i = old_val.length;
-          }
-        }
-        if (!foundmap) this._data[statement.coordinates].push(statement);
-      }
-      else this._data[statement.coordinates] = [statement];
-    }
-  }
-
-  storyContext(){
-    if (!Object.keys(this._data).length) return false;
-    return {
-      "type": "map",
-      "map": this._data,
-      "tooltip": "Significant Places",
-      "color": "rgb(29, 206, 173)",
-      "name": this.name,
     }
   }
 }
