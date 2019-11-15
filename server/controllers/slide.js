@@ -83,7 +83,6 @@ class Slide {
 
   getSubclasses() {
     const subclasses = [
-      TimelineSlide,
       WikipediaSlide, IndexSlide];
     return subclasses.map(cls => new cls(this.name, this.additional_data));
   }
@@ -100,13 +99,6 @@ class Slide {
         if (ctx) output.push(ctx);
         return output;
     }, jsonData);
-  }
-}
-
-class IncludeInverseSlide extends Slide {
-  constructor(name, additional_data) {
-    super(name, additional_data);
-    this.include_inverse = true;
   }
 }
 
@@ -165,123 +157,6 @@ class IndexSlide extends Slide {
       "name": this.name,
       "row": this.additional_data.row,
       "user": this.additional_data.user
-    }
-  }
-}
-
-
-class TimelineSlide extends IncludeInverseSlide{
-
-  validateStatement(statement, inverse=false){
-    if (this.isValidStatement(statement) && getValue(statement.wdLabel) != "author"){
-      // Skip Author Statements (Data is recoreded in the library)
-      var tempval = {
-        qid : false,
-        pid : statement.ps.value,
-        date: false,
-        title: false,
-        image: getValue(statement.img)
-      }
-      let statement_prop = getValue(statement.ps);
-      let statement_val = getValue(statement.ps_);
-      let statement_type = getValue(statement.datatype);
-      let qual_prop = getValue(statement.wdpq);
-      let name = this.name;
-
-      if (statement_type == "http://wikiba.se/ontology#WikibaseItem"){
-        tempval.qid = statement_val;
-      }
-      // Check if birth date
-      if (statement_prop == "http://www.wikidata.org/prop/statement/P569"){
-        tempval.title = name+" is Born"
-        tempval.date = statement_val;
-        return tempval
-      }
-      // Check if death date
-      else if (statement_prop == "http://www.wikidata.org/prop/statement/P570"){
-        tempval.title = name+" Passes"
-        tempval.date = statement_val;
-        return tempval
-      }
-      // Start Time
-      else if (qual_prop == "http://www.wikidata.org/entity/P580"){
-        tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Begins"
-        if (inverse) tempval.title = statement.ps_Label.value + "- Begins ("+ statement.wdLabel.value + ": "+name+")"
-        tempval.date = statement.pq_Label.value;
-        return tempval
-      }
-      // End Time
-      else if (qual_prop ==  "http://www.wikidata.org/entity/P582"){
-        tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value + " - Ends"
-        if (inverse) tempval.title = statement.ps_Label.value + "- Ends ("+ statement.wdLabel.value + ": "+name+")"
-        tempval.date = statement.pq_Label.value;
-        return tempval
-      }
-      // Check if point in time
-      else if (qual_prop == "http://www.wikidata.org/entity/P585"){
-        tempval.title = statement.wdLabel.value + ": " + statement.ps_Label.value
-        if (inverse) tempval.title = statement.ps_Label.value + " ("+ statement.wdLabel.value + ": "+name+")"
-        tempval.date = statement.pq_Label.value
-        return tempval;
-      }
-      // If datetime value of statement
-      else if (statement_type == "http://wikiba.se/ontology#Time"
-        || statement.ps_.datatype ==  "http://www.w3.org/2001/XMLSchema#dateTime"){
-        tempval.title = statement.wdLabel.value;
-        if (inverse) tempval.title = statement.ps_Label.value + " ("+ statement.wdLabel.value + ": "+name+")";
-        tempval.date = statement.ps_Label.value;
-        return tempval;
-      }
-      // If datetime value of statement
-      else if (statement.objDate){
-        tempval.title = statement.wdLabel.value;
-        if (inverse) tempval.title = statement.ps_Label.value + " ("+  statement.wdLabel.value + ": "+name+")"
-        tempval.date = statement.objDate.value;
-        return tempval;
-      }
-    }
-    return false;
-  }
-
-  setStatement(input, inverse=false){
-    let statement = this.validateStatement(input, inverse);
-    if (statement){
-      let uuid = String(statement.title) + String(statement.date);
-      this._data[uuid] = this.mergeStatement(uuid, statement);
-    }
-    return this._data;
-  }
-
-  storyContext(){
-    let data = this.process();
-    if (this.additional_data.wikidata_date){
-      data.push({
-        date: this.additional_data.wikidata_date,
-        title: this.name + " Gets Added To Wikidata",
-        image: "https://upload.wikimedia.org/wikipedia/commons/6/66/Wikidata-logo-en.svg"
-      })
-    }
-    if (this.additional_data.wikipedia_date){
-      data.push({
-        date: this.additional_data.wikipedia_date,
-        title: this.name + " Gets Added To English Wikipedia",
-        image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg"
-      })
-    }
-    if (this.additional_data.science_stories_date){
-      data.push({
-        date: this.additional_data.science_stories_date,
-        title: this.name + " Gets a Science Story",
-        image: "/static/images/branding/logo_black.png"
-      })
-    }
-    if (!data.length) return false;
-    return {
-      "type": "timeline",
-      "timeline": data,
-      "tooltip": "Timeline",
-      "color": "#1dc7ce",
-      "name": this.name,
     }
   }
 }
