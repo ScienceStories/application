@@ -1,8 +1,8 @@
 <div class="section pp-scrollable slide-timeline" id="section{{id}}">
   <div class="content">
     <div class="header">
-      <h1>Timeline of {{name}}</h1>
-      <p> <span id="section5Total"></span> Moments are currently recorded in Wikidata about {{name}}</p>
+      <h1>{{title}}</h1>
+      <p>{{subtitle}}</p>
     </div>
     <div class="page page-timeline">
       <div id="timeline"></div>
@@ -11,7 +11,7 @@
   <script>
   // NEW CODE
     newEvents = [
-      {{#each timeline}}
+      {{#each data}}
         {
           start: parseInt('{{this.date}}'.substring(0,4), 10),
           title: '{{this.title}}',
@@ -29,7 +29,6 @@
     }
     startTime = Math.ceil(startTime / 10) * 10 - 10;
     endTime = Math.ceil(endTime / 10) * 10 +10;
-    $('#section5Total').html(newEvents.length)
     $('#timeline').timespace({
       maxWidth: Math.round(screen.width*.9),
       timeType: 'date',
