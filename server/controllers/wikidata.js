@@ -8,7 +8,6 @@ const sparqlController = require('./sparql');
 const commentController = require('./comment');
 const StoryActivity = require('../models').storyactivity;
 const sequelize = require('../models').sequelize;
-const Slide = require('./slide').Slide;
 const moment = require('moment');
 const randomColor = require('randomcolor');
 const iconMap = JSONFile("server/controllers/iconMap.json");
@@ -172,39 +171,35 @@ const _ = module.exports = {
     // return res.send(jsonData)
     const qid = 'Q'+req.params.id;
     return StoriesAPI.get(qid, story => {
+      const user = req.session.user;
       const name = story.label;
       jsonData = jsonData.concat(story.moments);
       const url = sparqlController.getStoryClaims(qid);
-
+      meta = {};
+      meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
       appFetch(url).then(itemStatements => {
         itemStatements = _.simplifySparqlFetch(itemStatements)
         let storyImage = _.getMainStoryImage(row.data, itemStatements);
         var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
         appFetch(inverseUrl).then(inverseClaimsOutput => {
           inverseStatements = _.simplifySparqlFetch(inverseClaimsOutput);
-          let labelURL = `https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${qid}&format=json&props=labels|sitelinks&sitefilter=enwiki&languages=en`
-          appFetch(labelURL).then(labels => {
-            meta = {};
-            meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
-            wikipedia = '';
-            if (labels.entities[qid].sitelinks.enwiki){
-              wikipedia = labels.entities[qid].sitelinks.enwiki.title;
-            }
             let wikidataManifestData = _.getWikidataManifestData(name, itemStatements, inverseStatements);
-            return _.getWikiCreationDates(qid, wikipedia, (wikidata_date, wikipedia_date) => {
               let additional_data = {
                 qid: qid,
-                wikipedia_url: wikipedia,
-                wikidata_date: wikidata_date,
-                wikipedia_date: wikipedia_date,
                 science_stories_date: (row.createdAt) ? row.createdAt.toISOString() : null,
                 row: row,
-                user: req.session.user,
+                user: user,
                 story
               }
               jsonData = jsonData.concat(wikidataManifestData);
-              jsonData = new Slide(name, additional_data)
-                .getDynamicSlides(jsonData, itemStatements, inverseStatements);
+              jsonData = jsonData.map(m => {
+                if (m.type == "index"){
+                  // TODO: Temporary solution to add SS data into moment
+                  m.story_data = row;
+                  m.user = req.session.user
+                }
+                return m
+              })
               let storyRenderData = {
                 page: function(){ return 'story'},
                 scripts: function(){ return 'story_scripts'},
@@ -240,12 +235,9 @@ const _ = module.exports = {
                 .catch(error => res.renderError());
               }
               return res.render('full', storyRenderData);
-            })
-          })
         })
       })
     })
-
   },
   getStatementValueByProp(statements, prop_id){
     for (let i = 0; i < statements.length; i++) {
