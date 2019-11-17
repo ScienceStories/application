@@ -1,17 +1,16 @@
 <div class="section pp-scrollable last-section slide-index" id="sectionIndex">
   <div class="content">
-    <div class="header"  style="color:{{contrastColor color true}};">
-      <h1>Learn More About {{name}} </h1>
-      <p>Browse through resource links, contribution/attributions, and forum
-        comments to find other places on the web that describe {{name}}</p>
+    <div class="header"  style="color:{{color.text}};">
+      <h1>{{title}}</h1>
+      <p>{{subtitle}}</p>
     </div>
     <div class="page page-index">
       <div id="leftIndex">
         <div class="index-header">Helpful External Resources</div>
         <ul>
-          {{#each content}}
-            <li><span class="prop">{{this.prop}}:</span>
-              <a href="{{this.url}}" target="_blank">{{this.value}}</a>
+          {{#each data}}
+            <li><span class="prop">{{this.property}}:</span>
+              <a href="{{this.url}}" target="_blank">{{this.label}}</a>
                 <div class="prop-desc">{{this.description}}</div>
             </li>
           {{/each}}
@@ -20,7 +19,7 @@
       <div id="rightIndex">
         <div class="index-header">Curators</div>
         <div class="curator-list">
-          {{#each row.contributors}}
+          {{#each story_data.contributors}}
           <a class="comment-avatar" href="/member:{{this.member.username}}">
             <div class="curator-item">
                 <div class="comment-image-container">

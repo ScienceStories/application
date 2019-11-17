@@ -96,10 +96,6 @@
             <i class="fas fa-file-pdf"></i>
           {{else if_equal this.type 'google_book'}}
             <i class="fas fa-book-reader"></i>
-          {{else if_equal this.type 'wikipedia'}}
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b3/Wikipedia-logo-v2-en.svg" alt="Wikipedia Logo">
-          {{else if_equal this.type 'index'}}
-            <i class="far fa-comments"></i>
           {{else}}
             <i class="fas fa-info-circle"></i>
           {{/if_equal}}
@@ -119,7 +115,7 @@
     </div>
   <div id="pagepiling">
     {{#each data}}
-      {{loadMoment this.type this}}
+      {{loadMoment this.type this }}
     {{/each}}
 
   </div>

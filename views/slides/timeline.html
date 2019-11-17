@@ -13,7 +13,7 @@
     newEvents = [
       {{#each data}}
         {
-          start: parseInt('{{this.date}}'.substring(0,4), 10),
+          start: {{this.year}},
           title: '{{this.title}}',
           description: $(`<div class="tl-desc-div">
             {{#if this.image}}<img src="{{this.image}}" />{{/if}}
