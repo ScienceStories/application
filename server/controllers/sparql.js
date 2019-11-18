@@ -26,27 +26,6 @@ const _ = module.exports = {
     else for (let i in qidList) qidStr += `(wd:${qidList[i]}) `;
     return qidStr;
   },
-  getClaims(qid, lang){
-    var query = `
-    SELECT ?ps ?wdLabel ?datatype ?ps_Label ?ps_ ?wdpq ?wdpqLabel ?pq_Label ?url {
-      VALUES (?company) {(wd:${qid})}
-      ?company ?p ?statement .
-      ?statement ?ps ?ps_ .
-      ?wd wikibase:claim ?p.
-      ?wd wikibase:statementProperty ?ps.
-      ?wd wikibase:propertyType  ?datatype.
-      OPTIONAL {
-      ?statement ?pq ?pq_ .
-      ?wdpq wikibase:qualifier ?pq .
-      }
-      OPTIONAL {
-        ?wd wdt:P1630 ?url  .
-      }
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
-    } ORDER BY ?wd ?statement ?ps_
-    `
-    return wdk.sparqlQuery(query);
-  },
   getAnnotationData(qid, callback){
     return _.execute(`
       SELECT ?item ?itemLabel ?instance ?instanceLabel
@@ -70,115 +49,6 @@ const _ = module.exports = {
         ?story wdt:P31 wd:Q5.
       }
     `, callback);
-  },
-  getStoryClaims(qid, lang){
-    const query = `
-    SELECT ?statement ?ps ?wdLabel ?wdDescription ?datatype ?ps_Label
-    ?ps_Description ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?logo ?location
-    ?objLocation ?objLocationEntityLabel ?locationImage ?objInstance
-    ?objInstanceLabel ?objWebsite ?objBirth ?objDeath ?conferred ?conferredLabel
-    (STRAFTER(STR(?refProp), 'reference/') as ?ref_prop) ?ref_val{
-    VALUES (?company) {(wd:${qid})}
-    ?company ?p ?statement .
-    ?statement ?ps ?ps_ .
-    ?wd wikibase:claim ?p.
-    ?wd wikibase:statementProperty ?ps.
-    ?wd wikibase:propertyType  ?datatype.
-    FILTER (?ps != ps:P1889).
-    OPTIONAL {
-    ?statement ?pq ?pq_ .
-    ?wdpq wikibase:qualifier ?pq .
-    }
-    OPTIONAL {
-     ?statement prov:wasDerivedFrom ?ref .
-      ?ref ?refProp ?ref_val.
-    }
-OPTIONAL{
-   ?ps_ wdt:P31 ?objInstance .
- }
-    OPTIONAL {
-      ?wd wdt:P1630 ?url  .
-      }
-  OPTIONAL {
-  ?ps_ wdt:P856 ?objWebsite .
-  }
-      OPTIONAL{
- ?ps_ wdt:P18 ?img .
- }
-      OPTIONAL{
- ?ps_ wdt:P154 ?logo .
- }
-        OPTIONAL{
- ?ps_ wdt:P569 ?objBirth .
- }
-  OPTIONAL{
- ?ps_ wdt:P570 ?objDeath .
- }
- OPTIONAL{
-   ?ps_ wdt:P276|wdt:P159 ?objLocationEntity .
-   ?objLocationEntity wdt:P625 ?objLocation.
-   OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
- }
- OPTIONAL{
-   ?ps_ wdt:P1027 ?conferred.
-   }
- OPTIONAL{
- ?ps_ wdt:P625 ?location .
- }
-    SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
-  } ORDER BY ?wd ?statement ?ps_
-
-    `
-    return wdk.sparqlQuery(query);
-  },
-  getInverseClaims(qid, lang){
-    var query = `SELECT ?statement ?ps ?ps_Description ?wdLabel ?wdDescription ?datatype ?ps_Label ?ps_ ?wdpqLabel  ?wdpq ?pq_Label ?url ?img ?location ?objLocation ?objLocationEntityLabel ?locationImage ?objDate ?objProp
-      ?objBirth ?objDeath ?objInstance ?objInstanceLabel ?manifest ?manifest_collectionLabel  ?personPropLabel ?person ?personLabel ?personDescription ?personBirth ?personDeath ?personImg ?doi ?handle ?full_work ?website{
-      VALUES (?oldps_) {(wd:${qid})}
-      ?ps_ ?p ?statement .
-      ?statement ?ps ?oldps_ .
-      ?wd wikibase:claim ?p.
-      ?wd wikibase:statementProperty ?ps.
-      ?wd wikibase:propertyType  ?datatype.
-      FILTER (?ps != ps:P1889).
-   OPTIONAL {
-     ?statement ?pq ?pq_ .
-     ?wdpq wikibase:qualifier ?pq.
-   }
-   OPTIONAL {?wd wdt:P1630 ?url.}
-   OPTIONAL {?ps_ wdt:P856 ?website.}
-   OPTIONAL {?ps_ wdt:P953 ?full_work.}
-   OPTIONAL{?ps_ wdt:P356 ?doi.}
-   OPTIONAL{?ps_ wdt:P1184 ?handle}
-   OPTIONAL{?ps_ wdt:P18 ?img .}
-   OPTIONAL{
-     ?ps_ wdt:P276|wdt:P159 ?objLocationEntity .
-     ?objLocationEntity wdt:P625 ?objLocation.
-     OPTIONAL{?objLocationEntity wdt:P18 ?locationImage.}
-   }
-  OPTIONAL{
-    ?ps_ wdt:P50|wdt:P112|wdt:P1029 ?isperson . # check that the person's contribution matches the main person (i.e. both authors)
-    ?ps_ ?tval ?person .
-    ?person wdt:P31 wd:Q5 .
-    ?personProp wikibase:directClaim ?tval.
-    filter( ?isperson = ?oldps_).
-    filter( ?person != ?oldps_).
-    OPTIONAL{?person wdt:P569 ?personBirth .}
-    OPTIONAL{?person wdt:P570 ?personDeath .}
-    OPTIONAL{?person wdt:P18 ?personImg .}
-  }
-  OPTIONAL{?ps_ wdt:P625 ?location .}
-  OPTIONAL{?ps_ wdt:P571|wdt:P577 ?objDate .}
-  OPTIONAL{?ps_ wdt:P569 ?objBirth .}
-  OPTIONAL{?ps_ wdt:P570 ?objDeath .}
-  OPTIONAL{?ps_ wdt:P31 ?objInstance .}
-  OPTIONAL{
-     ?ps_ wdt:P6108 ?manifest .
-     optional{?ps_ wdt:P195 ?manifest_collection.}
-   }
-   SERVICE wikibase:label { bd:serviceParam wikibase:language "en" }
-} ORDER BY ?wd ?statement ?ps_`
-    return wdk.sparqlQuery(query);
   },
   getSmallDetailsList(qidList, lang){
     // TODO: This query is ran 3 times on overview page, we should consolidate
@@ -228,31 +98,4 @@ OPTIONAL{
       }
     `, callback);
   },
-  getNamedAfter(item, lang){
-    var query = `#defaultView:Map
-    SELECT ?truc ?presLabel ?trucLabel ?coord ?layer WHERE {
-      {
-        SELECT DISTINCT ?truc (SAMPLE(?coord) AS ?coord) (SAMPLE(?layer) AS ?layer) WHERE {
-         VALUES ( ?pres) {(wd:Q11641) } .
-
-          ?truc wdt:P138 ?pres .
-          optional {
-           ?truc     wdt:P625 ?coord.
-            }
-        }
-        GROUP BY ?truc ?trucLabel
-      }
-      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
-    }`
-    return wdk.sparqlQuery(query);
-  },
-  getCommonsCategory(item, callback){
-    return _.execute(`
-      SELECT ?item ?category
-      WHERE {
-        VALUES (?item) { (wd:${item}) }.
-        ?item wdt:P373 ?category.
-      }
-    `, callback);
-  }
 }

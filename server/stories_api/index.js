@@ -5,7 +5,7 @@ const storyAPIRequest = axios.create();
 
 storyAPIRequest.interceptors.request.use(config => {
   // Parse slug with base url
-  config.url = `${STORIES_API_URL}/api/story/${STORIES_API_CLIENT_NAME}/${config.url}`;
+  config.url = `${STORIES_API_URL}/api/story/${config.url}`;
   return config;
 });
 

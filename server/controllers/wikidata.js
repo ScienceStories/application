@@ -35,12 +35,6 @@ const _ = module.exports = {
       return callback(qidList);
     })
   },
-  mergeValuesComma(){
-    // TODO:
-  },
-  mergeValuesList(){
-    // TODO:
-  },
   mergeValuesFirst(qidList, rawData){
     let tempQidList = qidList.slice();
     let content = [];
@@ -101,12 +95,6 @@ const _ = module.exports = {
     })
   },
 
-  simplifySparqlFetch(content){
-    return content.results.bindings.map(function(x){
-      if (x.url != null) x.url.value = x.url.value.replace('$1', x.ps_Label.value);
-      return x;
-    })
-  },
   getDetailsList(req, res, qidList, detailLevel, mergeType=false, defaultImage=false, callback){
     if (detailLevel == 'small'){
       //  label, description, optional image
@@ -174,91 +162,61 @@ const _ = module.exports = {
       const user = req.session.user;
       const name = story.label;
       jsonData = jsonData.concat(story.moments);
-      const url = sparqlController.getStoryClaims(qid);
-      meta = {};
-      meta.description = `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
-      appFetch(url).then(itemStatements => {
-        itemStatements = _.simplifySparqlFetch(itemStatements)
-        let storyImage = _.getMainStoryImage(row.data, itemStatements);
-        var inverseUrl = sparqlController.getInverseClaims(qid, 'en')
-        appFetch(inverseUrl).then(inverseClaimsOutput => {
-          inverseStatements = _.simplifySparqlFetch(inverseClaimsOutput);
-            let wikidataManifestData = _.getWikidataManifestData(name, itemStatements, inverseStatements);
-              let additional_data = {
-                qid: qid,
-                science_stories_date: (row.createdAt) ? row.createdAt.toISOString() : null,
-                row: row,
-                user: user,
-                story
-              }
-              jsonData = jsonData.concat(wikidataManifestData);
-              jsonData = jsonData.map(m => {
-                if (m.type == "index"){
-                  // TODO: Temporary solution to add SS data into moment
-                  m.story_data = row;
-                  m.user = req.session.user
-                }
-                return m
-              })
-              let storyRenderData = {
-                page: function(){ return 'story'},
-                scripts: function(){ return 'story_scripts'},
-                links: function(){ return 'story_links'},
-                title: name +" - Story",
-                nav: "Story",
-                urlPath: getURLPath(req),
-                name: name,
-                qid: qid,
-                image: storyImage,
-                row: row,
-                isPreview: isPreview,
-                meta: meta,
-                user: req.session.user,
-                data: jsonData,
-              }
-              if (req.session.user && !isPreview) {
-                return StoryActivity
-                .findOrCreate({where: {
-                  memberId: req.session.user.id,
-                  storyId: row.id
-                }})
-                .spread((found, created) => {
-                  found.update({
-                    views: found.views+1,
-                    lastViewed: sequelize.fn('NOW')
-                  })
-                  .then(output => {
-                    storyRenderData.storyActivity = output.dataValues;
-                    return res.render('full', storyRenderData);
-                  })
-                })
-                .catch(error => res.renderError());
-              }
-              return res.render('full', storyRenderData);
-        })
+      jsonData = jsonData.map(m => {
+        if (m.type == "index"){
+          // TODO: Temporary solution to add SS data into moment
+          m.story_data = row;
+          m.user = user;
+        }
+        return m;
       })
+      const storyRenderData = {
+        page: function(){ return 'story'},
+        scripts: function(){ return 'story_scripts'},
+        links: function(){ return 'story_links'},
+        title: name +" - Story",
+        nav: "Story",
+        urlPath: getURLPath(req),
+        name,
+        qid,
+        image: _.getMainStoryImage(row.data, story.images),
+        row,
+        isPreview,
+        meta: {
+          description: `Visually learn about ${name}. View the ${name} Science Story that compiles the multimedia (images, videos, pictures, works, etc.) found throughout the web and enriches their content using Wikimedia via Wikidata, Wikipedia, and Commons alongside YouTube Videos, IIIF Manifests, Library Archives and more.`
+        },
+        user,
+        data: jsonData,
+      }
+      if (user && !isPreview) {
+        return StoryActivity
+        .findOrCreate({where: {
+          memberId: user.id,
+          storyId: row.id
+        }})
+        .spread((found, created) => {
+          found.update({
+            views: found.views+1,
+            lastViewed: sequelize.fn('NOW')
+          })
+          .then(output => {
+            storyRenderData.storyActivity = output.dataValues;
+            return res.render('full', storyRenderData);
+          })
+        })
+        .catch(error => res.renderError());
+      }
+      return res.render('full', storyRenderData);
     })
   },
-  getStatementValueByProp(statements, prop_id){
-    for (let i = 0; i < statements.length; i++) {
-      let tempItem = statements[i];
-      if (tempItem.ps
-        && tempItem.ps.value
-        && (tempItem.ps.value == "http://www.wikidata.org/prop/statement/"+prop_id)
-        && tempItem.ps_
-        && tempItem.ps_.value
-      ) return tempItem.ps_.value;
-    }
-    return false;
-  },
-  getMainStoryImage(storyData, wikidata, callback){
+  getMainStoryImage(storyData, images){
     for (let i = 0; i < storyData.length; i++) {
       if (storyData[i].image){
         return storyData[i].image;
       }
     }
-    let img_val = _.getStatementValueByProp(wikidata, 'P18');
-    return (img_val) ? img_val : 'http://sciencestories.io/static/images/branding/logo_black.png';
+    for (let i = 0; i < images.length; i++) return images[i];
+    return 'http://sciencestories.io/static/images/branding/logo_black.png';
   },
   processAnnotation(req, res){
     qid = req.params.qid;
@@ -339,63 +297,4 @@ const _ = module.exports = {
 
   },
 
-  getWikidataManifestData(name, wdData, inverseData){
-    let output = [];
-    let manifestFound = {};
-    for (var i = 0; i < inverseData.length; i++) {
-      let statement = inverseData[i]
-      if (statement.manifest && statement.manifest.value && !manifestFound[statement.manifest.value]) {
-        let manifest_data = {
-          manifestUri: statement.manifest.value,
-          viewType: "ImageView",
-        };
-        if (statement.manifest_collectionLabel
-            && statement.manifest_collectionLabel.value){
-          manifest_data.location = statement.manifest_collectionLabel.value;
-        }
-        let manifest = {
-          type: "mirador",
-          title: statement.ps_Label.value,
-          color: randomColor({luminosity: 'dark'}),
-          config: {
-            data: [manifest_data],
-            layout: "1x1"
-          }
-        };
-        if (manifest_data.location){
-          manifest.tooltip = manifest_data.location+': '+manifest.title;
-        }
-        if (statement.ps_Description && statement.ps_Description.value){
-          let description = statement.ps_Description.value;
-          if (manifest_data.location){
-            description += ` (Content Provided By ${manifest_data.location})`
-          }
-          manifest.description = description;
-          manifestFound[manifest_data.manifestUri] = true;
-        }
-        output.push(manifest);
-      }
-    }
-    return output;
-  },
-  getWikiCreationDates(qid, wikipedia_name, callback){
-    let url_params = '?action=query&prop=revisions&rvlimit=1&rvprop=timestamp&rvdir=newer&format=json&titles='
-    let wikidataUrl = 'https://www.wikidata.org/w/api.php'+url_params+qid;
-    return appFetch(wikidataUrl).then((wdresponse) => {
-      let wikidata_date = _._parseWikimediaAPIRevision(wdresponse);
-      let wikipediaUrl = 'https://en.wikipedia.org/w/api.php'+url_params+wikipedia_name;
-      return appFetch(encodeURI(wikipediaUrl)).then((wpresponse) => {
-        let wikipedia_date = _._parseWikimediaAPIRevision(wpresponse);
-        return callback(wikidata_date, wikipedia_date);
-      })
-    })
-  },
-  _parseWikimediaAPIRevision(response){
-    try {
-      return Object.values(response.query.pages)[0].revisions[0].timestamp;
-    }
-    catch(err) {
-      return null;
-    }
-  },
 };
