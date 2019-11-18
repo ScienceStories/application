@@ -16,7 +16,7 @@ const itemTypeMap = JSONFile("server/controllers/itemTypeMap.json");
 
 const _ = module.exports = {
   bibliography(req, res) {
-    return StoriesAPI.get('bibliography', data => {
+    return StoriesAPI.get('science_stories/bibliography', data => {
       const works = data.map(work => {
         work.icon = iterMap(work.instances, BIBLIOGRAPHY_INSTANCE_TO_ICON_MAP)
         return work;
