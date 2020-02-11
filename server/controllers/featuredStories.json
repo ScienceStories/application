@@ -1,42 +1,42 @@
 [
   {
-    "name": "Katharine Jeannette Bush",
-    "qid": "Q6376201",
-    "date_range": "1855-1937",
-    "occupation": "Zoologist & Researcher",
-    "description": "One of the First women to receive a Ph.D. in the sciences at Yale University",
-    "image": "http://peabody.yale.edu/sites/default/files/images/archives/Bush_KJ.jpg"
+    "name": "Dr. Roselyn P. Epps",
+    "qid": "Q16728838",
+    "date_range": "1930-2014",
+    "occupation": "pediatrician",
+    "description": "physician and educator with expertise in pediatrics, public health, maternal and child health, and women’s health",
+    "image": "https://giving.howard.edu/sites/development.howard.edu/files/RPE%20Photo%20%281%29.jpg"
   },
   {
-    "name": "Grace Hopper",
-    "qid": "Q11641",
-    "date_range": "1906-1992",
-    "occupation": "Computer Scientist & U.S. Navy Rear Admiral",
-    "description": "Early leader of computer programming and inventor of foundational compiler tools that have shaped the future of modern computing",
-    "image": "https://stories.vassar.edu/2017/assets/images/170706-legacy-of-grace-hopper-hopper-militarypportrait.jpeg"
+    "name": "Dr. Doris L. Wethers",
+    "qid": "Q19594759",
+    "date_range": "1927-2019",
+    "occupation": "physician and medical researcher",
+    "description": "pediatrician and leading researcher of sickle-cell disease",
+    "image": "https://epmgaa.media.clients.ellingtoncms.com/img/photos/2019/02/22/DrDoris_t750x550.jpg"
   },
   {
-    "name": "Dorrit Hoffleit",
-    "qid": "Q451538",
-    "date_range": "1907-2007",
-    "occupation": "Research Astronomer",
-    "description": "Inventor of the Bright Star Catalog",
-    "image": "http://www.encyclopediaofalabama.org/images/m-6968.jpg"
+    "name": "Dr. Lillian Holland Harvey",
+    "qid": "Q52238536",
+    "date_range": "1912-1994",
+    "occupation": "nurse and educator",
+    "description": "established the first baccalaureate degree program in nursing in the State of Alabama in 1953",
+    "image": "https://upload.wikimedia.org/wikipedia/en/4/41/Lillian_Holland_Harvey.jpeg"
   },
   {
-    "name": "Dorothy Horstmann",
-    "qid": "Q5298518",
-    "date_range": "1911-2001",
-    "occupation": "Epidemiologist, Virologist and Pediatrician",
-    "description": "First woman appointed as a professor at the Yale School of Medicine",
-    "image": "http://www.polioplace.org/sites/default/files/person/horstmann-yale.jpg"
+    "name": "Dr. Thyrsa Frazier Svager",
+    "qid": "Q12897730",
+    "date_range": "1930-1999",
+    "occupation": "mathematician",
+    "description": "philanthropist and mathematician",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Thyrsa_Frazier_Svager.jpg"
   },
   {
-    "name": "Maxine Singer",
-    "qid": "Q7309",
-    "date_range": "1931-",
-    "occupation": "Molecular Biologist",
-    "description": "Contributor to research on solving the genetic code in DNA",
-    "image": "https://web.archive.org/web/20190829003824if_/https://profiles.nlm.nih.gov/ps/access/DJBBLB.jpg"
+    "name": "Dr. Brenda Armstrong",
+    "qid": "Q84083960",
+    "date_range": "1949-2018  ",
+    "occupation": "pediatric cardiologist",
+    "description": "recently honored with a portrait at Duke University",
+    "image": "https://today.duke.edu/sites/default/files/styles/story_body/public/Brenda-Armstrongsmall.jpg"
   }
 ]
