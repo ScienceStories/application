@@ -237,23 +237,7 @@ fs.readdirSync(partials).forEach(function (file) {
 
     hbs.registerPartial(partial, source);
 });
-// Register partials
-var partials = "./views/slides/";
-fs.readdirSync(partials).forEach(function (file) {
-    var source = fs.readFileSync(partials + file, "utf8"),
-        partial = /(.+)\.html/.exec(file).pop();
 
-    hbs.registerPartial(partial, source);
-});
-
-hbs.registerHelper('loadMoment', function(template, data, options) {
-  // console.log("LOADING ", template, data, options)
-    var loadedPartial = hbs.partials[template];
-    if (typeof loadedPartial !== 'function') {
-      loadedPartial = hbs.compile(loadedPartial);
-    }
-    return new hbs.SafeString(loadedPartial(data, options));
-});
 hbs.registerHelper('json', function(data) {
   return JSON.stringify(data)
 });

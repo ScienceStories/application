@@ -5,7 +5,6 @@ const { BIBLIOGRAPHY_INSTANCE_TO_ICON_MAP } = require('../constants');
 const StoriesAPI = require('../stories_api');
 const { getValue, iterMap, JSONFile, safeOverwrite } = require('../utils');
 const sparqlController = require('./sparql');
-const commentController = require('./comment');
 const StoryActivity = require('../models').storyactivity;
 const sequelize = require('../models').sequelize;
 const moment = require('moment');
