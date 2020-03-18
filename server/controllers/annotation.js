@@ -82,8 +82,9 @@ module.exports = {
   loadAll(req, res) {
     sendData = {};
     return Annotation
-      .all()
+      .findAll()
       .then(out => {
+        return res.status(200).send(out)
         for (anno in out){
           sendData[out[anno].uri] = out[anno].state;
         }

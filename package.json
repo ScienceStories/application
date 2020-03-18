@@ -9,7 +9,9 @@
     "start:dev": "nodemon ./bin/www",
     "manifest:dev": "biiif collection -u http://localhost:${PORT:-8000}/collection",
     "manifest": "biiif collection -u http://sciencestories.ksn.io/collection",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd client && npm install --only=dev && npm install && npm run build",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
   "keywords": [
     "IIIF",

@@ -5,13 +5,16 @@ const annotationController = require('../controllers').annotation;
 const commentController = require('../controllers').comment;
 const sitemapController = require('../controllers').sitemap;
 const awsController = require('../controllers').aws;
+const path = require('path');
 const fetch = require('node-fetch');
 const fs = require('fs');
 
 module.exports = (app, sessionChecker) => {
 
   // route for Home-Page
-  app.get('/', storyController.welcome);
+
+  app.get('/', (req, res)=>  res.redirect('/welcome'));
+  app.get('/welcome', storyController.welcome);
   app.get('/donate', (req, res) => res.renderFullPage('donate', {title:'Giving'}))
   app.get('/home', membersController.homeRedirect)
   app.get('/search', storyController.search)
@@ -19,13 +22,23 @@ module.exports = (app, sessionChecker) => {
   app.get('/sitemap', sitemapController.generate);
   app.post('/api/comment/send', commentController.send);
   app.get('/api/comment/:comment_id', commentController.renderId);
+  app.get('/api/story/dump', storyController.dump);
   app.get('/api/story/validate/:qid', storyController.validate);
   app.get('/api/story/:story_id/commentlist', commentController.renderList);
   app.get('/api/story/:story_id/comments', commentController.storyList);
   // route for Home-Page
-  app.get('/Q:id', storyController.select);
+  // app.get('/Q:id', storyController.select);
+  // Proxy all other requests to the React front-end app
+  app.get('/Q:id', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../../client/build/index.html'))
+  });
+  app.get('/q:id', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../../client/build/index.html'))
+  });
   app.get('/preview', storyController.preview);
-  app.get('/browse', storyController.browse);
+  app.get('/browse', (req, res) => {
+    res.sendFile(path.join(__dirname + '/../../client/build/index.html'))
+  })
   app.get('/bibliography', wikidataController.bibliography);
   // route for Home-Page
   app.get('/manifest', sessionChecker, (req, res) => {
@@ -114,9 +127,14 @@ module.exports = (app, sessionChecker) => {
   });
   app.get('/api/wd/annotation/:qid', wikidataController.processAnnotation);
 
+    // // Proxy all other requests to the React front-end app
+    // app.get('*', (req, res) => {
+    //   res.sendFile(path.join(__dirname + '/../../client/build/index.html'))
+    // })
   // route for handling 404 requests(unavailable routes)
   app.use(function (req, res, next) {
     res.renderError("404: Sorry can't find this page", 404)
   });
+
 
 };

@@ -42,6 +42,7 @@ app.use('/scripts', cors(), express.static(__dirname + '/node_modules/'));
 app.use('/build/mirador', cors(), express.static(__dirname + '/static/vendor/mirador/'));
 app.use('/api/iiif/manifest/local/',  cors(), express.static(__dirname + '/manifests/'));
 app.use('/static', cors(), express.static(__dirname + '/static/'));
+app.use(express.static("client/build"));
 app.use('/uv-config.json', cors(), (req, res) => res.sendFile(__dirname + '/uv-config.json'));
 // TODO: create handlebarsHelpers.js
 hbs.registerHelper('if_equal', function(a, b, opts) {

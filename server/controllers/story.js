@@ -114,6 +114,11 @@ const _ = module.exports = {
     let data = JSON.parse(req.query.data);
     return wikidataController.processStory(req, res, {data: data});
   },
+  dump(req,res) {
+    return Story.findAll().then(stories => {
+      return res.send(stories)
+    })
+  },
   searchFunction(string, tokens){
     var tokenTotal = tokens.length
     var searchScore = 0
