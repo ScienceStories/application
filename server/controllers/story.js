@@ -1,15 +1,15 @@
 const Story = require('../models').story;
-const sparqlController = require('./sparql');
 const wikidataController = require('./wikidata');
 const JSONFile = require('../utils').JSONFile;
-const faq =  JSONFile("server/constants/faq.json");
-const featuredStories =  JSONFile("server/controllers/featuredStories.json");
+const faq = JSONFile("server/constants/faq.json");
+const featuredStories = JSONFile("server/controllers/featuredStories.json");
+const StoriesAPI = require('../stories_api');
 
 
 const _ = module.exports = {
   welcome(req, res){
-    return _.getCount(count => {
-      return _._getBirthdays((birthdays) => {
+    return StoriesAPI.count(({count}) => {
+      return StoriesAPI.birthdays((birthdays) => {
         let pageData = {
           title: 'Welcome',
           story_count: count,
@@ -22,56 +22,11 @@ const _ = module.exports = {
       });
     });
   },
-  getCount(callback){
-    return Story.count().then(count => callback(count))
-  },
-  validate(req, res){
-    let qid = req.params.qid;
-    return _.getByQID(qid, story => {
-      if (story) return res.send({valid: true, active: true});
-      return wikidataController.storyValidate(qid, isValid => {
-        return res.send({valid:isValid, active:false});
-      });
-    });
-  },
-  getByQID(qid, next){
-    return Story.findOne({where: {qid:qid}}).then(next);
-  },
+  storiesAPIInfo: (req, res) => res.send(StoriesAPI.info),
   dump(req,res) {
     return Story.findAll().then(stories => {
       return res.send(stories)
     })
-  },
-  birthday(req, res){
-    return _._getBirthdays((items) => res.send(items))
-  },
-  _getBirthdays(callback){
-    Story.findAll({ attributes:['qid', 'data']}).then(list => {
-      let qidList = [];
-      let allStories = [];
-      for(let i in list){
-        qidList.push(list[i].dataValues.qid);
-        allStories.push(list[i].dataValues);
-      }
-      return sparqlController.birthdayQuery(qidList, content => {
-        content = _.imagesFromStory(allStories, content);
-        return callback(content);
-      })
-    })
-  },
-  imagesFromStory(db_values, output){
-    for (var i = 0; i < output.length; i++) {
-      if(!output[i].image){
-        let index = output[i].index;
-        for (var k = 0; k < db_values[index].data.length; k++) {
-          if (db_values[index].data[k].image){
-            output[i].image = db_values[index].data[k].image;
-            break;
-          }
-        }
-      }
-    }
-    return output;
   },
   getFeaturedList() {
     // TODO: There is a bug when an odd number of elements are in the carousel.

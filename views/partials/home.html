@@ -144,7 +144,7 @@
     <div class="grid browse-gallery" id="browseStories">
       {{#each birthdays}}
         <div class="grid-item">
-          <a class="browse-story-link" href="/{{item.value}}">
+          <a class="browse-story-link" href="/{{id}}">
             <div class="inventory-card">
               <div class="card-header">
                 <div class="card-badge">
@@ -157,16 +157,14 @@
                   </div>
                 {{/if}}
                 <div class="card-title">
-                  {{item.label}}
-                  {{#if birth}}
-                    <div class="card-condition">
-                      {{dateFormat birth 'Y'}}-{{#if this.death}}{{dateFormat death 'Y'}}{{/if}}
-                    </div>
-                  {{/if}}
+                  {{label}}
+                  <div class="card-condition">
+                    {{birth}}-{{#if death}}{{death}}{{/if}}
+                  </div>
                 </div>
               </div>
               <div class="card-body">
-                <p class="card-desc">{{item.description}}</p>
+                <p class="card-desc">{{description}}</p>
               </div>
               <div class="card-footer">
                 <div class="card-footer-sub card-updated">
