@@ -102,3 +102,21 @@ ScrollReveal().reveal('#features .bottom img',
   origin: 'bottom',
   over: '3s'
 });
+
+$(window).load(function(){
+
+var repeatedLoad = setInterval(loadGridGallery ,1000);
+setTimeout(function( ) { clearInterval( repeatedLoad ); }, 10000);
+
+})
+function loadGridGallery(){
+  $('.browse-gallery').masonry({
+    visibleStyle: { transform: 'translateY(0)', opacity: 1 },
+  hiddenStyle: { transform: 'translateY(100px)', opacity: 0 },
+    // options...
+    itemSelector: '.grid-item',
+    columnWidth: '.grid-item',
+    percentPosition: true
+  });
+
+}

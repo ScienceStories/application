@@ -33,10 +33,13 @@
     "PYPATH": {
       "required": true
     },
-    "STORIES_API_URL": {
+    "STORIES_API_ENDPOINT": {
       "required": true
     },
-    "STORIES_API_CLIENT_NAME": {
+    "STORIES_API_COLLECTION_ID": {
+      "required": true
+    },
+    "STORIES_API_PUBLIC_KEY": {
       "required": true
     }
   },

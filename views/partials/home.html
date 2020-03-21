@@ -1,4 +1,7 @@
 {{> navbar }}
+<section class="home-section" id="video">
+<iframe width="100%" height="100%" src="https://www.youtube.com/embed/_xMjPB0b0IQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</section>
 <section class="home-section" id="welcome">
   <img src="/static/images/branding/logo_black.png" alt="Science Stories Logo">
   <p>
@@ -89,7 +92,7 @@
       <img src="/static/vendor/logos/illinois.jpg" alt="">
     </div>
 </section>
-<section class="social">
+<section class="social" id="social">
   <div class="left">
     <div class="feature-icon">
       <i class="fab fa-twitter faa-float animated"></i>
@@ -141,7 +144,7 @@
     <div class="grid browse-gallery" id="browseStories">
       {{#each birthdays}}
         <div class="grid-item">
-          <a class="browse-story-link" href="/{{item.value}}">
+          <a class="browse-story-link" href="/{{id}}">
             <div class="inventory-card">
               <div class="card-header">
                 <div class="card-badge">
@@ -154,16 +157,14 @@
                   </div>
                 {{/if}}
                 <div class="card-title">
-                  {{item.label}}
-                  {{#if birth}}
-                    <div class="card-condition">
-                      {{dateFormat birth 'Y'}}-{{#if this.death}}{{dateFormat death 'Y'}}{{/if}}
-                    </div>
-                  {{/if}}
+                  {{label}}
+                  <div class="card-condition">
+                    {{birth}}-{{#if death}}{{death}}{{/if}}
+                  </div>
                 </div>
               </div>
               <div class="card-body">
-                <p class="card-desc">{{item.description}}</p>
+                <p class="card-desc">{{description}}</p>
               </div>
               <div class="card-footer">
                 <div class="card-footer-sub card-updated">
