@@ -30,9 +30,6 @@
     "GOOGLE_VIEW_ID": {
       "required": true
     },
-    "PYPATH": {
-      "required": true
-    },
     "STORIES_API_ENDPOINT": {
       "required": true
     },
