@@ -1,0 +1,1 @@
+export const GET_STORIES_API_INFO = 'GET_STORIES_API_INFO';

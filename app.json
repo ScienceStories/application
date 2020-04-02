@@ -5,9 +5,6 @@
   "buildpacks": [
     {
       "url": "heroku/nodejs"
-    },
-    {
-      "url": "heroku/python"
     }
   ],
   "description": "Science Stories Application",
@@ -33,7 +30,13 @@
     "GOOGLE_VIEW_ID": {
       "required": true
     },
-    "PYPATH": {
+    "STORIES_API_ENDPOINT": {
+      "required": true
+    },
+    "STORIES_API_COLLECTION_ID": {
+      "required": true
+    },
+    "STORIES_API_PUBLIC_KEY": {
       "required": true
     }
   },

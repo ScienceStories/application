@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="/">
+          <a class="navbar-brand" href="/welcome">
             <img src="/static/images/branding/logo_white.png" alt="Science Stories Logo">
             <!-- Science Stories [beta] -->
           </a>
@@ -19,72 +19,23 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
 
-            <li {{#if_equal nav "home"}}{{#ifUserType data.user.type 'user'}}{{else}} class="active"{{/ifUserType}} {{else}}{{#if_equal nav "profile"}} class="active" {{else}}{{/if_equal}}{{/if_equal}}><a href="/home">Home</a></li>
+            <li {{#if_equal nav "home"}} class="active"{{else}}{{/if_equal}}><a href="/welcome">Home</a></li>
             <!-- <li {{#if_equal nav "manifest"}} class="active" {{else}}{{/if_equal}}><a href="/manifest">Manifest</a></li> -->
             <li {{#if_equal nav "story"}} class="active" {{else}}{{/if_equal}}><a href="/Q11641">Sample Story</a></li>
             <li {{#if_equal nav "browse"}} class="active" {{else}}{{/if_equal}}><a href="/browse">Browse</a></li>
-            {{#ifUserType data.user.type 'author'}}
-            <li class="dropdown" id="createDropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Author Tools </a>
-              <ul class="dropdown-menu">
-                <!-- <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createStoryModal">
-                  <i class="fas fa-book"></i> | New Story
-                </button></li> -->
-                <li {{#if_equal nav "build"}} class="active" {{else}}{{/if_equal}}><a href="/build"><i class="fas fa-book"></i> | Build Story</a></li>
-                <li {{#if_equal nav "annotate"}} class="active" {{else}}{{/if_equal}}><a href="/annotate"><i class="fas fa-feather-alt"></i> | Annotate Manifest</a></li>
-                <li {{#if_equal nav "upload"}} class="active" {{else}}{{/if_equal}}><a href="/upload"><i class="fas fa-upload"></i> | Upload Media</a></li>
 
-              </ul>
-            </li>
-            {{/ifUserType}}
           </ul>
-          <form class="navbar-form navbar-left" id="navSearch" action="/search" method="get">
+          <!-- <form class="navbar-form navbar-left" id="navSearch" action="/search" method="get">
             <div class="form-group" >
               <input name="search" type="text" class="form-control" placeholder="Search Here">
             </div>
             <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-          </form>
+          </form> -->
           <ul class="nav navbar-nav navbar-right">
             <li {{#if_equal nav "donate"}} class="active" {{else}}{{/if_equal}}><a href="/donate">Donate</a></li>
             <li {{#if_equal nav "bibliography"}} class="active" {{else}}{{/if_equal}}><a href="/bibliography">Bibliography</a></li>
             <li><a href="https://github.com/ScienceStories" target="_blank">GitHub <i class="fab fa-github"></i></a></li>
-            <li class="dropdown" id="accountDropDown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                {{#ifUserType data.user.type 'user'}}
-                  {{#if data.user.image}}
-                  <div class="nav-image-container">
-                    <img src="{{data.user.image}}">
-                  </div>
-                  {{else}}
-                  <i class="fa fa-user-circle"></i>
-                  {{/if}}
-                {{else}}
-                Sign-Up / Login
-                {{/ifUserType}}
-              </a>
-              <ul class="dropdown-menu">
-                {{#ifUserType data.user.type 'user'}}
-                <li{{#if_equal nav "profile"}} class="active" {{else}}{{/if_equal}}><a href="/profile">
-                  <button type="button" class="btn btn-primary" >
-                  Profile
-                </button></a></li>
-                <li><a href="/logout">
-                  <button type="button" class="btn btn-primary" >
-                  Logout
-                </button></a></li>
-                {{else}}
-                <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signupModal">
-                  Sign Up
-                </button></li>
-                <li><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
-                  Login
-                </button></li>
-                {{/ifUserType}}
-
-              </ul>
-            </li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-{{> account_modals }}

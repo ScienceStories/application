@@ -9,7 +9,9 @@
     "start:dev": "nodemon ./bin/www",
     "manifest:dev": "biiif collection -u http://localhost:${PORT:-8000}/collection",
     "manifest": "biiif collection -u http://sciencestories.ksn.io/collection",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd client && npm install --only=dev && npm install && npm run build",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
   "keywords": [
     "IIIF",
@@ -26,6 +28,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.439.0",
+    "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "biiif-cli": "0.0.13",
     "body-parser": "^1.18.3",
@@ -48,14 +51,12 @@
     "npm": "^6.12.1",
     "pg": "^7.10.0",
     "pg-hstore": "^2.3.2",
-    "python-shell": "^1.0.7",
     "randomcolor": "^0.5.4",
     "sequelize": "^5.21.2",
     "sequelize-cli": "^5.5.1",
     "serve-favicon": "^2.5.0",
     "tabula-rasa": "^1.0.9",
     "tinycolor2": "^1.4.1",
-    "universalviewer": "3.0.21",
     "uuid": "^3.3.2",
     "wikidata-sdk": "^6.4.0"
   },

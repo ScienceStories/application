@@ -6,22 +6,22 @@
 <div id="bibliography">
   {{#each works}}
     <div class="work-item">
-      <a class="browse-story-link" target="_blank" href="https://wikidata.org/wiki/{{@key}}">
+      <a class="browse-story-link" target="_blank" href="{{wikidataURL this.id}}">
         <div class="item-title">
           <div class="work-icon">
-            <i class="{{#if_equal this.instance.label 'book'}}fa fa-book {{else}}{{#if_equal this.instance.label 'report'}}far fa-chart-bar{{else}}far fa-file-alt{{/if_equal}}{{/if_equal}} "></i>
+            <i class="{{this.icon}}"></i>
           </div>
           <div class="work-content">
-          {{this.item.label}}
+          {{this.label}}
           <div class="work-description">
-            {{this.item.description}}
+            {{this.description}}
           </div>
             <div class="item-author">
-              {{this.author}}
+              {{arrayToString this.authors "pipe"}}
             </div>
           </div>
         </div>
       </a>
     </div>
-    {{/each}}
+  {{/each}}
 </div>

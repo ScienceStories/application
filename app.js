@@ -42,6 +42,7 @@ app.use('/scripts', cors(), express.static(__dirname + '/node_modules/'));
 app.use('/build/mirador', cors(), express.static(__dirname + '/static/vendor/mirador/'));
 app.use('/api/iiif/manifest/local/',  cors(), express.static(__dirname + '/manifests/'));
 app.use('/static', cors(), express.static(__dirname + '/static/'));
+app.use(express.static("client/build"));
 app.use('/uv-config.json', cors(), (req, res) => res.sendFile(__dirname + '/uv-config.json'));
 // TODO: create handlebarsHelpers.js
 hbs.registerHelper('if_equal', function(a, b, opts) {
@@ -222,6 +223,7 @@ hbs.registerHelper('dateFormat', function dateFormat(date, format, utc) {
       return (utc === true) ?  moment(date).utc().calendar() :moment(date).calendar()
     return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
 });
+hbs.registerHelper('wikidataURL', qid => "https://wikidata.org/wiki/" + qid);
 hbs.registerHelper('wikiDateTime', function dateFormat(date, format, utc) {
   date = date.substr(1,)
     return (utc === true) ? moment(date).utc().format(format) : moment(date).format(format);
@@ -235,22 +237,7 @@ fs.readdirSync(partials).forEach(function (file) {
 
     hbs.registerPartial(partial, source);
 });
-// Register partials
-var partials = "./views/slides/";
-fs.readdirSync(partials).forEach(function (file) {
-    var source = fs.readFileSync(partials + file, "utf8"),
-        partial = /(.+)\.html/.exec(file).pop();
 
-    hbs.registerPartial(partial, source);
-});
-
-hbs.registerHelper('loadMoment', function(template, data, options) {
-    var loadedPartial = hbs.partials[template];
-    if (typeof loadedPartial !== 'function') {
-      loadedPartial = hbs.compile(loadedPartial);
-    }
-    return new hbs.SafeString(loadedPartial(data, options));
-});
 hbs.registerHelper('json', function(data) {
   return JSON.stringify(data)
 });
