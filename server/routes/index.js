@@ -1,7 +1,6 @@
 const storyController = require('../controllers').story;
 const wikidataController = require('../controllers').wikidata;
 const annotationController = require('../controllers').annotation;
-const sitemapController = require('../controllers').sitemap;
 const awsController = require('../controllers').aws;
 const path = require('path');
 const fs = require('fs');
@@ -13,7 +12,7 @@ module.exports = (app, sessionChecker) => {
   app.get('/search', (req, res)=>  res.redirect(`/browse?q=${req.query.search}`));
   app.get('/donate', (req, res) => res.renderFullPage('donate', {title:'Giving'}))
   app.get('/annotate', (req, res) => res.ifAuthor(annotationController.showPage)); // Optional TODO
-  app.get('/sitemap', sitemapController.generate);  // Optional TODO
+  app.get('/sitemap', storyController.sitemap);
   app.get('/api/story/dump', storyController.dump);
   // Proxy all other requests to the React front-end app
   app.get('/Q:id', (req, res) => {
