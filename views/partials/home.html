@@ -14,12 +14,14 @@
 <section class="home-section" id="featured">
   {{> featured_stories }}
 </section>
-<section class="home-section" id="storyCount">
-  <script> var countStories = {{story_count}}</script>
-  <div class="story-odometer">100</div>
-  <span class="counter-text">STORIES TOLD</span>
-  <br> <span class="smallText">...and counting</span>
-</section>
+{{#if story_count}}
+  <section class="home-section" id="storyCount">
+    <script> var countStories = {{story_count}}</script>
+    <div class="story-odometer">100</div>
+    <span class="counter-text">STORIES TOLD</span>
+    <br> <span class="smallText">...and counting</span>
+  </section>
+{{/if}}
 <section class="home-section" id="project">
   <div class="left">
     <img src="/static/images/screenshots/story_main.png" alt="">
@@ -110,7 +112,6 @@
     </div>
   </div>
 </section>
-{{#if birthdays}}
 <style>
   .grid{
   	margin: 0 auto !important; /* this is the css that keeps the container centered in page */
@@ -133,6 +134,7 @@
     color: white;
 }
 </style>
+{{#if birthdays}}
   <section class="birthdays">
     <h2 class="section-header">
       Happy Birthday

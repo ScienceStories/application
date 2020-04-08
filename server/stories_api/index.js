@@ -25,8 +25,7 @@ const _ = module.exports = {
     .then(data => {
       return callback(data);
     }, error => {
-      console.log(error);
-      return err(error);
+      return err && err(error);
     })
   },
   collection(slug, callback, err){
@@ -45,6 +44,6 @@ const _ = module.exports = {
     return _.collection("birthday", callback, err);
   },
   bibliography(callback, err){
-    return _.story("science_stories/bibliography?page=0", callback, err)
+    return _.story("science_stories/bibliography", callback, err)
   },
 }
