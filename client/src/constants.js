@@ -10,3 +10,14 @@ export const theme = {
     }
   }
 };
+
+export const keywords = [
+  "Science", "Science Stories", "Women in Science", "STEM", "IIIF", "Wikidata",
+  "Education", "Wikipedia", "Linked Data", "Linked Open Data", "Biographies",
+  "Bibliography", "Researchers", "Scientists", "Museums", "Archive",
+  "manuscripts", "libraries", "history", "map", "visualization", "data",
+  "black scientists", "physics"
+];
+
+export const siteDescription = "Visually Learn About Underrepresented Scientists \
+and Mathematicians that Have Made a Remarkable Impact on STEM Research."

@@ -9,6 +9,8 @@ const fs = require('fs');
 module.exports = (app, sessionChecker) => {
   app.get('/', (req, res)=>  res.redirect('/welcome'));
   app.get('/welcome', storyController.welcome);
+
+  app.get('/search', (req, res)=>  res.redirect(`/browse?q=${req.query.search}`));
   app.get('/donate', (req, res) => res.renderFullPage('donate', {title:'Giving'}))
   app.get('/annotate', (req, res) => res.ifAuthor(annotationController.showPage)); // Optional TODO
   app.get('/sitemap', sitemapController.generate);  // Optional TODO

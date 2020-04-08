@@ -12,7 +12,6 @@ const path = require('path');
 const fetch = require('node-fetch');
 const cors = require('cors');
 const Sequelize = require('sequelize');
-const randomColor = require('randomcolor');
 const urlformatter = require('url').format;
 
 // initalize sequelize with session store
@@ -84,13 +83,6 @@ hbs.registerHelper( 'times', function( n, block ) {
     }
 
     return accum;
-});
-hbs.registerHelper('randomColor',function(alpha = '1', luminosity=false){
-  return randomColor({
-    alpha: parseFloat(alpha),
-    format: 'rgba',
-    luminosity: luminosity
-    }); // a hex code for an attractive color
 });
 hbs.registerHelper( 'truncate', function(chars, opts ) {
   // chars MUST be greater than 3

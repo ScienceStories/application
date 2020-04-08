@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { useLocation } from "react-router-dom";
 import { StoriesAPICollection } from 'react-stories-api';
 
-import { logo } from "../../../constants";
+import { logo, keywords, siteDescription } from "../../../constants";
 import { getStoriesAPIInfo } from '../../../redux/actions';
 
 
@@ -56,12 +58,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+// A custom hook that builds on useLocation to parse
+// the query string for you.
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
 const BrowsePage = (props) => {
   const classes = useStyles();
   const { storiesAPIInfo } = props;
   const [initialized, setInitialized] = useState(false); // ensure a refresh
   const [loading, isLoading] = useState(false);
+  const [collection, setCollection] = useState({});
+  const query = useQuery();
   if (!initialized && !loading) {
     isLoading(true);
     props.getStoriesAPIInfo((info) => {
@@ -70,8 +79,25 @@ const BrowsePage = (props) => {
     })
   };
 
+  const updateHistory = ({page, q}) => {
+    if (window.history.pushState) {
+        const newurl = window.location.protocol +
+        "//" + window.location.host + window.location.pathname
+        + `?page=${page}&q=${q}`;
+        window.history.replaceState({path:newurl},'',newurl);
+    }
+  }
+
   return (
     <div>
+      <Helmet>
+        <title>
+          Browse {"🔎"} {collection.name || ""}
+          | {collection.project_name || "Science Stories"}
+        </title>
+        <meta name="keywords" content={keywords.join(', ')} />
+        <meta name="description" content={siteDescription} />
+      </Helmet>
       <section className={classes.collectionPageHeader}>
         <div className={classes.collectionPageHeaderOverlay}>
           <Typography variant="h2" className={classes.collectionPageTitle}>
@@ -85,6 +111,10 @@ const BrowsePage = (props) => {
           apiKey={storiesAPIInfo.apiKey}
           id={storiesAPIInfo.collectionId}
           endpoint={storiesAPIInfo.endpoint}
+          onLoad={setCollection}
+          onChange={updateHistory}
+          page={query.get("page")}
+          q={query.get("q")}
         />
       )}
       </div>

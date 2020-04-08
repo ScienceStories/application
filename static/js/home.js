@@ -1,6 +1,6 @@
 var storyOdometer = document.querySelector('.story-odometer');
 
-od = new Odometer({
+od = storyOdometer && new Odometer({
   el: storyOdometer,
   value: 100,
 
@@ -76,7 +76,7 @@ ScrollReveal().reveal('section',
   origin: 'bottom',
   over: '3s'
 });
-ScrollReveal().reveal('.odometer',
+storyOdometer && ScrollReveal().reveal('.odometer',
 {
   origin: 'down',
   over: '3s',
