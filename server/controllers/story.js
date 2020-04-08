@@ -27,6 +27,7 @@ const _ = module.exports = {
 
     return renderWelcome(pageData);
   },
+  sitemap: (req, res) => StoriesAPI.sitemap(data => res.send(data)),
   storiesAPIInfo: (req, res) => res.send(StoriesAPI.info),
   dump(req,res) {
     return Story.findAll().then(stories => {

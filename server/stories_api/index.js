@@ -2,6 +2,7 @@ const axios = require('axios');
 const STORIES_API_ENDPOINT = process.env.STORIES_API_ENDPOINT;
 const STORIES_API_COLLECTION_ID = process.env.STORIES_API_COLLECTION_ID;
 const STORIES_API_PUBLIC_KEY = process.env.STORIES_API_PUBLIC_KEY;
+const PUBLIC_URL = process.env.PUBLIC_URL || "http://sciencestories.io";
 const storyAPIRequest = axios.create();
 
 storyAPIRequest.interceptors.request.use(config => {
@@ -39,6 +40,11 @@ const _ = module.exports = {
   count(callback, err){
     return _.story(`count?collection=${STORIES_API_COLLECTION_ID}`, callback,
       err)
+  },
+  sitemap(callback, err){
+    const formatterURL = `${PUBLIC_URL}/$id`;
+    const queryParams = `url_formatter=${formatterURL}&representation=xml`;
+    return _.collection(`sitemap?${queryParams}`, callback, err)
   },
   birthdays(callback, err){
     return _.collection("birthday", callback, err);
