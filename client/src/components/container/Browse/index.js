@@ -83,7 +83,7 @@ const BrowsePage = (props) => {
     if (window.history.pushState) {
         const newurl = window.location.protocol +
         "//" + window.location.host + window.location.pathname
-        + `?page=${page}&q=${q}`;
+        + `?page=${page}&q=${q || ''}`;
         window.history.replaceState({path:newurl},'',newurl);
     }
   }

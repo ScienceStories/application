@@ -19,5 +19,6 @@ export const keywords = [
   "black scientists", "physics"
 ];
 
-export const siteDescription = "Visually Learn About Underrepresented Scientists \
-and Mathematicians that Have Made a Remarkable Impact on STEM Research."
+export const siteDescription = "Visually Learn About Underrepresented " +
+"Scientists and Mathematicians that Have Made a Remarkable "
++ "Impact on STEM Research."
