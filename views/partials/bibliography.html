@@ -1,27 +1,38 @@
 <div class="page-header">
   <div class="overlayHeader">
-    Bibliography of {{size works}} Works on the Topic of Women in Science
+    {{#if works}}
+      Bibliography of {{size works}} Works on the Topic of Women in Science
+    {{else}}
+      Compiling an Updated Bibliography.
+    {{/if}}
   </div>
 </div>
 <div id="bibliography">
-  {{#each works}}
-    <div class="work-item">
-      <a class="browse-story-link" target="_blank" href="{{wikidataURL this.id}}">
-        <div class="item-title">
-          <div class="work-icon">
-            <i class="{{this.icon}}"></i>
-          </div>
-          <div class="work-content">
-          {{this.label}}
-          <div class="work-description">
-            {{this.description}}
-          </div>
-            <div class="item-author">
-              {{arrayToString this.authors "pipe"}}
+  {{#if works}}
+    {{#each works}}
+      <div class="work-item">
+        <a class="browse-story-link" target="_blank" href="{{wikidataURL this.id}}">
+          <div class="item-title">
+            <div class="work-icon">
+              <i class="{{this.icon}}"></i>
+            </div>
+            <div class="work-content">
+            {{this.label}}
+            <div class="work-description">
+              {{this.description}}
+            </div>
+              <div class="item-author">
+                {{arrayToString this.authors "pipe"}}
+              </div>
             </div>
           </div>
-        </div>
-      </a>
+        </a>
+      </div>
+    {{/each}}
+  {{else}}
+    <div style="text-align:center">
+      We are collecting metadata about our sources. <br />
+      Please wait a moment and then refresh the page.
     </div>
-  {{/each}}
+  {{/if}}
 </div>

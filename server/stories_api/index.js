@@ -5,6 +5,7 @@ const STORIES_API_PUBLIC_KEY = process.env.STORIES_API_PUBLIC_KEY;
 const PUBLIC_URL = process.env.PUBLIC_URL || "http://sciencestories.io";
 const RETRY_STATUS_CODE = 206;
 const RETRY_WAIT_TIME = 1000;
+const STORIES_API_ENDPOINT_ALLOW_RETRY = process.env.STORIES_API_ENDPOINT_ALLOW_RETRY;
 
 const storyAPIRequest = axios.create({
   headers: { "Content-Type": "application/json" },
@@ -21,7 +22,8 @@ storyAPIRequest.interceptors.request.use(config => {
 
 storyAPIRequest.interceptors.response.use(response => {
   const { config, data, status } = response;
-  if (status === RETRY_STATUS_CODE && data && data.retry_url){
+  if (STORIES_API_ENDPOINT_ALLOW_RETRY && status === RETRY_STATUS_CODE && data
+    && data.retry_url){
     const newConfig = {...config};
     newConfig.url = data.retry_url;
     newConfig.params = {};
