@@ -16,7 +16,7 @@ const _ = module.exports = {
     };
 
     const render = (pageData) => res.renderFullPage('home', pageData);
-    const setBirthdays = pageData => birthdays => render({...pageData, birthdays});
+    const setBirthdays = pageData => ({items}) => render({...pageData, birthdays: items});
     const fetchBithdays = pageData => StoriesAPI.birthdays(setBirthdays(pageData), () => render(pageData));
 
 
