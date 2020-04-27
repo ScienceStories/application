@@ -183,7 +183,7 @@ hbs.registerHelper('ifUserType', function accessCheck(type, level, opts) {
 
 hbs.registerHelper('commonsImage', function dateFormat(title) {
   title = title.replace(' ', '%20')
-    return 'http://commons.wikimedia.org/wiki/Special:FilePath/'+title;
+    return 'https://commons.wikimedia.org/wiki/Special:FilePath/'+title;
     // Going to page:
     // title = title.replace(' ', '_')
     // return `https://commons.wikimedia.org/wiki/File:${title}`;
