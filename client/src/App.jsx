@@ -1,7 +1,6 @@
 import React from 'react';
-import {
-  createMuiTheme, MuiThemeProvider, makeStyles
-} from '@material-ui/core';
+import { MuiThemeProvider } from '@material-ui/core';
+import { createTheme, makeStyles } from '@material-ui/core/styles';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import BrowsePage from './components/container/Browse';
@@ -18,11 +17,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function App(props){
+export default function App(){
   const classes = useStyles();
   return (
     <BrowserRouter>
-      <MuiThemeProvider theme={createMuiTheme(theme)}>
+      <MuiThemeProvider theme={createTheme(theme)}>
         <div className={classes.app}>
           <Switch>
             <Route path="/browse" component={BrowsePage} />

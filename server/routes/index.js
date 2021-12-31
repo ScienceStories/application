@@ -5,7 +5,7 @@ const awsController = require('../controllers').aws;
 const path = require('path');
 const fs = require('fs');
 
-module.exports = (app, sessionChecker) => {
+module.exports = (app) => {
   app.get('/', (req, res)=>  res.redirect('/welcome'));
   app.get('/welcome', storyController.welcome);
 
@@ -26,7 +26,7 @@ module.exports = (app, sessionChecker) => {
   })
   app.get('/bibliography', wikidataController.bibliography);
   // route for Home-Page
-  app.get('/manifest', sessionChecker, (req, res) => {
+  app.get('/manifest', (req, res) => {
       // res.redirect('/login');
       res.render('base', {
         page: function(){ return 'manifest'},
