@@ -4,9 +4,9 @@ function forceHTTPS(req, res, next) {
   if (FORCE_HTTPS && !req.secure) {
     return res.redirect(`https://${req.headers.host}${req.url}`);
   }
-    next();
+  next();
 }
 
 module.exports = {
-    forceHTTPS,
+  forceHTTPS,
 };
