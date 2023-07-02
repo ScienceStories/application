@@ -31,12 +31,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0001.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0001.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0001.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0001.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -98,12 +98,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0002.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0002.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0002.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0002.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -165,12 +165,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0003.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0003.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0003.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0003.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -232,12 +232,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0004.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0004.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0004.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0004.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -299,12 +299,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0005.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0005.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0005.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0005.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -366,12 +366,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0006.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0006.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0006.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0006.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -433,12 +433,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0007.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0007.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0007.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0007.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -500,12 +500,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0008.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0008.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0008.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0008.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -567,12 +567,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0009.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0009.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0009.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0009.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -634,12 +634,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0010.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0010.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0010.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0010.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -701,12 +701,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0011.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0011.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0011.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0011.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -768,12 +768,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0012.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0012.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0012.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0012.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -835,12 +835,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0013.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0013.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0013.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0013.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -902,12 +902,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0014.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0014.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0014.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0014.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -969,12 +969,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0015.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0015.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0015.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0015.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1036,12 +1036,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0016.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0016.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0016.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0016.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1103,12 +1103,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0017.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0017.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0017.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0017.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1170,12 +1170,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0018.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0018.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0018.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0018.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1237,12 +1237,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0019.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0019.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0019.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0019.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1304,12 +1304,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0020.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0020.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0020.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0020.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1371,12 +1371,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0021.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0021.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0021.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0021.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1438,12 +1438,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0022.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0022.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0022.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0022.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1505,12 +1505,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0023.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0023.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0023.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0023.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1572,12 +1572,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0024.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0024.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0024.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0024.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1639,12 +1639,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0025.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0025.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0025.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0025.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1706,12 +1706,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0026.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0026.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0026.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0026.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{
@@ -1773,12 +1773,12 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0027.pdf/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0027.pdf/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
 									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/pg_0027.pdf",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/pg_0027.pdf",
 									"profile": [
 										"http://iiif.io/api/image/2/level2.json",
 										{

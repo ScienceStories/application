@@ -12,16 +12,19 @@ const path = require('path');
 const fetch = require('node-fetch');
 const cors = require('cors');
 const urlformatter = require('url').format;
+const { forceHTTPS } = require('./server/middleware/forceHTTPS');
 
 // Set up the express app
 const app = express();
 const moment = require('moment');
-const url_path = (process.env.NODE_ENV == 'production') ? 'http://sciencestories.io/' : '/'
+const url_path = (process.env.NODE_ENV == 'production') ? 'https://sciencestories.io/' : '/'
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+app.enable('trust proxy');
+app.use(forceHTTPS);
 
 
 // Log requests to the console.
