@@ -10,8 +10,15 @@
 
     <br>
 
-    © Science Stories 2018 <br>
+    © Science Stories <span id="year-stamp"></span> <br>
     <a href="https://www.seals-nutt.com">Developed By Seals-Nutt</a><br>
     <a href="/sitemap">sitemap</a>
   </p>
 </section>
+
+<script>
+  let date = new Date();
+  let year = date.getFullYear();
+  let yearStamp = document.getElementById('year-stamp');
+  yearStamp.innerHTML = year;
+</script>
