@@ -31,14 +31,14 @@
 							"@type": "oa:Annotation",
 							"motivation": "sc:painting",
 							"resource": {
-								"@id": "http://iiif.ss.ksn.io/iiif/2/2339337HarvardPaperTape.jpg/full/full/0/default.jpg",
+								"@id": "https://iiif.ss.ksn.io/iiif/2/2339337HarvardPaperTape.jpg/full/full/0/default.jpg",
 								"@type": "dctypes:Image",
 								"format": "image/jpeg",
 								"service": {
-									"@context": "http://iiif.io/api/image/2/context.json",
-									"@id": "http://iiif.ss.ksn.io/iiif/2/2339337HarvardPaperTape.jpg",
+									"@context": "https://iiif.io/api/image/2/context.json",
+									"@id": "https://iiif.ss.ksn.io/iiif/2/2339337HarvardPaperTape.jpg",
 									"profile": [
-										"http://iiif.io/api/image/2/level2.json",
+										"https://iiif.io/api/image/2/level2.json",
 										{
 											"formats": [
 												"jpg",
