@@ -17,8 +17,6 @@
 </section>
 
 <script>
-  let date = new Date();
-  let year = date.getFullYear();
-  let yearStamp = document.getElementById('year-stamp');
-  yearStamp.innerHTML = year;
+  const yearStamp = document.getElementById('year-stamp');
+  yearStamp.innerHTML = new Date().getFullYear();
 </script>
